@@ -332,6 +332,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   50% { opacity: 0.35; transform: scale(1.5); }
 }
 
+/* phones: the video was covering almost nothing recognizable because
+   object-fit:cover crops hard against a tall, narrow container. Pin it
+   to its native 16:9 at the top of the section instead (full frame,
+   nothing cropped), drop the scrim (nothing to darken), and skip the
+   medallion — just the heading/copy/buttons remain once it ends */
+@media (max-width: 640px) {
+  .hero-bg-video {
+    top: 0; left: 0; right: 0; bottom: auto;
+    height: auto;
+    aspect-ratio: 16/9;
+    object-fit: contain;
+    background: var(--umber-900);
+  }
+  .hero-video-scrim { display: none; }
+  .hero-medallion-col { display: none; }
+}
+
 .hero-title {
   font-family: var(--font-display);
   font-weight: 600;
