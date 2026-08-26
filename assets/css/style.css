@@ -312,7 +312,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .product-card:hover .card-glyph { color: var(--saffron); }
 
 /* ---------- shop grid (magaza.html) — slimmer cards, popup badge, bottom-anchored quick add ---------- */
-#shop-grid .product-frame { aspect-ratio: 3/4; }
+#shop-grid .product-frame { aspect-ratio: 3/4; background: var(--cream); }
 #shop-grid .product-frame img {
   -webkit-mask-image: linear-gradient(to bottom,
     transparent 0%, transparent 13%,
