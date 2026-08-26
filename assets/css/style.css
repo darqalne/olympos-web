@@ -318,6 +318,49 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 #shop-grid .product-card:hover .quick-add { transform: translateY(0); }
 #shop-grid .product-card h3 { font-size: 1.175rem !important; }
 
+/* ---------- shop grid — stitch hover effect ---------- */
+#shop-grid .stitch-wrap { position: relative; }
+#shop-grid .stitch-fx {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 3;
+}
+#shop-grid .stitch-path {
+  fill: none;
+  stroke: var(--saffron);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  opacity: 0;
+  vector-effect: non-scaling-stroke;
+  transition: opacity 0.5s ease;
+}
+#shop-grid .stitch-outer { stroke-dasharray: 2.2 3.6; }
+#shop-grid .stitch-inner { stroke-dasharray: 2.2 3.6; stroke-dashoffset: 2.9; }
+#shop-grid .product-card:hover .stitch-path { opacity: 0.85; }
+#shop-grid .product-card:hover .stitch-outer { animation: stitch-run 1.8s linear infinite; }
+#shop-grid .product-card:hover .stitch-inner { animation: stitch-run 1.8s linear infinite reverse; }
+@keyframes stitch-run { to { stroke-dashoffset: -100; } }
+
+#shop-grid .stitch-hole {
+  fill: var(--saffron);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+#shop-grid .product-card:hover .stitch-hole { opacity: 1; transform: scale(1); }
+#shop-grid .stitch-hole:nth-of-type(2) { transition-delay: .06s; }
+#shop-grid .stitch-hole:nth-of-type(3) { transition-delay: .12s; }
+#shop-grid .stitch-hole:nth-of-type(4) { transition-delay: .18s; }
+#shop-grid .stitch-hole:nth-of-type(5) { transition-delay: .09s; }
+#shop-grid .stitch-hole:nth-of-type(6) { transition-delay: .15s; }
+#shop-grid .stitch-hole:nth-of-type(7) { transition-delay: .21s; }
+#shop-grid .stitch-hole:nth-of-type(8) { transition-delay: .27s; }
+
 /* ---------- divider rule ---------- */
 .rule-glyph {
   display: flex; align-items: center; gap: 1rem;

@@ -332,6 +332,20 @@ const OLYMPOS = (() => {
     });
   }
 
+  /* ---------------- shop grid stitch hover fx ---------------- */
+  function stitchOverlaySVG() {
+    const holesTop = [8, 30, 70, 92].map(x =>
+      `<circle class="stitch-hole" cx="${x}" cy="0" r="1.7"/>`).join('');
+    const holesBottom = [8, 30, 70, 92].map(x =>
+      `<circle class="stitch-hole" cx="${x}" cy="100" r="1.7"/>`).join('');
+    return `
+    <svg class="stitch-fx" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <rect class="stitch-path stitch-outer" x="-3" y="-3" width="106" height="106" rx="6" pathLength="100"/>
+      <rect class="stitch-path stitch-inner" x="4" y="4" width="92" height="92" rx="2" pathLength="100"/>
+      ${holesTop}${holesBottom}
+    </svg>`;
+  }
+
   /* ---------------- shop grid (magaza.html) ---------------- */
   function initShopGrid() {
     const grid = document.getElementById('shop-grid');
@@ -352,6 +366,13 @@ const OLYMPOS = (() => {
 
       grid.classList.remove('in-view');
       grid.innerHTML = list.map(p => productCardHTML(p)).join('');
+      grid.querySelectorAll('.product-frame').forEach(frame => {
+        const wrap = document.createElement('div');
+        wrap.className = 'stitch-wrap';
+        frame.parentNode.insertBefore(wrap, frame);
+        wrap.appendChild(frame);
+        wrap.insertAdjacentHTML('beforeend', stitchOverlaySVG());
+      });
       requestAnimationFrame(() => grid.classList.add('in-view'));
       bindQuickAdd(grid);
       if (countEl) countEl.textContent = `${list.length} ürün`;
