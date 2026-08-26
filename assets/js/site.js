@@ -365,15 +365,15 @@ const OLYMPOS = (() => {
   }
   function stitchHolesWrapperHTML() {
     // matches the paths' touch point exactly: x=23.4, y=38/68/.../188
-    // out of the stitch-layer's fixed 300x400px box (shifted up 8px,
-    // same as .stitch-layer's top:-8px) — plain px, not %, so the
-    // first hole always lands exactly 30px below the card's top edge
+    // out of the stitch-layer's fixed 300x400px box (shifted down 7px,
+    // same as .stitch-layer's top:7px) — plain px, not %, so the
+    // first hole always lands exactly 45px below the card's top edge
     // on every card, everywhere, regardless of that card's own size.
     const ys = [38, 68, 98, 128, 158, 188];
     return `
     <div class="holes-wrapper">
       ${ys.map((y, i) => {
-        const top = y - 8;
+        const top = y + 7;
         return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}px - 3px); left: calc(23.4px - 3px);"></div>`;
       }).join('')}
     </div>`;
@@ -440,6 +440,12 @@ const OLYMPOS = (() => {
     const p = getProduct(id) || getProducts()[0];
 
     document.title = `${p.name} — Olympos Leather`;
+    const metaDesc = `${p.name} — ${p.tagline} ${p.description}`.slice(0, 160);
+    document.querySelector('meta[name="description"]')?.setAttribute('content', metaDesc);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', document.title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', metaDesc);
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', document.title);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', metaDesc);
 
     root.querySelectorAll('[data-field="name"]').forEach(el => el.textContent = p.name);
     root.querySelectorAll('[data-field="category"]').forEach(el => el.textContent = p.categoryLabel);
@@ -509,6 +515,23 @@ const OLYMPOS = (() => {
       bindQuickAdd(relatedWrap);
     }
 
+    const origin = window.location.origin;
+    injectLD({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: p.name,
+      description: p.description,
+      sku: p.id,
+      image: p.images.map(src => origin + '/' + src),
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'TRY',
+        price: p.price,
+        availability: 'https://schema.org/InStock',
+        url: origin + '/urun.html?id=' + p.id
+      }
+    });
+
     initReveal();
   }
 
@@ -547,6 +570,39 @@ const OLYMPOS = (() => {
     document.querySelectorAll('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
   }
 
+  /* ---------------- structured data (schema.org JSON-LD) ----------------
+     Built from location.origin at runtime rather than a hardcoded domain,
+     so it's correct on the live site, a preview deploy, or localhost
+     without needing to bake a production URL into the page. */
+  function injectLD(obj) {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(obj);
+    document.head.appendChild(script);
+  }
+  function initStructuredData() {
+    const origin = window.location.origin;
+    injectLD({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'Olympos Leather',
+      url: origin + '/index.html',
+      logo: origin + '/assets/img/brand/logo.png'
+    });
+
+    const crumbNav = document.querySelector('nav[aria-label="Breadcrumb"]');
+    if (crumbNav) {
+      const nodes = Array.from(crumbNav.querySelectorAll('a, span:not(:empty)')).filter(el => el.tagName !== 'SPAN' || el.textContent !== '/');
+      const items = nodes.map((el, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: el.textContent.trim(),
+        item: el.tagName === 'A' ? origin + '/' + el.getAttribute('href') : undefined
+      }));
+      injectLD({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items });
+    }
+  }
+
   /* ---------------- boot ---------------- */
   /* ---------------- hero intro video (index.html) ---------------- */
   function initHeroVideo() {
@@ -574,6 +630,7 @@ const OLYMPOS = (() => {
     initContactForm();
     initFooterYear();
     initHeroVideo();
+    initStructuredData();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

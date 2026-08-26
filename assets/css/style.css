@@ -510,7 +510,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
      100%/100% — that way the thread's start point sits at the exact
      same pixel offset from the card's top edge on every card, instead
      of drifting with each card's own (variable) rendered height */
-  top: -8px; left: 0;
+  top: 7px; left: 0;
   width: 300px; height: 400px;
   pointer-events: none;
   overflow: visible !important;
