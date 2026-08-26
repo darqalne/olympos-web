@@ -280,9 +280,11 @@
 
 <script src="assets/js/site.js"></script>
 <script>
-  document.getElementById('featured-grid').innerHTML = ['original','eclipse','flare']
+  const featuredGrid = document.getElementById('featured-grid');
+  featuredGrid.innerHTML = ['original','eclipse','flare']
     .map(id => OLYMPOS.productCardHTML(OLYMPOS.getProduct(id))).join('');
-  OLYMPOS.bindQuickAdd(document.getElementById('featured-grid'));
+  OLYMPOS.attachStitchFX(featuredGrid);
+  OLYMPOS.bindQuickAdd(featuredGrid);
 </script>
 </body>
 </html>

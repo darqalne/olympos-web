@@ -369,6 +369,22 @@ const OLYMPOS = (() => {
     </div>`;
   }
 
+  // attaches the wrap-around stitch/lacing hover fx to every .product-frame
+  // inside the given grid container (used by both the shop grid and the
+  // homepage featured grid)
+  function attachStitchFX(grid) {
+    if (!grid) return;
+    grid.querySelectorAll('.product-frame').forEach(frame => {
+      const wrap = document.createElement('div');
+      wrap.className = 'olympos-card-wrapper';
+      frame.parentNode.insertBefore(wrap, frame);
+      wrap.insertAdjacentHTML('beforeend', stitchBackLayerSVG());
+      wrap.appendChild(frame);
+      wrap.insertAdjacentHTML('beforeend', stitchFrontLayerSVG());
+      frame.insertAdjacentHTML('beforeend', stitchHolesWrapperHTML());
+    });
+  }
+
   /* ---------------- shop grid (magaza.html) ---------------- */
   function initShopGrid() {
     const grid = document.getElementById('shop-grid');
@@ -389,15 +405,7 @@ const OLYMPOS = (() => {
 
       grid.classList.remove('in-view');
       grid.innerHTML = list.map(p => productCardHTML(p)).join('');
-      grid.querySelectorAll('.product-frame').forEach(frame => {
-        const wrap = document.createElement('div');
-        wrap.className = 'olympos-card-wrapper';
-        frame.parentNode.insertBefore(wrap, frame);
-        wrap.insertAdjacentHTML('beforeend', stitchBackLayerSVG());
-        wrap.appendChild(frame);
-        wrap.insertAdjacentHTML('beforeend', stitchFrontLayerSVG());
-        frame.insertAdjacentHTML('beforeend', stitchHolesWrapperHTML());
-      });
+      attachStitchFX(grid);
       requestAnimationFrame(() => grid.classList.add('in-view'));
       bindQuickAdd(grid);
       if (countEl) countEl.textContent = `${list.length} ürün`;
@@ -561,5 +569,5 @@ const OLYMPOS = (() => {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 
-  return { getProducts, getProduct, formatPrice, addToCart, toast, productCardHTML, bindQuickAdd };
+  return { getProducts, getProduct, formatPrice, addToCart, toast, productCardHTML, bindQuickAdd, attachStitchFX };
 })();
