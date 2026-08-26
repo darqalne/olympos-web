@@ -357,25 +357,27 @@ const OLYMPOS = (() => {
       <path class="stitch-path f6" d="M 15,188 C 5,188 -12,195 -12,203" />
     </svg>`;
   }
-  function stitchHolesWrapperHTML() {
+  function stitchHolesWrapperHTML(xPercent) {
     // Y tracks the thread paths' entry point directly: y=38/68/.../188 in the
     // 300x400 viewBox, as a % of the wrapper height (height is never
     // letterboxed regardless of the card's own aspect ratio).
     //
     // X is NOT simply x=15/300=5%: the stitch SVGs use the default
     // preserveAspectRatio (meet), so on any card whose aspect ratio isn't
-    // exactly 3:4 (e.g. the homepage featured grid's cards, which are 4:5),
-    // the 300x400 artwork gets letterboxed sideways within the box — the
-    // thread's real on-screen touch point ends up a bit further right than
-    // a naive 5% would put it. 7.8% matches where the thread actually
-    // lands at 4:5 (verified by the 4:5 card being the one this was tuned
-    // against), and is used everywhere so both grids match.
+    // exactly 3:4 (the shop grid's cards are 3:4 — no letterbox, 5% is
+    // exact; the homepage featured grid's cards are 4:5 — letterboxed,
+    // needs ~7.8%), the artwork gets letterboxed sideways and the
+    // thread's real on-screen touch point shifts right of a naive 5%.
+    // attachStitchFX computes the right value per card from its actual
+    // rendered aspect ratio; this only falls back to the unshifted 5%
+    // if called without one.
+    const x = typeof xPercent === 'number' ? xPercent : 5;
     const ys = [38, 68, 98, 128, 158, 188];
     return `
     <div class="holes-wrapper">
       ${ys.map((y, i) => {
         const top = (y / 400 * 100).toFixed(3);
-        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}% - 3px); left: calc(7.8% - 3px);"></div>`;
+        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}% - 3px); left: calc(${x.toFixed(3)}% - 3px);"></div>`;
       }).join('')}
     </div>`;
   }
@@ -383,16 +385,30 @@ const OLYMPOS = (() => {
   // attaches the wrap-around stitch/lacing hover fx to every .product-frame
   // inside the given grid container (used by both the shop grid and the
   // homepage featured grid)
+  // works out where the thread's visible touch point actually lands on
+  // a card of this aspect ratio, given the stitch SVGs' 300x400 viewBox
+  // and default (letterboxing) preserveAspectRatio — see the long
+  // comment in stitchHolesWrapperHTML for why this isn't just x=15/300
+  function stitchHoleXPercent(frame) {
+    const SVG_ASPECT = 300 / 400;
+    const rect = frame.getBoundingClientRect();
+    const boxAspect = rect.height ? rect.width / rect.height : SVG_ASPECT;
+    if (boxAspect <= SVG_ASPECT) return 5; // no horizontal letterbox
+    const gapEachSide = (1 - SVG_ASPECT / boxAspect) / 2;
+    return (gapEachSide + 0.05 * (SVG_ASPECT / boxAspect)) * 100;
+  }
+
   function attachStitchFX(grid) {
     if (!grid) return;
     grid.querySelectorAll('.product-frame').forEach(frame => {
+      const xPercent = stitchHoleXPercent(frame);
       const wrap = document.createElement('div');
       wrap.className = 'olympos-card-wrapper';
       frame.parentNode.insertBefore(wrap, frame);
       wrap.insertAdjacentHTML('beforeend', stitchBackLayerSVG());
       wrap.appendChild(frame);
       wrap.insertAdjacentHTML('beforeend', stitchFrontLayerSVG());
-      frame.insertAdjacentHTML('beforeend', stitchHolesWrapperHTML());
+      frame.insertAdjacentHTML('beforeend', stitchHolesWrapperHTML(xPercent));
     });
   }
 

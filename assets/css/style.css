@@ -358,7 +358,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     object-fit: cover;
     background: var(--umber-900);
   }
-  .hero-medallion-col { display: none; }
+  /* !important: Tailwind's CDN build injects its utility stylesheet
+     after this file, so its own .flex{display:flex} on this same
+     element (same specificity) was winning the tie and keeping the
+     medallion visible despite this rule */
+  .hero-medallion-col { display: none !important; }
   .hero-mobile-silhouette {
     display: block;
     position: absolute;
