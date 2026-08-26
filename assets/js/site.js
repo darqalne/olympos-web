@@ -356,10 +356,16 @@ const OLYMPOS = (() => {
     </svg>`;
   }
   function stitchHolesWrapperHTML() {
-    const tops = [27, 57, 87, 117, 147, 177];
+    // must match the thread paths' entry point exactly: x=15,y=30/60/.../180
+    // in the 300x400 viewBox, as a % of the wrapper so it tracks the SVG's
+    // own scaling instead of drifting at real card sizes other than 300x400px
+    const ys = [30, 60, 90, 120, 150, 180];
     return `
     <div class="holes-wrapper">
-      ${tops.map((t, i) => `<div class="punch-hole ph-${i + 1}" style="top: ${t}px;"></div>`).join('')}
+      ${ys.map((y, i) => {
+        const top = (y / 400 * 100).toFixed(3);
+        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}% - 3px); left: calc(5% - 3px);"></div>`;
+      }).join('')}
     </div>`;
   }
 
