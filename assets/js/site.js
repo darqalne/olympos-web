@@ -336,30 +336,30 @@ const OLYMPOS = (() => {
   function stitchBackLayerSVG() {
     return `
     <svg class="stitch-layer back-layer" viewBox="0 0 300 400" aria-hidden="true">
-      <path class="stitch-path b0" d="M -12,15 C -12,23 5,30 15,30" />
-      <path class="stitch-path b1" d="M -12,45 C -12,53 5,60 15,60" />
-      <path class="stitch-path b2" d="M -12,75 C -12,83 5,90 15,90" />
-      <path class="stitch-path b3" d="M -12,105 C -12,113 5,120 15,120" />
-      <path class="stitch-path b4" d="M -12,135 C -12,143 5,150 15,150" />
-      <path class="stitch-path b5" d="M -12,165 C -12,173 5,180 15,180" />
+      <path class="stitch-path b0" d="M -12,23 C -12,31 5,38 15,38" />
+      <path class="stitch-path b1" d="M -12,53 C -12,61 5,68 15,68" />
+      <path class="stitch-path b2" d="M -12,83 C -12,91 5,98 15,98" />
+      <path class="stitch-path b3" d="M -12,113 C -12,121 5,128 15,128" />
+      <path class="stitch-path b4" d="M -12,143 C -12,151 5,158 15,158" />
+      <path class="stitch-path b5" d="M -12,173 C -12,181 5,188 15,188" />
     </svg>`;
   }
   function stitchFrontLayerSVG() {
     return `
     <svg class="stitch-layer front-layer" viewBox="0 0 300 400" aria-hidden="true">
-      <path class="stitch-path f1" d="M 15,30 C 5,30 -12,37 -12,45" />
-      <path class="stitch-path f2" d="M 15,60 C 5,60 -12,67 -12,75" />
-      <path class="stitch-path f3" d="M 15,90 C 5,90 -12,97 -12,105" />
-      <path class="stitch-path f4" d="M 15,120 C 5,120 -12,127 -12,135" />
-      <path class="stitch-path f5" d="M 15,150 C 5,150 -12,157 -12,165" />
-      <path class="stitch-path f6" d="M 15,180 C 5,180 -12,187 -12,195" />
+      <path class="stitch-path f1" d="M 15,38 C 5,38 -12,45 -12,53" />
+      <path class="stitch-path f2" d="M 15,68 C 5,68 -12,75 -12,83" />
+      <path class="stitch-path f3" d="M 15,98 C 5,98 -12,105 -12,113" />
+      <path class="stitch-path f4" d="M 15,128 C 5,128 -12,135 -12,143" />
+      <path class="stitch-path f5" d="M 15,158 C 5,158 -12,165 -12,173" />
+      <path class="stitch-path f6" d="M 15,188 C 5,188 -12,195 -12,203" />
     </svg>`;
   }
   function stitchHolesWrapperHTML() {
-    // must match the thread paths' entry point exactly: x=15,y=30/60/.../180
+    // must match the thread paths' entry point exactly: x=15,y=38/68/.../188
     // in the 300x400 viewBox, as a % of the wrapper so it tracks the SVG's
     // own scaling instead of drifting at real card sizes other than 300x400px
-    const ys = [30, 60, 90, 120, 150, 180];
+    const ys = [38, 68, 98, 128, 158, 188];
     return `
     <div class="holes-wrapper">
       ${ys.map((y, i) => {
