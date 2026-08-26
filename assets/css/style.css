@@ -312,102 +312,95 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .product-card:hover .card-glyph { color: var(--saffron); }
 
 /* ---------- shop grid (magaza.html) — slimmer cards, popup badge, bottom-anchored quick add ---------- */
-#shop-grid .product-frame { aspect-ratio: 3/4; z-index: 1; }
+#shop-grid .product-frame { aspect-ratio: 3/4; z-index: 2; }
 #shop-grid .badge { box-shadow: 0 8px 18px -6px rgba(24,16,10,0.5); }
 #shop-grid .quick-add { bottom: 14px; transform: translateY(120%); }
 #shop-grid .product-card:hover .quick-add { transform: translateY(0); }
 #shop-grid .product-card h3 { font-size: 1.175rem !important; }
 
-/* ---------- shop grid — wrap-around stitch hover effect ---------- */
-/* IMPORTANT: #shop-grid .product-card must NOT have overflow:hidden,
+/* ---------- shop grid — punch-hole & wrap-around thread hover effect ---------- */
+/* IMPORTANT: #shop-grid .olympos-card-wrapper must NOT have overflow:hidden,
    or the thread parts that stick outside the card get clipped. */
+#shop-grid .olympos-card-wrapper { position: relative; }
 
-#shop-grid .stitch-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 22px;
-  height: 105px;
-  pointer-events: none;
-}
-#shop-grid .stitch-svg {
-  position: absolute;
-  top: 0;
-  left: -10px;
-  width: 22px;
-  height: 105px;
-  overflow: visible;
-}
-
-/* z-index hierarchy is what produces the 3D weave: back thread behind
-   the product photo (z:1 via #shop-grid .product-frame above),
-   holes and front thread in front of it */
-#shop-grid .thread-back { z-index: 0; }
-#shop-grid .holes-container { z-index: 2; }
-#shop-grid .thread-front { z-index: 3; }
-
-#shop-grid .holes-container {
+#shop-grid .holes-wrapper {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  transition-delay: 1.8s;
 }
-#shop-grid .product-card:hover .holes-container {
-  opacity: 1;
-  transition-delay: 0s;
-}
-#shop-grid .hole {
+#shop-grid .punch-hole {
   position: absolute;
-  left: 8px;
-  width: 4px;
-  height: 4px;
+  left: 12px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background-color: #0b0805;
-  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.9), 0.5px 0.5px 1px rgba(255,255,255,0.1);
+  background-color: #050403;
+  box-shadow: inset 1px 2px 4px rgba(0,0,0,1), 0px 1px 1px rgba(255,255,255,0.1);
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#shop-grid .olympos-card-wrapper:hover .punch-hole {
+  opacity: 1;
+  transform: scale(1);
 }
 
+#shop-grid .stitch-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible !important;
+}
 #shop-grid .stitch-path {
   fill: none;
-  stroke: #d3a144;
-  stroke-width: 1.5;
+  stroke-width: 3.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 22;
-  stroke-dashoffset: 22;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
   transition: stroke-dashoffset 0.15s linear;
 }
-#shop-grid .product-card:hover .stitch-path { stroke-dashoffset: 0; }
 
-/* forward (hover-in): top to bottom */
-#shop-grid .product-card:hover .front-1 { transition-delay: 0.10s; }
-#shop-grid .product-card:hover .back-1  { transition-delay: 0.25s; }
-#shop-grid .product-card:hover .front-2 { transition-delay: 0.40s; }
-#shop-grid .product-card:hover .back-2  { transition-delay: 0.55s; }
-#shop-grid .product-card:hover .front-3 { transition-delay: 0.70s; }
-#shop-grid .product-card:hover .back-3  { transition-delay: 0.85s; }
-#shop-grid .product-card:hover .front-4 { transition-delay: 1.00s; }
-#shop-grid .product-card:hover .back-4  { transition-delay: 1.15s; }
-#shop-grid .product-card:hover .front-5 { transition-delay: 1.30s; }
-#shop-grid .product-card:hover .back-5  { transition-delay: 1.45s; }
-#shop-grid .product-card:hover .front-6 { transition-delay: 1.60s; }
-#shop-grid .product-card:hover .back-6  { transition-delay: 1.75s; }
+/* front threads: bright, with a shadow for the 3D pop */
+#shop-grid .front-layer {
+  z-index: 3;
+  filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.6));
+}
+#shop-grid .front-layer .stitch-path { stroke: #d4a373; }
 
-/* reverse (hover-out): bottom to top */
-#shop-grid .front-1 { transition-delay: 1.75s; }
-#shop-grid .back-1  { transition-delay: 1.60s; }
-#shop-grid .front-2 { transition-delay: 1.45s; }
-#shop-grid .back-2  { transition-delay: 1.30s; }
-#shop-grid .front-3 { transition-delay: 1.15s; }
-#shop-grid .back-3  { transition-delay: 1.00s; }
-#shop-grid .front-4 { transition-delay: 0.85s; }
-#shop-grid .back-4  { transition-delay: 0.70s; }
-#shop-grid .front-5 { transition-delay: 0.55s; }
-#shop-grid .back-5  { transition-delay: 0.40s; }
-#shop-grid .front-6 { transition-delay: 0.25s; }
-#shop-grid .back-6  { transition-delay: 0.10s; }
+/* back threads: dark, no shadow, sit behind the card (z:2) */
+#shop-grid .back-layer { z-index: 1; }
+#shop-grid .back-layer .stitch-path { stroke: #7f5c35; }
+
+/* forward (hover-in): holes open, then thread laces down */
+#shop-grid .olympos-card-wrapper:hover .b0 { stroke-dashoffset: 0; transition-delay: 0.30s; }
+#shop-grid .olympos-card-wrapper:hover .f1 { stroke-dashoffset: 0; transition-delay: 0.45s; }
+#shop-grid .olympos-card-wrapper:hover .b1 { stroke-dashoffset: 0; transition-delay: 0.60s; }
+#shop-grid .olympos-card-wrapper:hover .f2 { stroke-dashoffset: 0; transition-delay: 0.75s; }
+#shop-grid .olympos-card-wrapper:hover .b2 { stroke-dashoffset: 0; transition-delay: 0.90s; }
+#shop-grid .olympos-card-wrapper:hover .f3 { stroke-dashoffset: 0; transition-delay: 1.05s; }
+#shop-grid .olympos-card-wrapper:hover .b3 { stroke-dashoffset: 0; transition-delay: 1.20s; }
+#shop-grid .olympos-card-wrapper:hover .f4 { stroke-dashoffset: 0; transition-delay: 1.35s; }
+#shop-grid .olympos-card-wrapper:hover .b4 { stroke-dashoffset: 0; transition-delay: 1.50s; }
+#shop-grid .olympos-card-wrapper:hover .f5 { stroke-dashoffset: 0; transition-delay: 1.65s; }
+#shop-grid .olympos-card-wrapper:hover .b5 { stroke-dashoffset: 0; transition-delay: 1.80s; }
+#shop-grid .olympos-card-wrapper:hover .f6 { stroke-dashoffset: 0; transition-delay: 1.95s; }
+
+/* reverse (hover-out): unravels bottom to top, holes close last */
+#shop-grid .f6 { transition-delay: 0.00s; }
+#shop-grid .b5 { transition-delay: 0.15s; }
+#shop-grid .f5 { transition-delay: 0.30s; }
+#shop-grid .b4 { transition-delay: 0.45s; }
+#shop-grid .f4 { transition-delay: 0.60s; }
+#shop-grid .b3 { transition-delay: 0.75s; }
+#shop-grid .f3 { transition-delay: 0.90s; }
+#shop-grid .b2 { transition-delay: 1.05s; }
+#shop-grid .f2 { transition-delay: 1.20s; }
+#shop-grid .b1 { transition-delay: 1.35s; }
+#shop-grid .f1 { transition-delay: 1.50s; }
+#shop-grid .b0 { transition-delay: 1.65s; }
+#shop-grid .punch-hole { transition-delay: 1.80s; }
 
 /* ---------- divider rule ---------- */
 .rule-glyph {

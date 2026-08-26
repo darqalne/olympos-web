@@ -333,35 +333,33 @@ const OLYMPOS = (() => {
   }
 
   /* ---------------- shop grid stitch hover fx ---------------- */
-  function stitchOverlaySVG() {
+  function stitchBackLayerSVG() {
     return `
-    <div class="stitch-wrapper" aria-hidden="true">
-      <svg class="thread-back stitch-svg" viewBox="0 0 22 105">
-        <path class="stitch-path back-1" d="M 20, 15 Q 12, 19 2, 22" />
-        <path class="stitch-path back-2" d="M 20, 30 Q 12, 34 2, 37" />
-        <path class="stitch-path back-3" d="M 20, 45 Q 12, 49 2, 52" />
-        <path class="stitch-path back-4" d="M 20, 60 Q 12, 64 2, 67" />
-        <path class="stitch-path back-5" d="M 20, 75 Q 12, 79 2, 82" />
-        <path class="stitch-path back-6" d="M 20, 90 Q 12, 94 2, 97" />
-      </svg>
-
-      <div class="holes-container">
-        <div class="hole" style="top: 13px;"></div>
-        <div class="hole" style="top: 28px;"></div>
-        <div class="hole" style="top: 43px;"></div>
-        <div class="hole" style="top: 58px;"></div>
-        <div class="hole" style="top: 73px;"></div>
-        <div class="hole" style="top: 88px;"></div>
-      </div>
-
-      <svg class="thread-front stitch-svg" viewBox="0 0 22 105">
-        <path class="stitch-path front-1" d="M 2, 7 Q 10, 11 20, 15" />
-        <path class="stitch-path front-2" d="M 2, 22 Q 10, 26 20, 30" />
-        <path class="stitch-path front-3" d="M 2, 37 Q 10, 41 20, 45" />
-        <path class="stitch-path front-4" d="M 2, 52 Q 10, 56 20, 60" />
-        <path class="stitch-path front-5" d="M 2, 67 Q 10, 71 20, 75" />
-        <path class="stitch-path front-6" d="M 2, 82 Q 10, 86 20, 90" />
-      </svg>
+    <svg class="stitch-layer back-layer" viewBox="0 0 300 400" aria-hidden="true">
+      <path class="stitch-path b0" d="M -12,15 C -12,23 5,30 15,30" />
+      <path class="stitch-path b1" d="M -12,45 C -12,53 5,60 15,60" />
+      <path class="stitch-path b2" d="M -12,75 C -12,83 5,90 15,90" />
+      <path class="stitch-path b3" d="M -12,105 C -12,113 5,120 15,120" />
+      <path class="stitch-path b4" d="M -12,135 C -12,143 5,150 15,150" />
+      <path class="stitch-path b5" d="M -12,165 C -12,173 5,180 15,180" />
+    </svg>`;
+  }
+  function stitchFrontLayerSVG() {
+    return `
+    <svg class="stitch-layer front-layer" viewBox="0 0 300 400" aria-hidden="true">
+      <path class="stitch-path f1" d="M 15,30 C 5,30 -12,37 -12,45" />
+      <path class="stitch-path f2" d="M 15,60 C 5,60 -12,67 -12,75" />
+      <path class="stitch-path f3" d="M 15,90 C 5,90 -12,97 -12,105" />
+      <path class="stitch-path f4" d="M 15,120 C 5,120 -12,127 -12,135" />
+      <path class="stitch-path f5" d="M 15,150 C 5,150 -12,157 -12,165" />
+      <path class="stitch-path f6" d="M 15,180 C 5,180 -12,187 -12,195" />
+    </svg>`;
+  }
+  function stitchHolesWrapperHTML() {
+    const tops = [27, 57, 87, 117, 147, 177];
+    return `
+    <div class="holes-wrapper">
+      ${tops.map(t => `<div class="punch-hole" style="top: ${t}px;"></div>`).join('')}
     </div>`;
   }
 
@@ -385,8 +383,14 @@ const OLYMPOS = (() => {
 
       grid.classList.remove('in-view');
       grid.innerHTML = list.map(p => productCardHTML(p)).join('');
-      grid.querySelectorAll('.product-card').forEach(card => {
-        card.insertAdjacentHTML('afterbegin', stitchOverlaySVG());
+      grid.querySelectorAll('.product-frame').forEach(frame => {
+        const wrap = document.createElement('div');
+        wrap.className = 'olympos-card-wrapper';
+        frame.parentNode.insertBefore(wrap, frame);
+        wrap.insertAdjacentHTML('beforeend', stitchBackLayerSVG());
+        wrap.appendChild(frame);
+        wrap.insertAdjacentHTML('beforeend', stitchFrontLayerSVG());
+        frame.insertAdjacentHTML('beforeend', stitchHolesWrapperHTML());
       });
       requestAnimationFrame(() => grid.classList.add('in-view'));
       bindQuickAdd(grid);
