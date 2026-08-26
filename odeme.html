@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ödeme — Olympos Leather</title>
+<meta name="description" content="Siparişinizi tamamlayın.">
+<link rel="icon" href="assets/img/brand/logo-mark.png">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: {
+        cream: '#F7F1E4', 'cream-2': '#FBF7EF', parchment: '#EDE1C8',
+        umber: { 300:'#B79878', 500:'#8A6644', 600:'#6B4A2F', 700:'#4A3320', 800:'#2E2013', 900:'#241811' },
+        saffron: { DEFAULT:'#C6872E', light:'#E3B15C', dim:'#A96E22' }
+      },
+      fontFamily: { display: ['Cinzel','serif'], body: ['Jost','sans-serif'], editorial: ['"Cormorant Garamond"','serif'] }
+    } }
+  }
+</script>
+</head>
+<body class="font-body">
+<a href="#main" class="skip-link">İçeriğe geç</a>
+
+<div class="bg-umber-900 text-cream-2/80 text-center text-[0.72rem] tracking-[0.18em] uppercase py-2 px-4">
+  El Yapımı &nbsp;·&nbsp; %100 Dana Derisi &nbsp;·&nbsp; Antalya'dan Dünyaya
+</div>
+
+<header class="site-header">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
+    <a href="index.html" class="shrink-0" aria-label="Olympos Leather anasayfa">
+      <img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 md:h-11 w-auto">
+    </a>
+    <nav class="hidden lg:flex items-center gap-10" aria-label="Ana menü">
+      <a href="index.html" class="nav-link">Ana Sayfa</a>
+      <a href="magaza.html" class="nav-link">Mağaza</a>
+      <a href="hakkimizda.html" class="nav-link">Hakkımızda</a>
+      <a href="iletisim.html" class="nav-link">İletişim</a>
+    </nav>
+    <div class="flex items-center gap-1">
+      <a href="hesabim.html" class="icon-btn" aria-label="Hesabım">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <button class="icon-btn" data-open-cart aria-label="Sepeti aç">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <button class="icon-btn lg:hidden" data-menu-toggle aria-label="Menüyü aç" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="mobile-menu">
+  <div class="flex items-center justify-between px-5 h-20 border-b border-umber-700/10">
+    <img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 w-auto">
+    <button data-menu-toggle aria-label="Menüyü kapat" class="icon-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <nav class="flex flex-col gap-7 px-8 py-12" aria-label="Mobil menü">
+    <a href="index.html" class="mobile-link">Ana Sayfa</a>
+    <a href="magaza.html" class="mobile-link">Mağaza</a>
+    <a href="hakkimizda.html" class="mobile-link">Hakkımızda</a>
+    <a href="iletisim.html" class="mobile-link">İletişim</a>
+  </nav>
+</div>
+
+<div id="drawer-backdrop" class="drawer-backdrop" data-close-cart></div>
+<aside id="cart-drawer" class="drawer" aria-label="Alışveriş sepeti">
+  <div class="flex items-center justify-between px-6 h-20 border-b border-umber-700/10 shrink-0">
+    <h2 class="font-display text-lg text-umber-800">Sepetiniz</h2>
+    <button data-close-cart class="icon-btn" aria-label="Sepeti kapat">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="flex-1 overflow-y-auto px-6">
+    <div id="cart-empty" class="h-full flex flex-col items-center justify-center text-center gap-4 py-16">
+      <span class="glyph text-umber-300" style="--gsize:34px"></span>
+      <p class="text-umber-500 text-sm">Sepetiniz şu an boş.</p>
+      <a href="magaza.html" class="btn btn-outline btn-sm">Mağazaya Göz At</a>
+    </div>
+    <div id="cart-lines"></div>
+  </div>
+  <div id="cart-foot" class="px-6 py-6 border-t border-umber-700/10 shrink-0" style="display:none;">
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-sm text-umber-600">Ara Toplam</span>
+      <span id="cart-subtotal" class="font-display text-lg text-umber-800">0,00 ₺</span>
+    </div>
+    <button id="checkout-btn" class="btn btn-primary btn-block">Ödemeye Geç</button>
+    <p class="text-[0.72rem] text-umber-500 text-center mt-3">Kargo ve vergiler ödeme sırasında hesaplanır.</p>
+  </div>
+</aside>
+
+<main id="main">
+  <section class="section-parchment pt-14 pb-10 md:pt-20 md:pb-14">
+    <div class="max-w-7xl mx-auto px-5 md:px-8">
+      <p class="eyebrow"><span class="glyph" style="--gsize:14px"></span>Ödeme</p>
+      <h1 class="font-display text-4xl md:text-5xl text-umber-800 mt-4">Siparişi Tamamla</h1>
+    </div>
+  </section>
+
+  <section class="section-cream py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-5 md:px-8">
+
+      <div id="checkout-empty" style="display:none;" class="text-center py-16">
+        <span class="glyph text-umber-300" style="--gsize:34px"></span>
+        <p class="text-umber-500 text-sm mt-4">Sepetiniz boş, ödeme adımına geçemezsiniz.</p>
+        <a href="magaza.html" class="btn btn-primary mt-6">Mağazaya Göz At</a>
+      </div>
+
+      <div id="checkout-content" class="grid lg:grid-cols-5 gap-14">
+        <div class="lg:col-span-3 reveal in-view">
+          <form id="checkout-form" novalidate>
+            <h2 class="font-display text-xl text-umber-800 mb-6">Teslimat Bilgileri</h2>
+            <div class="space-y-6">
+              <div class="grid sm:grid-cols-2 gap-6">
+                <div class="field">
+                  <label for="ck-name">Ad Soyad</label>
+                  <input id="ck-name" name="name" type="text" required autocomplete="name">
+                </div>
+                <div class="field">
+                  <label for="ck-email">E-posta</label>
+                  <input id="ck-email" name="email" type="email" required autocomplete="email">
+                </div>
+              </div>
+              <div class="field">
+                <label for="ck-phone">Telefon</label>
+                <input id="ck-phone" name="phone" type="tel" required autocomplete="tel">
+              </div>
+              <div class="field">
+                <label for="ck-address">Adres</label>
+                <textarea id="ck-address" name="address" required></textarea>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-6">
+                <div class="field">
+                  <label for="ck-city">Şehir</label>
+                  <input id="ck-city" name="city" type="text" required autocomplete="address-level2">
+                </div>
+                <div class="field">
+                  <label for="ck-zip">Posta Kodu</label>
+                  <input id="ck-zip" name="zip" type="text" autocomplete="postal-code">
+                </div>
+              </div>
+            </div>
+
+            <h2 class="font-display text-xl text-umber-800 mb-6 mt-12">Kart Bilgileri</h2>
+            <p class="text-umber-500 text-xs mb-6">Bu bir vitrin ortamıdır — gerçek bir kart ile ödeme alınmaz. Test için herhangi bir kart numarası kullanabilirsiniz.</p>
+            <div class="space-y-6">
+              <div class="field">
+                <label for="ck-card-name">Kart Üzerindeki İsim</label>
+                <input id="ck-card-name" name="cardName" type="text" required autocomplete="cc-name">
+              </div>
+              <div class="field">
+                <label for="ck-card-number">Kart Numarası</label>
+                <input id="ck-card-number" name="cardNumber" type="text" inputmode="numeric" placeholder="4242 4242 4242 4242" required autocomplete="cc-number">
+              </div>
+              <div class="grid sm:grid-cols-2 gap-6">
+                <div class="field">
+                  <label for="ck-card-exp">Son Kullanma (AA/YY)</label>
+                  <input id="ck-card-exp" name="cardExp" type="text" placeholder="12/28" required autocomplete="cc-exp">
+                </div>
+                <div class="field">
+                  <label for="ck-card-cvc">CVC</label>
+                  <input id="ck-card-cvc" name="cardCvc" type="text" inputmode="numeric" placeholder="123" required autocomplete="cc-csc">
+                </div>
+              </div>
+            </div>
+
+            <p id="checkout-error" class="text-sm mt-6" style="color:#B4432E; display:none;"></p>
+            <button type="submit" id="checkout-submit" class="btn btn-primary btn-block mt-8">Siparişi Onayla</button>
+          </form>
+        </div>
+
+        <div class="lg:col-span-2 reveal in-view">
+          <div class="bg-cream-2 rounded-sm shadow-sm p-7">
+            <h2 class="font-display text-lg text-umber-800 mb-5">Sipariş Özeti</h2>
+            <div id="checkout-lines" class="space-y-4"></div>
+            <div class="border-t border-umber-700/10 mt-5 pt-5 flex items-center justify-between">
+              <span class="text-sm text-umber-600">Ara Toplam</span>
+              <span id="checkout-subtotal" class="font-display text-lg text-umber-800">0,00 ₺</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="checkout-success" style="display:none;" class="max-w-lg mx-auto text-center py-16">
+        <span class="glyph text-saffron-dim" style="--gsize:40px"></span>
+        <h2 class="font-display text-2xl text-umber-800 mt-5">Siparişiniz Alındı</h2>
+        <p class="text-umber-600 mt-3">Sipariş numaranız: <strong id="success-order-number" class="text-umber-800"></strong></p>
+        <p class="text-umber-500 text-sm mt-2">Bu numarayı sipariş takip sayfasında kullanabilirsiniz.</p>
+        <div class="flex flex-wrap gap-4 justify-center mt-8">
+          <a href="siparis-takip.html" class="btn btn-outline">Siparişimi Takip Et</a>
+          <a href="magaza.html" class="btn btn-primary">Alışverişe Devam Et</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="footer-dark pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-cream-2/10">
+      <div>
+        <div class="bg-cream-2 inline-block rounded-sm p-3 mb-5">
+          <img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-8 w-auto">
+        </div>
+        <p class="text-sm leading-relaxed max-w-xs">Antalya'da, tek parça dana derisinden elde üretilen kartlık ve cüzdanlar.</p>
+      </div>
+      <div>
+        <p class="font-display text-cream-2 text-sm tracking-wide mb-5">Keşfet</p>
+        <ul class="space-y-3 text-sm">
+          <li><a href="index.html" class="footer-link">Ana Sayfa</a></li>
+          <li><a href="magaza.html" class="footer-link">Mağaza</a></li>
+          <li><a href="hakkimizda.html" class="footer-link">Hakkımızda</a></li>
+          <li><a href="iletisim.html" class="footer-link">İletişim</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-display text-cream-2 text-sm tracking-wide mb-5">Kategoriler</p>
+        <ul class="space-y-3 text-sm">
+          <li><a href="magaza.html?kategori=kartlik" class="footer-link">Kartlık</a></li>
+          <li><a href="magaza.html?kategori=cuzdan" class="footer-link">Cüzdan</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-display text-cream-2 text-sm tracking-wide mb-5">Bize Ulaşın</p>
+        <ul class="space-y-3 text-sm">
+          <li><a href="mailto:info@olymposleather.com" class="footer-link">info@olymposleather.com</a></li>
+          <li><span>Antalya, Türkiye</span></li>
+          <li class="flex gap-4 pt-1">
+            <a href="#" class="footer-link" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+            <a href="#" class="footer-link" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream-2/50">
+      <p>© <span data-year></span> Olympos Leather. Tüm hakları saklıdır.</p>
+      <p class="flex items-center gap-2"><span class="glyph" style="--gsize:12px"></span>Elde imal edildi</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+  const lines = OLYMPOS.cartLines();
+  const emptyEl = document.getElementById('checkout-empty');
+  const contentEl = document.getElementById('checkout-content');
+
+  if (lines.length === 0) {
+    emptyEl.style.display = 'block';
+    contentEl.style.display = 'none';
+  } else {
+    document.getElementById('checkout-lines').innerHTML = lines.map(l => `
+      <div class="flex items-center gap-3">
+        <img src="${l.product.images[0]}" alt="${l.product.name}" style="width:52px; height:64px; object-fit:cover; border-radius:3px;">
+        <div style="flex:1; min-width:0;">
+          <p class="text-sm text-umber-800">${l.product.name} <span class="text-umber-500">× ${l.qty}</span></p>
+        </div>
+        <span class="text-sm text-umber-800">${OLYMPOS.formatPrice(l.product.price * l.qty)}</span>
+      </div>
+    `).join('');
+    document.getElementById('checkout-subtotal').textContent = OLYMPOS.formatPrice(OLYMPOS.cartSubtotal());
+
+    const user = OLYMPOS_BACKEND.currentUser();
+    if (user) {
+      const form = document.getElementById('checkout-form');
+      form.name.value = user.name;
+      form.email.value = user.email;
+    }
+
+    const form = document.getElementById('checkout-form');
+    const errorEl = document.getElementById('checkout-error');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.style.display = 'none';
+      const btn = document.getElementById('checkout-submit');
+      const original = btn.textContent;
+      btn.disabled = true; btn.textContent = 'İşleniyor…';
+
+      try {
+        const subtotal = OLYMPOS.cartSubtotal();
+        const shipping = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          phone: form.phone.value.trim(),
+          address: form.address.value.trim(),
+          city: form.city.value.trim(),
+          zip: form.zip.value.trim()
+        };
+        const card = {
+          name: form.cardName.value.trim(),
+          number: form.cardNumber.value.trim(),
+          exp: form.cardExp.value.trim(),
+          cvc: form.cardCvc.value.trim()
+        };
+
+        await OLYMPOS_BACKEND.processPayment({ amount: subtotal, card });
+        const order = await OLYMPOS_BACKEND.createOrder({
+          items: lines.map(l => ({ id: l.id, name: l.product.name, qty: l.qty, price: l.product.price })),
+          subtotal,
+          shipping
+        });
+
+        OLYMPOS.clearCart();
+        contentEl.style.display = 'none';
+        document.getElementById('success-order-number').textContent = order.number;
+        document.getElementById('checkout-success').style.display = 'block';
+      } catch (err) {
+        errorEl.textContent = err.message || 'Ödeme işlenemedi. Lütfen tekrar deneyin.';
+        errorEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = original;
+      }
+    });
+  }
+</script>
+</body>
+</html>

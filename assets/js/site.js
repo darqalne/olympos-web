@@ -141,6 +141,7 @@ const OLYMPOS = (() => {
     writeCart(cart);
   }
   function removeFromCart(id) { setQty(id, 0); }
+  function clearCart() { writeCart([]); }
 
   function updateCartCount() {
     document.querySelectorAll('[data-cart-count]').forEach(el => {
@@ -253,7 +254,8 @@ const OLYMPOS = (() => {
     document.getElementById('drawer-backdrop')?.addEventListener('click', closeDrawer);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
     document.getElementById('checkout-btn')?.addEventListener('click', () => {
-      toast('Ödeme altyapısı yakında entegre edilecek — bu bir vitrin demosudur.', 'info');
+      if (readCart().length === 0) return;
+      window.location.href = 'odeme.html';
     });
   }
 
@@ -569,5 +571,8 @@ const OLYMPOS = (() => {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 
-  return { getProducts, getProduct, formatPrice, addToCart, toast, productCardHTML, bindQuickAdd, attachStitchFX };
+  return {
+    getProducts, getProduct, formatPrice, addToCart, toast, productCardHTML, bindQuickAdd, attachStitchFX,
+    cartLines, cartSubtotal, cartCount, clearCart
+  };
 })();
