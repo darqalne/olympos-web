@@ -311,6 +311,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .product-card:hover .card-glyph { color: var(--saffron); }
 
+/* ---------- shop grid (magaza.html) — slimmer cards, popup badge, bottom-anchored quick add ---------- */
+#shop-grid .product-frame { aspect-ratio: 3/4; }
+#shop-grid .badge { box-shadow: 0 8px 18px -6px rgba(24,16,10,0.5); }
+#shop-grid .quick-add { bottom: 14px; transform: translateY(120%); }
+#shop-grid .product-card:hover .quick-add { transform: translateY(0); }
+#shop-grid .product-card h3 { font-size: 1.175rem !important; }
+
 /* ---------- divider rule ---------- */
 .rule-glyph {
   display: flex; align-items: center; gap: 1rem;
