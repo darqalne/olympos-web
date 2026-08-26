@@ -359,7 +359,7 @@ const OLYMPOS = (() => {
     const tops = [27, 57, 87, 117, 147, 177];
     return `
     <div class="holes-wrapper">
-      ${tops.map(t => `<div class="punch-hole" style="top: ${t}px;"></div>`).join('')}
+      ${tops.map((t, i) => `<div class="punch-hole ph-${i + 1}" style="top: ${t}px;"></div>`).join('')}
     </div>`;
   }
 

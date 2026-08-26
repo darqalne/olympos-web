@@ -373,34 +373,42 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 #shop-grid .back-layer { z-index: 1; }
 #shop-grid .back-layer .stitch-path { stroke: #7f5c35; }
 
-/* forward (hover-in): holes open, then thread laces down */
-#shop-grid .olympos-card-wrapper:hover .b0 { stroke-dashoffset: 0; transition-delay: 0.30s; }
-#shop-grid .olympos-card-wrapper:hover .f1 { stroke-dashoffset: 0; transition-delay: 0.45s; }
-#shop-grid .olympos-card-wrapper:hover .b1 { stroke-dashoffset: 0; transition-delay: 0.60s; }
-#shop-grid .olympos-card-wrapper:hover .f2 { stroke-dashoffset: 0; transition-delay: 0.75s; }
-#shop-grid .olympos-card-wrapper:hover .b2 { stroke-dashoffset: 0; transition-delay: 0.90s; }
-#shop-grid .olympos-card-wrapper:hover .f3 { stroke-dashoffset: 0; transition-delay: 1.05s; }
-#shop-grid .olympos-card-wrapper:hover .b3 { stroke-dashoffset: 0; transition-delay: 1.20s; }
-#shop-grid .olympos-card-wrapper:hover .f4 { stroke-dashoffset: 0; transition-delay: 1.35s; }
-#shop-grid .olympos-card-wrapper:hover .b4 { stroke-dashoffset: 0; transition-delay: 1.50s; }
-#shop-grid .olympos-card-wrapper:hover .f5 { stroke-dashoffset: 0; transition-delay: 1.65s; }
-#shop-grid .olympos-card-wrapper:hover .b5 { stroke-dashoffset: 0; transition-delay: 1.80s; }
-#shop-grid .olympos-card-wrapper:hover .f6 { stroke-dashoffset: 0; transition-delay: 1.95s; }
+/* forward (hover-in): a little faster than before, hole pops open
+   right as its back-thread segment arrives, then the front thread
+   crosses over it a beat later */
+#shop-grid .olympos-card-wrapper:hover .b0, #shop-grid .olympos-card-wrapper:hover .ph-1 { transition-delay: 0.20s; }
+#shop-grid .olympos-card-wrapper:hover .b0 { stroke-dashoffset: 0; }
+#shop-grid .olympos-card-wrapper:hover .f1 { stroke-dashoffset: 0; transition-delay: 0.30s; }
+#shop-grid .olympos-card-wrapper:hover .b1, #shop-grid .olympos-card-wrapper:hover .ph-2 { transition-delay: 0.40s; }
+#shop-grid .olympos-card-wrapper:hover .b1 { stroke-dashoffset: 0; }
+#shop-grid .olympos-card-wrapper:hover .f2 { stroke-dashoffset: 0; transition-delay: 0.50s; }
+#shop-grid .olympos-card-wrapper:hover .b2, #shop-grid .olympos-card-wrapper:hover .ph-3 { transition-delay: 0.60s; }
+#shop-grid .olympos-card-wrapper:hover .b2 { stroke-dashoffset: 0; }
+#shop-grid .olympos-card-wrapper:hover .f3 { stroke-dashoffset: 0; transition-delay: 0.70s; }
+#shop-grid .olympos-card-wrapper:hover .b3, #shop-grid .olympos-card-wrapper:hover .ph-4 { transition-delay: 0.80s; }
+#shop-grid .olympos-card-wrapper:hover .b3 { stroke-dashoffset: 0; }
+#shop-grid .olympos-card-wrapper:hover .f4 { stroke-dashoffset: 0; transition-delay: 0.90s; }
+#shop-grid .olympos-card-wrapper:hover .b4, #shop-grid .olympos-card-wrapper:hover .ph-5 { transition-delay: 1.00s; }
+#shop-grid .olympos-card-wrapper:hover .b4 { stroke-dashoffset: 0; }
+#shop-grid .olympos-card-wrapper:hover .f5 { stroke-dashoffset: 0; transition-delay: 1.10s; }
+#shop-grid .olympos-card-wrapper:hover .b5, #shop-grid .olympos-card-wrapper:hover .ph-6 { transition-delay: 1.20s; }
+#shop-grid .olympos-card-wrapper:hover .b5 { stroke-dashoffset: 0; }
+#shop-grid .olympos-card-wrapper:hover .f6 { stroke-dashoffset: 0; transition-delay: 1.30s; }
 
-/* reverse (hover-out): unravels bottom to top, holes close last */
+/* reverse (hover-out): unravels bottom to top, each hole closes with
+   its own back-thread segment instead of all six at once */
 #shop-grid .f6 { transition-delay: 0.00s; }
-#shop-grid .b5 { transition-delay: 0.15s; }
-#shop-grid .f5 { transition-delay: 0.30s; }
-#shop-grid .b4 { transition-delay: 0.45s; }
-#shop-grid .f4 { transition-delay: 0.60s; }
-#shop-grid .b3 { transition-delay: 0.75s; }
-#shop-grid .f3 { transition-delay: 0.90s; }
-#shop-grid .b2 { transition-delay: 1.05s; }
-#shop-grid .f2 { transition-delay: 1.20s; }
-#shop-grid .b1 { transition-delay: 1.35s; }
-#shop-grid .f1 { transition-delay: 1.50s; }
-#shop-grid .b0 { transition-delay: 1.65s; }
-#shop-grid .punch-hole { transition-delay: 1.80s; }
+#shop-grid .b5, #shop-grid .ph-6 { transition-delay: 0.10s; }
+#shop-grid .f5 { transition-delay: 0.20s; }
+#shop-grid .b4, #shop-grid .ph-5 { transition-delay: 0.30s; }
+#shop-grid .f4 { transition-delay: 0.40s; }
+#shop-grid .b3, #shop-grid .ph-4 { transition-delay: 0.50s; }
+#shop-grid .f3 { transition-delay: 0.60s; }
+#shop-grid .b2, #shop-grid .ph-3 { transition-delay: 0.70s; }
+#shop-grid .f2 { transition-delay: 0.80s; }
+#shop-grid .b1, #shop-grid .ph-2 { transition-delay: 0.90s; }
+#shop-grid .f1 { transition-delay: 1.00s; }
+#shop-grid .b0, #shop-grid .ph-1 { transition-delay: 1.10s; }
 
 /* ---------- divider rule ---------- */
 .rule-glyph {
