@@ -335,28 +335,28 @@ const OLYMPOS = (() => {
   /* ---------------- shop grid stitch hover fx ---------------- */
   function stitchBackLayerSVG() {
     return `
-    <svg class="stitch-layer back-layer" viewBox="0 0 300 400" aria-hidden="true">
-      <path class="stitch-path b0" d="M -12,15 C -12,23 5,30 15,30" />
-      <path class="stitch-path b1" d="M -12,45 C -12,53 5,60 15,60" />
-      <path class="stitch-path b2" d="M -12,75 C -12,83 5,90 15,90" />
-      <path class="stitch-path b3" d="M -12,105 C -12,113 5,120 15,120" />
-      <path class="stitch-path b4" d="M -12,135 C -12,143 5,150 15,150" />
-      <path class="stitch-path b5" d="M -12,165 C -12,173 5,180 15,180" />
+    <svg class="stitch-layer back-layer" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+      <path class="stitch-path b1" d="M -15,15 C -2,18 5,24 15,30" />
+      <path class="stitch-path b2" d="M -15,45 C -2,48 5,54 15,60" />
+      <path class="stitch-path b3" d="M -15,75 C -2,78 5,84 15,90" />
+      <path class="stitch-path b4" d="M -15,105 C -2,108 5,114 15,120" />
+      <path class="stitch-path b5" d="M -15,135 C -2,138 5,144 15,150" />
+      <path class="stitch-path b6" d="M -15,165 C -2,168 5,174 15,180" />
     </svg>`;
   }
   function stitchFrontLayerSVG() {
     return `
-    <svg class="stitch-layer front-layer" viewBox="0 0 300 400" aria-hidden="true">
-      <path class="stitch-path f1" d="M 15,30 C 5,30 -12,37 -12,45" />
-      <path class="stitch-path f2" d="M 15,60 C 5,60 -12,67 -12,75" />
-      <path class="stitch-path f3" d="M 15,90 C 5,90 -12,97 -12,105" />
-      <path class="stitch-path f4" d="M 15,120 C 5,120 -12,127 -12,135" />
-      <path class="stitch-path f5" d="M 15,150 C 5,150 -12,157 -12,165" />
-      <path class="stitch-path f6" d="M 15,180 C 5,180 -12,187 -12,195" />
+    <svg class="stitch-layer front-layer" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+      <path class="stitch-path f1" d="M 15,30 C 25,36 32,42 -15,45" />
+      <path class="stitch-path f2" d="M 15,60 C 25,66 32,72 -15,75" />
+      <path class="stitch-path f3" d="M 15,90 C 25,96 32,102 -15,105" />
+      <path class="stitch-path f4" d="M 15,120 C 25,126 32,132 -15,135" />
+      <path class="stitch-path f5" d="M 15,150 C 25,156 32,162 -15,165" />
+      <path class="stitch-path f6" d="M 15,180 C 25,186 32,192 -15,195" />
     </svg>`;
   }
   function stitchHolesWrapperHTML() {
-    const tops = [27, 57, 87, 117, 147, 177];
+    const tops = [30, 60, 90, 120, 150, 180];
     return `
     <div class="holes-wrapper">
       ${tops.map(t => `<div class="punch-hole" style="top: ${t}px;"></div>`).join('')}
