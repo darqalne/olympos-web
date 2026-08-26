@@ -332,16 +332,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   50% { opacity: 0.35; transform: scale(1.5); }
 }
 
-/* phones: pin the video to the top of the section at a center-cropped
-   8:9 box — object-fit:cover on that ratio crops exactly 25% off each
-   side (full height, no vertical crop) leaving the center 50% where
+/* logo silhouette that replaces the medallion below lg (see media
+   query): rotated 90° and cropped to its own left half, so a soft
+   half-circle sits flush against the right edge behind the text */
+.hero-mobile-silhouette { display: none; }
+
+/* phones + tablets (anything narrower than the lg 2-column layout):
+   pin the video to the top of the section at a center-cropped 16:15
+   box — object-fit:cover on that ratio crops exactly 20% off each
+   side (full height, no vertical crop) leaving the center 60% where
    the animated text lives. A flat, light brown tint replaces the
-   desktop vignette; the logo medallion stays hidden after it ends. */
-@media (max-width: 640px) {
+   desktop vignette; the bordered medallion is swapped for a faint
+   rotated silhouette that fades in with the rest of the text. */
+@media (max-width: 1023px) {
   .hero-bg-video {
     top: 0; left: 0; right: 0; bottom: auto;
     height: auto;
-    aspect-ratio: 8/9;
+    aspect-ratio: 16/15;
     object-fit: cover;
     background: var(--umber-900);
   }
@@ -349,6 +356,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     background: rgba(74,51,32,0.22);
   }
   .hero-medallion-col { display: none; }
+  .hero-mobile-silhouette {
+    display: block;
+    position: absolute;
+    top: 0; right: 0;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .hero-mobile-silhouette img {
+    height: 100%;
+    width: auto;
+    display: block;
+  }
 }
 
 .hero-title {
