@@ -253,9 +253,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     linear-gradient(90deg,
       rgba(36,24,17,.92) 0%,
       rgba(36,24,17,.92) 9%,
-      rgba(36,24,17,.1) 26%,
-      rgba(36,24,17,.05) 50%,
-      rgba(36,24,17,.1) 74%,
+      rgba(36,24,17,.02) 32%,
+      rgba(36,24,17,.02) 68%,
       rgba(36,24,17,.92) 91%,
       rgba(36,24,17,.92) 100%
     ),
@@ -289,18 +288,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   width: 100%; height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 14px 30px rgba(0,0,0,.4));
+  transition: filter 0.4s var(--ease-spring);
 }
-/* cursor-tracking shine: JS sets --mx/--my on mousemove, this radial
-   highlight follows the pointer and brightens whatever it's over */
-.hero-medallion-shine {
-  position: absolute; inset: 0;
-  background: radial-gradient(130px circle at var(--mx, 50%) var(--my, 50%), rgba(255,246,228,.75), transparent 62%);
-  mix-blend-mode: soft-light;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  pointer-events: none;
+/* hover: the outline itself brightens, same warm-amber glow language
+   as .btn-accent:hover's box-shadow (rgba(198,135,46,...)) */
+.hero-medallion:hover .hero-medallion-logo {
+  filter:
+    drop-shadow(0 14px 30px rgba(0,0,0,.4))
+    drop-shadow(0 0 20px rgba(198,135,46,.85))
+    drop-shadow(0 0 46px rgba(227,177,92,.55))
+    brightness(1.1);
 }
-.hero-medallion:hover .hero-medallion-shine { opacity: 1; }
 
 .hero-video-badge {
   position: absolute;

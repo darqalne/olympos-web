@@ -543,15 +543,6 @@ const OLYMPOS = (() => {
       if (scrim) scrim.classList.add('is-hidden');
       if (content) content.classList.add('is-visible');
     });
-
-    const medallion = document.querySelector('.hero-medallion');
-    if (medallion) {
-      medallion.addEventListener('mousemove', (e) => {
-        const rect = medallion.getBoundingClientRect();
-        medallion.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`);
-        medallion.style.setProperty('--my', `${((e.clientY - rect.top) / rect.height) * 100}%`);
-      });
-    }
   }
 
   function init() {
