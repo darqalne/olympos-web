@@ -319,53 +319,69 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 #shop-grid .product-card h3 { font-size: 1.175rem !important; }
 
 /* ---------- shop grid — laced-hole hover effect (left edge) ---------- */
-#shop-grid .stitch-wrap { position: relative; }
-#shop-grid .stitch-fx {
+#shop-grid .product-card { overflow: hidden; }
+
+#shop-grid .stitch-animation {
   position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
-  overflow: visible;
+  left: 0;
+  top: 0;
+  width: 72px;
+  height: 100%;
+  z-index: 20;
   pointer-events: none;
-  z-index: 3;
+}
+#shop-grid .stitch-animation svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
-/* punched holes — filled with the page background so they read as
-   actual cutouts through the photo, not stickers on top of it */
-#shop-grid .stitch-hole {
-  fill: var(--cream);
-  filter: drop-shadow(0 1px 1px rgba(24,16,10,0.6)) drop-shadow(0 -0.5px 0.5px rgba(255,255,255,0.12));
+#shop-grid .holes circle {
+  fill: #090705;
+  stroke: rgba(255,255,255,.12);
+  stroke-width: 1;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
   transform: scale(0);
-  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(.34,1.56,.64,1);
 }
-#shop-grid .product-card:hover .stitch-hole { opacity: 1; transform: scale(1); }
-#shop-grid .stitch-hole:nth-of-type(1) { transition-delay: 0s; }
-#shop-grid .stitch-hole:nth-of-type(2) { transition-delay: .09s; }
-#shop-grid .stitch-hole:nth-of-type(3) { transition-delay: .18s; }
-#shop-grid .stitch-hole:nth-of-type(4) { transition-delay: .27s; }
-#shop-grid .stitch-hole:nth-of-type(5) { transition-delay: .36s; }
-#shop-grid .stitch-hole:nth-of-type(6) { transition-delay: .45s; }
 
-/* thread — laces in from outside the left edge, top to bottom,
-   diving into each hole in turn */
-#shop-grid .stitch-thread {
+#shop-grid .thread-back,
+#shop-grid .thread-front {
   fill: none;
-  stroke: var(--umber-800);
-  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
   opacity: 0;
-  transition: opacity 0.25s ease, stroke-dashoffset 0.25s ease;
 }
-#shop-grid .product-card:hover .stitch-thread {
-  opacity: 0.95;
-  stroke-dashoffset: 0;
-  transition: opacity 0.2s ease, stroke-dashoffset 1.3s cubic-bezier(.65,0,.35,1);
+#shop-grid .thread-back { stroke: #24170e; stroke-width: 6; }
+#shop-grid .thread-front { stroke: #b47a2a; stroke-width: 2.5; }
+
+#shop-grid .product-card:hover .holes circle {
+  animation: shop-hole-open .22s cubic-bezier(.2,.8,.2,1) forwards;
+}
+#shop-grid .product-card:hover .holes circle:nth-child(1) { animation-delay: .05s; }
+#shop-grid .product-card:hover .holes circle:nth-child(2) { animation-delay: .15s; }
+#shop-grid .product-card:hover .holes circle:nth-child(3) { animation-delay: .25s; }
+#shop-grid .product-card:hover .holes circle:nth-child(4) { animation-delay: .35s; }
+#shop-grid .product-card:hover .holes circle:nth-child(5) { animation-delay: .45s; }
+#shop-grid .product-card:hover .holes circle:nth-child(6) { animation-delay: .55s; }
+
+#shop-grid .product-card:hover .thread-back,
+#shop-grid .product-card:hover .thread-front {
+  opacity: 1;
+  animation: shop-stitch-down 1.8s cubic-bezier(.4,0,.2,1) .75s forwards;
+}
+
+@keyframes shop-hole-open {
+  0% { opacity: 0; transform: scale(0); }
+  70% { opacity: 1; transform: scale(1.25); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes shop-stitch-down {
+  from { stroke-dashoffset: 900; }
+  to { stroke-dashoffset: 0; }
 }
 
 /* ---------- divider rule ---------- */

@@ -334,14 +334,39 @@ const OLYMPOS = (() => {
 
   /* ---------------- shop grid stitch hover fx ---------------- */
   function stitchOverlaySVG() {
-    const ys = [8, 24, 40, 56, 72, 88];
-    const holes = ys.map(y => `<circle class="stitch-hole" cx="4" cy="${y}" r="3.6"/>`).join('');
-    const pathD = 'M -12,0 ' + ys.map(y => `L 4,${y} L -12,${y + 8}`).join(' ');
     return `
-    <svg class="stitch-fx" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <path class="stitch-thread" d="${pathD}" pathLength="100"/>
-      ${holes}
-    </svg>`;
+    <div class="stitch-animation" aria-hidden="true">
+      <svg viewBox="0 0 80 600" preserveAspectRatio="none">
+        <g class="holes">
+          <circle cx="18" cy="70"  r="5"/>
+          <circle cx="18" cy="160" r="5"/>
+          <circle cx="18" cy="250" r="5"/>
+          <circle cx="18" cy="340" r="5"/>
+          <circle cx="18" cy="430" r="5"/>
+          <circle cx="18" cy="520" r="5"/>
+        </g>
+        <path class="thread-back" d="
+          M -10 25
+          C 5 25, 35 40, 18 70
+          C 3 95, 35 130, 18 160
+          C 3 185, 35 220, 18 250
+          C 3 275, 35 310, 18 340
+          C 3 365, 35 400, 18 430
+          C 3 455, 35 490, 18 520
+          C 8 540, 25 560, 45 575
+        "/>
+        <path class="thread-front" d="
+          M -10 25
+          C 5 25, 35 40, 18 70
+          C 3 95, 35 130, 18 160
+          C 3 185, 35 220, 18 250
+          C 3 275, 35 310, 18 340
+          C 3 365, 35 400, 18 430
+          C 3 455, 35 490, 18 520
+          C 8 540, 25 560, 45 575
+        "/>
+      </svg>
+    </div>`;
   }
 
   /* ---------------- shop grid (magaza.html) ---------------- */
@@ -364,12 +389,8 @@ const OLYMPOS = (() => {
 
       grid.classList.remove('in-view');
       grid.innerHTML = list.map(p => productCardHTML(p)).join('');
-      grid.querySelectorAll('.product-frame').forEach(frame => {
-        const wrap = document.createElement('div');
-        wrap.className = 'stitch-wrap';
-        frame.parentNode.insertBefore(wrap, frame);
-        wrap.appendChild(frame);
-        wrap.insertAdjacentHTML('beforeend', stitchOverlaySVG());
+      grid.querySelectorAll('.product-card').forEach(card => {
+        card.insertAdjacentHTML('afterbegin', stitchOverlaySVG());
       });
       requestAnimationFrame(() => grid.classList.add('in-view'));
       bindQuickAdd(grid);
