@@ -314,8 +314,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* ---------- shop grid (magaza.html) — slimmer cards, popup badge, bottom-anchored quick add ---------- */
 #shop-grid .product-frame { aspect-ratio: 3/4; }
 #shop-grid .product-frame img {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 34%, black 66%, transparent 100%);
-          mask-image: linear-gradient(to bottom, transparent 0%, black 34%, black 66%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0%, transparent 13%,
+    black 42%, black 58%,
+    transparent 87%, transparent 100%);
+          mask-image: linear-gradient(to bottom,
+    transparent 0%, transparent 13%,
+    black 42%, black 58%,
+    transparent 87%, transparent 100%);
 }
 #shop-grid .badge { box-shadow: 0 8px 18px -6px rgba(24,16,10,0.5); }
 #shop-grid .quick-add { bottom: 14px; transform: translateY(120%); }
