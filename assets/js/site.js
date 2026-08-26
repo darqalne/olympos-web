@@ -335,36 +335,32 @@ const OLYMPOS = (() => {
   /* ---------------- shop grid stitch hover fx ---------------- */
   function stitchOverlaySVG() {
     return `
-    <div class="stitch-animation" aria-hidden="true">
-      <svg viewBox="0 0 80 600" preserveAspectRatio="none">
-        <g class="holes">
-          <circle cx="18" cy="70"  r="5"/>
-          <circle cx="18" cy="160" r="5"/>
-          <circle cx="18" cy="250" r="5"/>
-          <circle cx="18" cy="340" r="5"/>
-          <circle cx="18" cy="430" r="5"/>
-          <circle cx="18" cy="520" r="5"/>
-        </g>
-        <path class="thread-back" d="
-          M -10 25
-          C 5 25, 35 40, 18 70
-          C 3 95, 35 130, 18 160
-          C 3 185, 35 220, 18 250
-          C 3 275, 35 310, 18 340
-          C 3 365, 35 400, 18 430
-          C 3 455, 35 490, 18 520
-          C 8 540, 25 560, 45 575
-        "/>
-        <path class="thread-front" d="
-          M -10 25
-          C 5 25, 35 40, 18 70
-          C 3 95, 35 130, 18 160
-          C 3 185, 35 220, 18 250
-          C 3 275, 35 310, 18 340
-          C 3 365, 35 400, 18 430
-          C 3 455, 35 490, 18 520
-          C 8 540, 25 560, 45 575
-        "/>
+    <div class="stitch-wrapper" aria-hidden="true">
+      <svg class="thread-back stitch-svg" viewBox="0 0 22 105">
+        <path class="stitch-path back-1" d="M 20, 15 Q 12, 19 2, 22" />
+        <path class="stitch-path back-2" d="M 20, 30 Q 12, 34 2, 37" />
+        <path class="stitch-path back-3" d="M 20, 45 Q 12, 49 2, 52" />
+        <path class="stitch-path back-4" d="M 20, 60 Q 12, 64 2, 67" />
+        <path class="stitch-path back-5" d="M 20, 75 Q 12, 79 2, 82" />
+        <path class="stitch-path back-6" d="M 20, 90 Q 12, 94 2, 97" />
+      </svg>
+
+      <div class="holes-container">
+        <div class="hole" style="top: 13px;"></div>
+        <div class="hole" style="top: 28px;"></div>
+        <div class="hole" style="top: 43px;"></div>
+        <div class="hole" style="top: 58px;"></div>
+        <div class="hole" style="top: 73px;"></div>
+        <div class="hole" style="top: 88px;"></div>
+      </div>
+
+      <svg class="thread-front stitch-svg" viewBox="0 0 22 105">
+        <path class="stitch-path front-1" d="M 2, 7 Q 10, 11 20, 15" />
+        <path class="stitch-path front-2" d="M 2, 22 Q 10, 26 20, 30" />
+        <path class="stitch-path front-3" d="M 2, 37 Q 10, 41 20, 45" />
+        <path class="stitch-path front-4" d="M 2, 52 Q 10, 56 20, 60" />
+        <path class="stitch-path front-5" d="M 2, 67 Q 10, 71 20, 75" />
+        <path class="stitch-path front-6" d="M 2, 82 Q 10, 86 20, 90" />
       </svg>
     </div>`;
   }
