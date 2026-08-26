@@ -332,20 +332,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   50% { opacity: 0.35; transform: scale(1.5); }
 }
 
-/* phones: the video was covering almost nothing recognizable because
-   object-fit:cover crops hard against a tall, narrow container. Pin it
-   to its native 16:9 at the top of the section instead (full frame,
-   nothing cropped), drop the scrim (nothing to darken), and skip the
-   medallion — just the heading/copy/buttons remain once it ends */
+/* phones: pin the video to the top of the section at a center-cropped
+   8:9 box — object-fit:cover on that ratio crops exactly 25% off each
+   side (full height, no vertical crop) leaving the center 50% where
+   the animated text lives. A flat, light brown tint replaces the
+   desktop vignette; the logo medallion stays hidden after it ends. */
 @media (max-width: 640px) {
   .hero-bg-video {
     top: 0; left: 0; right: 0; bottom: auto;
     height: auto;
-    aspect-ratio: 16/9;
-    object-fit: contain;
+    aspect-ratio: 8/9;
+    object-fit: cover;
     background: var(--umber-900);
   }
-  .hero-video-scrim { display: none; }
+  .hero-video-scrim {
+    background: rgba(74,51,32,0.22);
+  }
   .hero-medallion-col { display: none; }
 }
 
