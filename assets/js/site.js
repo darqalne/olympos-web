@@ -334,50 +334,45 @@ const OLYMPOS = (() => {
     });
   }
 
-  /* ---------------- shop grid stitch hover fx ---------------- */
+  /* ---------------- shop grid stitch hover fx ----------------
+     Coordinates are baked in (not left to the SVG's own scaling) so
+     the thread sits snug against the card — and lands in the exact
+     same spot — on every card everywhere, regardless of that card's
+     own aspect ratio (shop grid cards are 3:4, homepage cards 4:5).
+     preserveAspectRatio="none" makes the viewBox map to the card's
+     box 1:1 on both axes, so a % is always the same % on any card. */
   function stitchBackLayerSVG() {
     return `
-    <svg class="stitch-layer back-layer" viewBox="0 0 300 400" aria-hidden="true">
-      <path class="stitch-path b0" d="M -12,23 C -12,31 5,38 15,38" />
-      <path class="stitch-path b1" d="M -12,53 C -12,61 5,68 15,68" />
-      <path class="stitch-path b2" d="M -12,83 C -12,91 5,98 15,98" />
-      <path class="stitch-path b3" d="M -12,113 C -12,121 5,128 15,128" />
-      <path class="stitch-path b4" d="M -12,143 C -12,151 5,158 15,158" />
-      <path class="stitch-path b5" d="M -12,173 C -12,181 5,188 15,188" />
+    <svg class="stitch-layer back-layer" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+      <path class="stitch-path b0" d="M -1.9,23 C -1.9,31 14.1,38 23.4,38" />
+      <path class="stitch-path b1" d="M -1.9,53 C -1.9,61 14.1,68 23.4,68" />
+      <path class="stitch-path b2" d="M -1.9,83 C -1.9,91 14.1,98 23.4,98" />
+      <path class="stitch-path b3" d="M -1.9,113 C -1.9,121 14.1,128 23.4,128" />
+      <path class="stitch-path b4" d="M -1.9,143 C -1.9,151 14.1,158 23.4,158" />
+      <path class="stitch-path b5" d="M -1.9,173 C -1.9,181 14.1,188 23.4,188" />
     </svg>`;
   }
   function stitchFrontLayerSVG() {
     return `
-    <svg class="stitch-layer front-layer" viewBox="0 0 300 400" aria-hidden="true">
-      <path class="stitch-path f1" d="M 15,38 C 5,38 -12,45 -12,53" />
-      <path class="stitch-path f2" d="M 15,68 C 5,68 -12,75 -12,83" />
-      <path class="stitch-path f3" d="M 15,98 C 5,98 -12,105 -12,113" />
-      <path class="stitch-path f4" d="M 15,128 C 5,128 -12,135 -12,143" />
-      <path class="stitch-path f5" d="M 15,158 C 5,158 -12,165 -12,173" />
-      <path class="stitch-path f6" d="M 15,188 C 5,188 -12,195 -12,203" />
+    <svg class="stitch-layer front-layer" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+      <path class="stitch-path f1" d="M 23.4,38 C 14.1,38 -1.9,45 -1.9,53" />
+      <path class="stitch-path f2" d="M 23.4,68 C 14.1,68 -1.9,75 -1.9,83" />
+      <path class="stitch-path f3" d="M 23.4,98 C 14.1,98 -1.9,105 -1.9,113" />
+      <path class="stitch-path f4" d="M 23.4,128 C 14.1,128 -1.9,135 -1.9,143" />
+      <path class="stitch-path f5" d="M 23.4,158 C 14.1,158 -1.9,165 -1.9,173" />
+      <path class="stitch-path f6" d="M 23.4,188 C 14.1,188 -1.9,195 -1.9,203" />
     </svg>`;
   }
-  function stitchHolesWrapperHTML(xPercent) {
-    // Y tracks the thread paths' entry point directly: y=38/68/.../188 in the
-    // 300x400 viewBox, as a % of the wrapper height (height is never
-    // letterboxed regardless of the card's own aspect ratio).
-    //
-    // X is NOT simply x=15/300=5%: the stitch SVGs use the default
-    // preserveAspectRatio (meet), so on any card whose aspect ratio isn't
-    // exactly 3:4 (the shop grid's cards are 3:4 — no letterbox, 5% is
-    // exact; the homepage featured grid's cards are 4:5 — letterboxed,
-    // needs ~7.8%), the artwork gets letterboxed sideways and the
-    // thread's real on-screen touch point shifts right of a naive 5%.
-    // attachStitchFX computes the right value per card from its actual
-    // rendered aspect ratio; this only falls back to the unshifted 5%
-    // if called without one.
-    const x = typeof xPercent === 'number' ? xPercent : 5;
+  function stitchHolesWrapperHTML() {
+    // matches the paths' touch point exactly: x=23.4/300=7.8%,
+    // y=38/68/.../188 out of 400, as plain %s of the wrapper — safe
+    // now that the SVGs above are forced 1:1 via preserveAspectRatio
     const ys = [38, 68, 98, 128, 158, 188];
     return `
     <div class="holes-wrapper">
       ${ys.map((y, i) => {
         const top = (y / 400 * 100).toFixed(3);
-        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}% - 3px); left: calc(${x.toFixed(3)}% - 3px);"></div>`;
+        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}% - 3px); left: calc(7.8% - 3px);"></div>`;
       }).join('')}
     </div>`;
   }
@@ -385,30 +380,16 @@ const OLYMPOS = (() => {
   // attaches the wrap-around stitch/lacing hover fx to every .product-frame
   // inside the given grid container (used by both the shop grid and the
   // homepage featured grid)
-  // works out where the thread's visible touch point actually lands on
-  // a card of this aspect ratio, given the stitch SVGs' 300x400 viewBox
-  // and default (letterboxing) preserveAspectRatio — see the long
-  // comment in stitchHolesWrapperHTML for why this isn't just x=15/300
-  function stitchHoleXPercent(frame) {
-    const SVG_ASPECT = 300 / 400;
-    const rect = frame.getBoundingClientRect();
-    const boxAspect = rect.height ? rect.width / rect.height : SVG_ASPECT;
-    if (boxAspect <= SVG_ASPECT) return 5; // no horizontal letterbox
-    const gapEachSide = (1 - SVG_ASPECT / boxAspect) / 2;
-    return (gapEachSide + 0.05 * (SVG_ASPECT / boxAspect)) * 100;
-  }
-
   function attachStitchFX(grid) {
     if (!grid) return;
     grid.querySelectorAll('.product-frame').forEach(frame => {
-      const xPercent = stitchHoleXPercent(frame);
       const wrap = document.createElement('div');
       wrap.className = 'olympos-card-wrapper';
       frame.parentNode.insertBefore(wrap, frame);
       wrap.insertAdjacentHTML('beforeend', stitchBackLayerSVG());
       wrap.appendChild(frame);
       wrap.insertAdjacentHTML('beforeend', stitchFrontLayerSVG());
-      frame.insertAdjacentHTML('beforeend', stitchHolesWrapperHTML(xPercent));
+      frame.insertAdjacentHTML('beforeend', stitchHolesWrapperHTML());
     });
   }
 
