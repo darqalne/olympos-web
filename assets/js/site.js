@@ -266,13 +266,13 @@ const OLYMPOS = (() => {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    const menuBtn = document.querySelector('[data-menu-toggle]');
+    const menuBtns = document.querySelectorAll('[data-menu-toggle]');
     const menu = document.getElementById('mobile-menu');
-    menuBtn?.addEventListener('click', () => {
+    menuBtns.forEach(btn => btn.addEventListener('click', () => {
       const open = menu.classList.toggle('open');
       document.body.style.overflow = open ? 'hidden' : '';
-      menuBtn.setAttribute('aria-expanded', String(open));
-    });
+      menuBtns.forEach(b => b.setAttribute('aria-expanded', String(open)));
+    }));
     menu?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
       menu.classList.remove('open');
       document.body.style.overflow = '';
@@ -364,15 +364,17 @@ const OLYMPOS = (() => {
     </svg>`;
   }
   function stitchHolesWrapperHTML() {
-    // matches the paths' touch point exactly: x=23.4/300=7.8%,
-    // y=38/68/.../188 out of 400, as plain %s of the wrapper — safe
-    // now that the SVGs above are forced 1:1 via preserveAspectRatio
+    // matches the paths' touch point exactly: x=23.4, y=38/68/.../188
+    // out of the stitch-layer's fixed 300x400px box (shifted up 8px,
+    // same as .stitch-layer's top:-8px) — plain px, not %, so the
+    // first hole always lands exactly 30px below the card's top edge
+    // on every card, everywhere, regardless of that card's own size.
     const ys = [38, 68, 98, 128, 158, 188];
     return `
     <div class="holes-wrapper">
       ${ys.map((y, i) => {
-        const top = (y / 400 * 100).toFixed(3);
-        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}% - 3px); left: calc(7.8% - 3px);"></div>`;
+        const top = y - 8;
+        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}px - 3px); left: calc(23.4px - 3px);"></div>`;
       }).join('')}
     </div>`;
   }

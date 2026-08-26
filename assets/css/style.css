@@ -464,6 +464,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 #shop-grid .product-card:hover .quick-add { transform: translateY(0); }
 #shop-grid .product-card h3 { font-size: 1.175rem !important; }
 
+/* touch devices (phone/tablet) can't hover, so the "Sepete Ekle" button
+   must stay visible and tappable instead of only appearing on :hover */
+@media (hover: none) {
+  .quick-add, #shop-grid .quick-add { opacity: 1; transform: translateY(0); }
+}
+
 /* ---------- punch-hole & wrap-around thread hover effect ----------
    shared by the shop grid (magaza.html) and the homepage featured
    grid (index.html) — anything specific to the shop grid's own card
@@ -500,8 +506,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 #shop-grid .stitch-layer, #featured-grid .stitch-layer {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  /* fixed px box (matches the viewBox 1:1, no stretching) instead of
+     100%/100% — that way the thread's start point sits at the exact
+     same pixel offset from the card's top edge on every card, instead
+     of drifting with each card's own (variable) rendered height */
+  top: -8px; left: 0;
+  width: 300px; height: 400px;
   pointer-events: none;
   overflow: visible !important;
 }

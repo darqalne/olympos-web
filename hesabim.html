@@ -59,7 +59,7 @@
 
 <div id="mobile-menu" class="mobile-menu">
   <div class="flex items-center justify-between px-5 h-20 border-b border-umber-700/10">
-    <img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 w-auto">
+    <a href="index.html" aria-label="Olympos Leather anasayfa"><img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 w-auto"></a>
     <button data-menu-toggle aria-label="Menüyü kapat" class="icon-btn">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
@@ -93,6 +93,7 @@
       <span class="text-sm text-umber-600">Ara Toplam</span>
       <span id="cart-subtotal" class="font-display text-lg text-umber-800">0,00 ₺</span>
     </div>
+    <a href="sepet.html" class="btn btn-outline btn-block mb-3">Sepetim</a>
     <button id="checkout-btn" class="btn btn-primary btn-block">Ödemeye Geç</button>
     <p class="text-[0.72rem] text-umber-500 text-center mt-3">Kargo ve vergiler ödeme sırasında hesaplanır.</p>
   </div>
@@ -103,14 +104,19 @@
     <div class="max-w-7xl mx-auto px-5 md:px-8">
       <p class="eyebrow"><span class="glyph" style="--gsize:14px"></span>Hesap</p>
       <h1 class="font-display text-4xl md:text-5xl text-umber-800 mt-4">Hesabım</h1>
+      <div class="flex flex-wrap gap-3 mt-8">
+        <a href="#bilgilerim" class="btn btn-outline btn-sm">Bilgilerim</a>
+        <a href="sepet.html" class="btn btn-outline btn-sm">Sepetim</a>
+        <a href="siparis-takip.html" class="btn btn-outline btn-sm">Sipariş Takibi</a>
+      </div>
     </div>
   </section>
 
   <section class="section-cream py-16 md:py-24">
     <div class="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-3 gap-14">
-      <div class="lg:col-span-1 reveal in-view">
+      <div id="bilgilerim" class="lg:col-span-1 reveal in-view" style="scroll-margin-top: 6rem;">
         <div class="bg-cream-2 rounded-sm shadow-sm p-7">
-          <p class="eyebrow" style="color:var(--saffron-dim)"><span class="glyph" style="--gsize:12px"></span>Hoş Geldiniz</p>
+          <p class="eyebrow" style="color:var(--saffron-dim)"><span class="glyph" style="--gsize:12px"></span>Bilgilerim</p>
           <p id="acc-name" class="font-display text-umber-800 text-xl mt-3"></p>
           <p id="acc-email" class="text-umber-500 text-sm mt-1"></p>
           <button id="logout-btn" class="btn btn-outline btn-sm mt-6">Çıkış Yap</button>
