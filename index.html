@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olympos Leather — El Yapımı Deri Kartlık ve Cüzdanlar</title>
+<meta name="description" content="Olympos Leather — %100 dana derisinden, elde dikilen kartlık ve cüzdanlar. Antalya'dan çıkan zamansız kesimler.">
+<link rel="icon" href="assets/img/brand/logo-mark.png">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#F7F1E4', 'cream-2': '#FBF7EF',
+          parchment: '#EDE1C8',
+          umber: { 300:'#B79878', 500:'#8A6644', 600:'#6B4A2F', 700:'#4A3320', 800:'#2E2013', 900:'#241811' },
+          saffron: { DEFAULT:'#C6872E', light:'#E3B15C', dim:'#A96E22' }
+        },
+        fontFamily: {
+          display: ['Cinzel','serif'],
+          body: ['Jost','sans-serif'],
+          editorial: ['"Cormorant Garamond"','serif']
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="font-body">
+<a href="#main" class="skip-link">İçeriğe geç</a>
+
+<!-- announcement bar -->
+<div class="bg-umber-900 text-cream-2/80 text-center text-[0.72rem] tracking-[0.18em] uppercase py-2 px-4">
+  El Yapımı &nbsp;·&nbsp; %100 Dana Derisi &nbsp;·&nbsp; Antalya'dan Dünyaya
+</div>
+
+<!-- header -->
+<header class="site-header">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
+    <a href="index.html" class="shrink-0" aria-label="Olympos Leather anasayfa">
+      <img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 md:h-11 w-auto">
+    </a>
+    <nav class="hidden lg:flex items-center gap-10" aria-label="Ana menü">
+      <a href="index.html" class="nav-link active">Ana Sayfa</a>
+      <a href="magaza.html" class="nav-link">Mağaza</a>
+      <a href="hakkimizda.html" class="nav-link">Hakkımızda</a>
+      <a href="iletisim.html" class="nav-link">İletişim</a>
+    </nav>
+    <div class="flex items-center gap-1">
+      <button class="icon-btn hidden sm:inline-flex" aria-label="Ara">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button class="icon-btn" data-open-cart aria-label="Sepeti aç">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <button class="icon-btn lg:hidden" data-menu-toggle aria-label="Menüyü aç" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile menu -->
+<div id="mobile-menu" class="mobile-menu">
+  <div class="flex items-center justify-between px-5 h-20 border-b border-umber-700/10">
+    <img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 w-auto">
+    <button data-menu-toggle aria-label="Menüyü kapat" class="icon-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <nav class="flex flex-col gap-7 px-8 py-12" aria-label="Mobil menü">
+    <a href="index.html" class="mobile-link">Ana Sayfa</a>
+    <a href="magaza.html" class="mobile-link">Mağaza</a>
+    <a href="hakkimizda.html" class="mobile-link">Hakkımızda</a>
+    <a href="iletisim.html" class="mobile-link">İletişim</a>
+  </nav>
+</div>
+
+<!-- cart drawer -->
+<div id="drawer-backdrop" class="drawer-backdrop" data-close-cart></div>
+<aside id="cart-drawer" class="drawer" aria-label="Alışveriş sepeti">
+  <div class="flex items-center justify-between px-6 h-20 border-b border-umber-700/10 shrink-0">
+    <h2 class="font-display text-lg text-umber-800">Sepetiniz</h2>
+    <button data-close-cart class="icon-btn" aria-label="Sepeti kapat">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="flex-1 overflow-y-auto px-6">
+    <div id="cart-empty" class="h-full flex flex-col items-center justify-center text-center gap-4 py-16">
+      <span class="glyph text-umber-300" style="--gsize:34px"></span>
+      <p class="text-umber-500 text-sm">Sepetiniz şu an boş.</p>
+      <a href="magaza.html" class="btn btn-outline btn-sm">Mağazaya Göz At</a>
+    </div>
+    <div id="cart-lines"></div>
+  </div>
+  <div id="cart-foot" class="px-6 py-6 border-t border-umber-700/10 shrink-0" style="display:none;">
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-sm text-umber-600">Ara Toplam</span>
+      <span id="cart-subtotal" class="font-display text-lg text-umber-800">0,00 ₺</span>
+    </div>
+    <button id="checkout-btn" class="btn btn-primary btn-block">Ödemeye Geç</button>
+    <p class="text-[0.72rem] text-umber-500 text-center mt-3">Kargo ve vergiler ödeme sırasında hesaplanır.</p>
+  </div>
+</aside>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero-dark">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 pt-14 pb-20 md:pt-20 md:pb-28 grid lg:grid-cols-2 gap-14 items-center relative z-10">
+      <div>
+        <p class="eyebrow on-dark rise" style="animation-delay:.05s"><span class="glyph" style="--gsize:14px"></span>El İşçiliği Deri Atölyesi</p>
+        <h1 class="hero-title text-[3.1rem] leading-[0.98] sm:text-[4.4rem] md:text-[5.2rem] mt-5 rise" style="animation-delay:.15s">
+          DERİNİN<br>EN ÖZEL<br>HALİ
+        </h1>
+        <p class="font-editorial text-cream-2/80 text-xl md:text-2xl mt-7 max-w-md rise" style="animation-delay:.3s">
+          Tek parça dana derisinden, elde dikilen kartlıklar ve cüzdanlar — Olympos'un zirvesinden ilham alan kesimlerle.
+        </p>
+        <div class="flex flex-wrap gap-4 mt-10 rise" style="animation-delay:.42s">
+          <a href="magaza.html" class="btn btn-accent">Koleksiyonu Keşfet</a>
+          <a href="hakkimizda.html" class="btn btn-ghost">Hikayemiz</a>
+        </div>
+      </div>
+      <div class="relative rise" style="animation-delay:.2s">
+        <div class="relative rounded-sm overflow-hidden shadow-2xl" style="aspect-ratio:4/5;">
+          <img src="assets/img/products/original-1.jpg" alt="Original kartlık — hardal sarısı negatif kesim detayı" class="w-full h-full object-cover hero-kenburns">
+          <div class="absolute inset-0" style="background:linear-gradient(0deg, rgba(24,16,10,.5), transparent 40%);"></div>
+        </div>
+        <div class="absolute -bottom-6 -left-6 md:-left-10 bg-cream-2 rounded-sm shadow-2xl px-6 py-5 max-w-[230px] hidden sm:block">
+          <p class="eyebrow" style="color:var(--saffron-dim)"><span class="glyph" style="--gsize:12px"></span>Original</p>
+          <p class="font-display text-umber-800 text-base mt-1">1.450,00 ₺</p>
+          <p class="text-umber-500 text-xs mt-1">4 kart bölmesi · gizli cep</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <section class="section-cream border-b border-umber-700/10">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 reveal-stagger reveal">
+      <div class="flex items-center gap-3">
+        <span class="glyph text-saffron-dim shrink-0"></span>
+        <p class="text-[0.8rem] text-umber-700 leading-snug">%100 Dana Derisi</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="glyph text-saffron-dim shrink-0"></span>
+        <p class="text-[0.8rem] text-umber-700 leading-snug">Elde Dikim &amp; Kesim</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="glyph text-saffron-dim shrink-0"></span>
+        <p class="text-[0.8rem] text-umber-700 leading-snug">Türkiye'de Üretim</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="glyph text-saffron-dim shrink-0"></span>
+        <p class="text-[0.8rem] text-umber-700 leading-snug">Özenli Hediye Paketi</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED COLLECTION -->
+  <section class="section-cream py-20 md:py-28">
+    <div class="max-w-7xl mx-auto px-5 md:px-8">
+      <div class="flex flex-wrap items-end justify-between gap-6 mb-12 reveal">
+        <div>
+          <p class="eyebrow"><span class="glyph" style="--gsize:14px"></span>Koleksiyon</p>
+          <h2 class="font-display text-3xl md:text-4xl text-umber-800 mt-3">Öne Çıkan Parçalar</h2>
+        </div>
+        <a href="magaza.html" class="btn btn-outline">Tüm Ürünler</a>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14 reveal-stagger reveal" id="featured-grid"></div>
+    </div>
+  </section>
+
+  <!-- TAGLINE BANNER -->
+  <section class="tagline-banner reveal" style="background-image:url('assets/img/products/classy-1.jpg'); min-height:60vh;">
+    <div class="relative z-10 max-w-3xl mx-auto h-full px-6 flex flex-col items-center justify-center text-center" style="min-height:60vh;">
+      <p class="eyebrow on-dark"><span class="glyph" style="--gsize:14px"></span>Olympos Leather</p>
+      <p class="font-editorial text-cream-2 text-3xl md:text-5xl mt-6 leading-tight">
+        "Her parça, bir deri postundan doğar — iki eş yoktur."
+      </p>
+      <a href="hakkimizda.html" class="btn btn-ghost mt-9">Atölyeyi Tanıyın</a>
+    </div>
+  </section>
+
+  <!-- CRAFT TEASER -->
+  <section class="section-cream py-20 md:py-28 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-14 items-center">
+      <div class="grid grid-cols-2 gap-4 reveal">
+        <img src="assets/img/brand/craft-2.jpg" alt="Deri kenar işçiliği detayı" class="rounded-sm shadow-xl w-full h-full object-cover" style="aspect-ratio:3/4; object-position:20% 35%;">
+        <img src="assets/img/brand/craft-1.jpg" alt="El dikişi detayı" class="rounded-sm shadow-xl w-full h-full object-cover mt-10" style="aspect-ratio:3/4; object-position:25% 50%;">
+      </div>
+      <div class="reveal">
+        <p class="eyebrow"><span class="glyph" style="--gsize:14px"></span>Atölyeden</p>
+        <h2 class="font-display text-3xl md:text-4xl text-umber-800 mt-4 leading-tight">Her dikiş,<br>elle atılır.</h2>
+        <p class="font-editorial text-umber-600 text-xl mt-6 leading-relaxed max-w-md">
+          Kalıp kesiminden kenar boyamaya, mumlu iplikle atılan saddle stitch dikişe kadar her adım Antalya'daki atölyemizde, tek tek elden geçer.
+        </p>
+        <a href="hakkimizda.html" class="btn btn-outline mt-9">Hikayemizi Okuyun</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOOD STRIP -->
+  <section class="section-parchment py-16 md:py-20">
+    <div class="max-w-7xl mx-auto px-5 md:px-8">
+      <div class="flex items-center justify-between mb-8 reveal">
+        <p class="eyebrow"><span class="glyph" style="--gsize:14px"></span>@olymposleather</p>
+        <a href="iletisim.html" class="nav-link hidden sm:inline-block">Bize Ulaşın</a>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal-stagger reveal">
+        <img src="assets/img/brand/mood-1.jpg" alt="Olympos Leather atölye kompozisyonu" class="rounded-sm w-full object-cover shadow-md" style="aspect-ratio:1/1;">
+        <img src="assets/img/products/flare-2.jpg" alt="Flare kartlık detay" class="rounded-sm w-full object-cover shadow-md" style="aspect-ratio:1/1;">
+        <img src="assets/img/products/original-5.jpg" alt="Original kartlık negatif kesim detayı" class="rounded-sm w-full object-cover shadow-md" style="aspect-ratio:1/1;">
+        <img src="assets/img/brand/craft-3.jpg" alt="Deri köşe işçiliği" class="rounded-sm w-full object-cover shadow-md" style="aspect-ratio:1/1;">
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER CTA -->
+  <section class="section-dark py-20">
+    <div class="max-w-3xl mx-auto px-5 md:px-8 text-center reveal">
+      <p class="eyebrow on-dark justify-center"><span class="glyph" style="--gsize:14px"></span>Bültenimize Katılın</p>
+      <h2 class="font-display text-2xl md:text-3xl mt-4">Yeni koleksiyonlardan ilk siz haberdar olun</h2>
+      <form class="flex flex-col sm:flex-row gap-3 mt-9 max-w-md mx-auto" onsubmit="event.preventDefault(); OLYMPOS.toast('Abone oldunuz — teşekkürler.'); this.reset();">
+        <label for="newsletter-email" class="sr-only">E-posta adresiniz</label>
+        <input id="newsletter-email" type="email" required placeholder="E-posta adresiniz" class="flex-1 bg-cream-2/10 border border-cream-2/25 rounded-sm px-4 py-3 text-cream-2 placeholder:text-cream-2/50 text-sm focus:outline-none focus:border-saffron">
+        <button type="submit" class="btn btn-accent">Abone Ol</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer-dark pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-cream-2/10">
+      <div>
+        <div class="bg-cream-2 inline-block rounded-sm p-3 mb-5">
+          <img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-8 w-auto">
+        </div>
+        <p class="text-sm leading-relaxed max-w-xs">Antalya'da, tek parça dana derisinden elde üretilen kartlık ve cüzdanlar.</p>
+      </div>
+      <div>
+        <p class="font-display text-cream-2 text-sm tracking-wide mb-5">Keşfet</p>
+        <ul class="space-y-3 text-sm">
+          <li><a href="index.html" class="footer-link">Ana Sayfa</a></li>
+          <li><a href="magaza.html" class="footer-link">Mağaza</a></li>
+          <li><a href="hakkimizda.html" class="footer-link">Hakkımızda</a></li>
+          <li><a href="iletisim.html" class="footer-link">İletişim</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-display text-cream-2 text-sm tracking-wide mb-5">Kategoriler</p>
+        <ul class="space-y-3 text-sm">
+          <li><a href="magaza.html?kategori=kartlik" class="footer-link">Kartlık</a></li>
+          <li><a href="magaza.html?kategori=cuzdan" class="footer-link">Cüzdan</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-display text-cream-2 text-sm tracking-wide mb-5">Bize Ulaşın</p>
+        <ul class="space-y-3 text-sm">
+          <li><a href="mailto:info@olymposleather.com" class="footer-link">info@olymposleather.com</a></li>
+          <li><span>Antalya, Türkiye</span></li>
+          <li class="flex gap-4 pt-1">
+            <a href="#" class="footer-link" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+            <a href="#" class="footer-link" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream-2/50">
+      <p>© <span data-year></span> Olympos Leather. Tüm hakları saklıdır.</p>
+      <p class="flex items-center gap-2"><span class="glyph" style="--gsize:12px"></span>Elde imal edildi</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+<script>
+  document.getElementById('featured-grid').innerHTML = ['original','eclipse','flare']
+    .map(id => OLYMPOS.productCardHTML(OLYMPOS.getProduct(id))).join('');
+  OLYMPOS.bindQuickAdd(document.getElementById('featured-grid'));
+</script>
+</body>
+</html>
