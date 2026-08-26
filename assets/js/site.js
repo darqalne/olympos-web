@@ -587,7 +587,8 @@ const OLYMPOS = (() => {
       '@type': 'Organization',
       name: 'Olympos Leather',
       url: origin + '/index.html',
-      logo: origin + '/assets/img/brand/logo.png'
+      logo: origin + '/assets/img/brand/logo.png',
+      sameAs: ['https://www.instagram.com/olymposleathers/']
     });
 
     const crumbNav = document.querySelector('nav[aria-label="Breadcrumb"]');
