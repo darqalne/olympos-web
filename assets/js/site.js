@@ -536,10 +536,12 @@ const OLYMPOS = (() => {
     if (!video) return;
     const badge = document.getElementById('hero-video-badge');
     const scrim = document.getElementById('hero-video-scrim');
+    const content = document.getElementById('hero-content');
     video.addEventListener('ended', () => {
       video.classList.add('is-hidden');
       if (badge) badge.classList.add('is-hidden');
       if (scrim) scrim.classList.add('is-hidden');
+      if (content) content.classList.add('is-visible');
     });
   }
 

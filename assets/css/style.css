@@ -248,11 +248,48 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   position: absolute; inset: 0;
   z-index: 2;
   background:
-    linear-gradient(100deg, rgba(24,16,10,.82) 0%, rgba(24,16,10,.5) 42%, rgba(24,16,10,.72) 100%),
-    radial-gradient(260px 220px at 100% 100%, rgba(15,10,6,.92), transparent 70%);
+    linear-gradient(100deg, rgba(24,16,10,.57) 0%, rgba(24,16,10,.35) 42%, rgba(24,16,10,.50) 100%),
+    radial-gradient(260px 220px at 100% 100%, rgba(15,10,6,.64), transparent 70%);
   transition: opacity 1.2s ease;
 }
 .hero-video-scrim.is-hidden { opacity: 0; }
+
+/* hero content is hidden while the video plays, and fades/rises in
+   once the video ends */
+.hero-content {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 1s var(--ease-spring), transform 1s var(--ease-spring);
+}
+.hero-content.is-visible { opacity: 1; transform: translateY(0); }
+
+/* logo medallion that replaces the product panel once the video ends */
+.hero-medallion {
+  position: relative;
+  width: clamp(220px, 30vw, 380px);
+  aspect-ratio: 1;
+}
+.hero-medallion-logo {
+  position: absolute; top: 50%; left: 50%;
+  width: 78%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 14px 30px rgba(0,0,0,.4));
+}
+.hero-medallion-ring {
+  position: absolute; top: 50%; left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid var(--saffron-light);
+  pointer-events: none;
+}
+.hero-medallion-ring-outer {
+  width: 86%; height: 86%;
+  box-shadow: 0 0 0 1px rgba(227,177,92,.15), 0 0 44px rgba(227,177,92,.2);
+}
+.hero-medallion-ring-inner {
+  width: 66%; height: 66%;
+  opacity: 0.75;
+}
 
 .hero-video-badge {
   position: absolute;
