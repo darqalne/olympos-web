@@ -334,15 +334,13 @@ const OLYMPOS = (() => {
 
   /* ---------------- shop grid stitch hover fx ---------------- */
   function stitchOverlaySVG() {
-    const holesTop = [8, 30, 70, 92].map(x =>
-      `<circle class="stitch-hole" cx="${x}" cy="0" r="1.7"/>`).join('');
-    const holesBottom = [8, 30, 70, 92].map(x =>
-      `<circle class="stitch-hole" cx="${x}" cy="100" r="1.7"/>`).join('');
+    const ys = [8, 24, 40, 56, 72, 88];
+    const holes = ys.map(y => `<circle class="stitch-hole" cx="4" cy="${y}" r="3.6"/>`).join('');
+    const pathD = 'M -12,0 ' + ys.map(y => `L 4,${y} L -12,${y + 8}`).join(' ');
     return `
     <svg class="stitch-fx" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <rect class="stitch-path stitch-outer" x="-3" y="-3" width="106" height="106" rx="6" pathLength="100"/>
-      <rect class="stitch-path stitch-inner" x="4" y="4" width="92" height="92" rx="2" pathLength="100"/>
-      ${holesTop}${holesBottom}
+      <path class="stitch-thread" d="${pathD}" pathLength="100"/>
+      ${holes}
     </svg>`;
   }
 
