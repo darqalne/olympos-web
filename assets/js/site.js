@@ -352,6 +352,12 @@ const OLYMPOS = (() => {
 
       grid.classList.remove('in-view');
       grid.innerHTML = list.map(p => productCardHTML(p)).join('');
+      // shop grid uses tightly-cropped thumbnails (no letterbox bars) —
+      // product page keeps the full-product padded images untouched
+      grid.querySelectorAll('.product-frame img').forEach(img => {
+        img.src = img.src.replace(/\.jpg(\?.*)?$/, '-grid.jpg$1');
+        img.style.objectPosition = 'center';
+      });
       requestAnimationFrame(() => grid.classList.add('in-view'));
       bindQuickAdd(grid);
       if (countEl) countEl.textContent = `${list.length} ürün`;
