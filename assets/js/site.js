@@ -358,15 +358,24 @@ const OLYMPOS = (() => {
     </svg>`;
   }
   function stitchHolesWrapperHTML() {
-    // must match the thread paths' entry point exactly: x=15,y=38/68/.../188
-    // in the 300x400 viewBox, as a % of the wrapper so it tracks the SVG's
-    // own scaling instead of drifting at real card sizes other than 300x400px
+    // Y tracks the thread paths' entry point directly: y=38/68/.../188 in the
+    // 300x400 viewBox, as a % of the wrapper height (height is never
+    // letterboxed regardless of the card's own aspect ratio).
+    //
+    // X is NOT simply x=15/300=5%: the stitch SVGs use the default
+    // preserveAspectRatio (meet), so on any card whose aspect ratio isn't
+    // exactly 3:4 (e.g. the homepage featured grid's cards, which are 4:5),
+    // the 300x400 artwork gets letterboxed sideways within the box — the
+    // thread's real on-screen touch point ends up a bit further right than
+    // a naive 5% would put it. 7.8% matches where the thread actually
+    // lands at 4:5 (verified by the 4:5 card being the one this was tuned
+    // against), and is used everywhere so both grids match.
     const ys = [38, 68, 98, 128, 158, 188];
     return `
     <div class="holes-wrapper">
       ${ys.map((y, i) => {
         const top = (y / 400 * 100).toFixed(3);
-        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}% - 3px); left: calc(5% - 3px);"></div>`;
+        return `<div class="punch-hole ph-${i + 1}" style="top: calc(${top}% - 3px); left: calc(7.8% - 3px);"></div>`;
       }).join('')}
     </div>`;
   }
@@ -573,6 +582,6 @@ const OLYMPOS = (() => {
 
   return {
     getProducts, getProduct, formatPrice, addToCart, toast, productCardHTML, bindQuickAdd, attachStitchFX,
-    cartLines, cartSubtotal, cartCount, clearCart
+    cartLines, cartSubtotal, cartCount, clearCart, setQty, removeFromCart
   };
 })();
