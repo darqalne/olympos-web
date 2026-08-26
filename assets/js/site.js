@@ -530,6 +530,17 @@ const OLYMPOS = (() => {
   }
 
   /* ---------------- boot ---------------- */
+  /* ---------------- hero intro video (index.html) ---------------- */
+  function initHeroVideo() {
+    const video = document.getElementById('hero-video');
+    if (!video) return;
+    const badge = document.getElementById('hero-video-badge');
+    video.addEventListener('ended', () => {
+      video.classList.add('is-hidden');
+      if (badge) badge.classList.add('is-hidden');
+    });
+  }
+
   function init() {
     initHeader();
     initCartUI();
@@ -540,6 +551,7 @@ const OLYMPOS = (() => {
     initAccordion();
     initContactForm();
     initFooterYear();
+    initHeroVideo();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

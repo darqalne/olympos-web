@@ -125,9 +125,16 @@
         </div>
       </div>
       <div class="relative rise" style="animation-delay:.2s">
+        <div class="hero-glow" aria-hidden="true"></div>
         <div class="relative rounded-sm overflow-hidden shadow-2xl" style="aspect-ratio:4/5;">
+          <video id="hero-video" class="w-full h-full object-cover" autoplay muted playsinline preload="auto" poster="assets/video/olympos-handmade-poster.jpg" aria-hidden="true">
+            <source src="assets/video/olympos-handmade.mp4" type="video/mp4">
+          </video>
           <img src="assets/img/products/original-1.jpg" alt="Original kartlık — hardal sarısı negatif kesim detayı" class="w-full h-full object-cover hero-kenburns">
-          <div class="absolute inset-0" style="background:linear-gradient(0deg, rgba(24,16,10,.5), transparent 40%);"></div>
+          <div class="absolute inset-0" style="background:linear-gradient(0deg, rgba(24,16,10,.5), transparent 40%), radial-gradient(140px 140px at 100% 100%, rgba(24,16,10,.6), transparent 70%);"></div>
+          <div id="hero-video-badge" class="hero-video-badge">
+            <span class="hero-video-dot"></span>El Yapımı — Tanıtım
+          </div>
         </div>
         <div class="absolute -bottom-6 -left-6 md:-left-10 bg-cream-2 rounded-sm shadow-2xl px-6 py-5 max-w-[230px] hidden sm:block">
           <p class="eyebrow" style="color:var(--saffron-dim)"><span class="glyph" style="--gsize:12px"></span>Original</p>
