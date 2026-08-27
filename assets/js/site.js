@@ -99,12 +99,120 @@ const OLYMPOS = (() => {
 
   const CART_KEY = 'olympos_cart_v1';
 
+  /* ---------------- product overrides (admin panel) ----------------
+     yonetici.html edits products through the functions below rather
+     than touching PRODUCTS directly, so the hand-authored catalog
+     above stays the fallback/reset target. Two localStorage tables:
+       - OVERRIDES: { [baseProductId]: { field: value, ..., hidden? } }
+         patched onto the matching PRODUCTS entry.
+       - CUSTOM: [ {..full product, hidden?} ] products admin added
+         from scratch, no PRODUCTS entry to patch.
+     An override field always wins over the PRODUCT_I18N table in
+     i18n.js — an admin edit should show in every language, not get
+     clobbered by the hardcoded EN/DE copy — see mergeTranslation(). */
+  const OVERRIDES_KEY = 'olympos_product_overrides_v1';
+  const CUSTOM_KEY = 'olympos_custom_products_v1';
+
+  function readLS(key, fallback) {
+    try { const v = JSON.parse(localStorage.getItem(key)); return v == null ? fallback : v; }
+    catch { return fallback; }
+  }
+  function writeLS(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+  function readOverrides() { return readLS(OVERRIDES_KEY, {}); }
+  function writeOverrides(v) { writeLS(OVERRIDES_KEY, v); }
+  function readCustom() { return readLS(CUSTOM_KEY, []); }
+  function writeCustom(v) { writeLS(CUSTOM_KEY, v); }
+
+  // maps Turkish letters to plain ASCII, then anything else non-alphanumeric
+  // (accents included) is stripped by the final replace — no Unicode
+  // normalization needed for the handful of characters this site uses.
+  const SLUG_MAP = { 'ç': 'c', 'Ç': 'c', 'ğ': 'g', 'Ğ': 'g', 'ı': 'i', 'İ': 'i', 'ö': 'o', 'Ö': 'o', 'ş': 's', 'Ş': 's', 'ü': 'u', 'Ü': 'u' };
+  function slugify(str) {
+    const swapped = (str || '').split('').map(ch => SLUG_MAP[ch] || ch).join('');
+    return swapped.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-+|-+$)/g, '') || 'urun';
+  }
+
+  // every product this store knows about — Turkish base + admin
+  // overrides layered on, hidden ones included — for the admin panel.
+  function allProductsRaw() {
+    const overrides = readOverrides();
+    const based = PRODUCTS.map(p => {
+      const ov = overrides[p.id] || {};
+      return { ...p, ...ov, _overrideKeys: Object.keys(ov).filter(k => k !== 'hidden'), _source: 'base', _hidden: !!ov.hidden };
+    });
+    const custom = readCustom().map(p => ({ ...p, _overrideKeys: Object.keys(p), _source: 'custom', _hidden: !!p.hidden }));
+    return [...based, ...custom];
+  }
+
+  // i18n's tProduct() would otherwise let a hardcoded EN/DE translation
+  // clobber a field the admin just edited — re-apply those fields after.
+  function mergeTranslation(p) {
+    const translated = window.OLYMPOS_I18N.tProduct(p);
+    (p._overrideKeys || []).forEach(k => { translated[k] = p[k]; });
+    const { _overrideKeys, _source, _hidden, ...clean } = translated;
+    return clean;
+  }
+
   // PRODUCTS above carries the Turkish source text; getProducts/getProduct
-  // always hand back the copy localized for whatever language is active.
-  function getProducts() { return PRODUCTS.map(p => window.OLYMPOS_I18N.tProduct(p)); }
+  // always hand back the copy localized for whatever language is active,
+  // with any admin-panel edits layered on top.
+  function getProducts() { return allProductsRaw().filter(p => !p._hidden).map(mergeTranslation); }
   function getProduct(id) {
-    const p = PRODUCTS.find(p => p.id === id) || null;
-    return p ? window.OLYMPOS_I18N.tProduct(p) : null;
+    const p = allProductsRaw().find(p => p.id === id && !p._hidden) || null;
+    return p ? mergeTranslation(p) : null;
+  }
+
+  /* ---------------- admin: product CRUD ---------------- */
+  function adminListProducts() { return allProductsRaw(); }
+  function adminGetProduct(id) { return allProductsRaw().find(p => p.id === id) || null; }
+
+  function adminUpdateProduct(id, fields) {
+    const customList = readCustom();
+    const idx = customList.findIndex(p => p.id === id);
+    if (idx !== -1) {
+      customList[idx] = { ...customList[idx], ...fields };
+      writeCustom(customList);
+      return customList[idx];
+    }
+    const overrides = readOverrides();
+    overrides[id] = { ...(overrides[id] || {}), ...fields };
+    writeOverrides(overrides);
+    return { ...PRODUCTS.find(p => p.id === id), ...overrides[id] };
+  }
+
+  function adminAddProduct(fields) {
+    const base = {
+      category: 'kartlik', categoryLabel: 'Kartlık', price: 0, compareAt: null,
+      color: '', swatch: '#241811', size: '', material: '%100 dana derisi', slots: '',
+      tagline: '', description: '', badge: null, images: [], hidden: false
+    };
+    const existingIds = new Set([...PRODUCTS.map(p => p.id), ...readCustom().map(p => p.id)]);
+    let id = slugify(fields.name);
+    while (existingIds.has(id)) id = slugify(fields.name) + '-' + Math.random().toString(36).slice(2, 5);
+    const product = { ...base, ...fields, id };
+    const customList = readCustom();
+    customList.push(product);
+    writeCustom(customList);
+    return product;
+  }
+
+  function adminSetHidden(id, hidden) {
+    const customList = readCustom();
+    const idx = customList.findIndex(p => p.id === id);
+    if (idx !== -1) { customList[idx].hidden = hidden; writeCustom(customList); return; }
+    const overrides = readOverrides();
+    overrides[id] = { ...(overrides[id] || {}), hidden };
+    writeOverrides(overrides);
+  }
+
+  function adminResetProduct(id) {
+    const overrides = readOverrides();
+    delete overrides[id];
+    writeOverrides(overrides);
+  }
+
+  function adminDeleteCustomProduct(id) {
+    writeCustom(readCustom().filter(p => p.id !== id));
   }
 
   function formatPrice(n) {
@@ -736,6 +844,7 @@ const OLYMPOS = (() => {
 
   return {
     getProducts, getProduct, formatPrice, addToCart, toast, productCardHTML, bindQuickAdd, attachStitchFX,
-    cartLines, cartSubtotal, cartCount, clearCart, setQty, removeFromCart
+    cartLines, cartSubtotal, cartCount, clearCart, setQty, removeFromCart,
+    adminListProducts, adminGetProduct, adminUpdateProduct, adminAddProduct, adminSetHidden, adminResetProduct, adminDeleteCustomProduct
   };
 })();

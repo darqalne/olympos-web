@@ -153,6 +153,7 @@
           <p class="eyebrow" style="color:var(--saffron-dim)"><span class="glyph" style="--gsize:12px"></span><span data-i18n="account.welcome">Hoş Geldiniz</span></p>
           <p id="acc-name" class="font-display text-umber-800 text-xl mt-3"></p>
           <p id="acc-email" class="text-umber-500 text-sm mt-1"></p>
+          <a id="admin-link" href="yonetici.html" class="btn btn-accent btn-sm btn-block mt-5" style="display:none;">Yönetici Paneli</a>
           <div class="flex flex-wrap gap-3 mt-6">
             <a href="bilgilerim.html" class="btn btn-outline btn-sm" data-i18n="account.editProfile">Bilgilerimi Düzenle</a>
             <button id="logout-btn" class="btn btn-outline btn-sm" data-i18n="account.logout">Çıkış Yap</button>
@@ -230,6 +231,7 @@
   if (user) {
     document.getElementById('acc-name').textContent = user.name;
     document.getElementById('acc-email').textContent = user.email;
+    if (user.isAdmin) document.getElementById('admin-link').style.display = 'inline-flex';
 
     const orders = OLYMPOS_BACKEND.getOrdersForUser(user.id);
     const listEl = document.getElementById('orders-list');

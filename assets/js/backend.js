@@ -47,6 +47,12 @@ window.OLYMPOS_BACKEND = (() => {
     }
   };
 
+  // Accounts whose email matches this list get isAdmin:true and are
+  // routed straight to yonetici.html on login/register. Add more
+  // emails here (lowercase) to grant a teammate admin access — once
+  // a real database is wired up, this becomes a role column instead.
+  const ADMIN_EMAILS = ['picturesshadow0@gmail.com'];
+
   const USERS_KEY = 'olympos_users_v1';
   const SESSION_KEY = 'olympos_session_v1';
   const ORDERS_KEY = 'olympos_orders_v1';
@@ -73,7 +79,9 @@ window.OLYMPOS_BACKEND = (() => {
   function publicUser(u) {
     return {
       id: u.id, name: u.name, email: u.email,
-      phone: u.phone || '', address: u.address || '', city: u.city || '', zip: u.zip || ''
+      phone: u.phone || '', address: u.address || '', city: u.city || '', zip: u.zip || '',
+      createdAt: u.createdAt || null,
+      isAdmin: ADMIN_EMAILS.includes(u.email)
     };
   }
 
@@ -135,6 +143,23 @@ window.OLYMPOS_BACKEND = (() => {
     if (!user) {
       const back = encodeURIComponent(window.location.pathname + window.location.search);
       window.location.href = `giris.html?sonra=${back}`;
+    }
+    return user;
+  }
+
+  // guards yonetici.html: sends signed-out visitors to login (returning
+  // here after), and signed-in non-admins back to the storefront —
+  // never leaks that an admin panel exists to a regular shopper.
+  function requireAdmin() {
+    const user = currentUser();
+    if (!user) {
+      const back = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `giris.html?sonra=${back}`;
+      return null;
+    }
+    if (!user.isAdmin) {
+      window.location.href = 'index.html';
+      return null;
     }
     return user;
   }
@@ -207,6 +232,41 @@ window.OLYMPOS_BACKEND = (() => {
     ) || null;
   }
 
+  /* ---------------- admin ---------------- */
+  // every function below is admin-only data access (yonetici.html
+  // guards the page itself with requireAdmin() before ever calling
+  // these) — reads straight through the same USERS_KEY/ORDERS_KEY
+  // localStorage this whole mock backend already uses, so a real
+  // database swap-in later just replaces these bodies, same as above.
+
+  function getAllUsers() {
+    const users = readJSON(USERS_KEY, []);
+    const orders = readJSON(ORDERS_KEY, []);
+    return users.map(u => {
+      const own = orders.filter(o => o.userId === u.id);
+      return {
+        ...publicUser(u),
+        orderCount: own.length,
+        totalSpent: own.reduce((s, o) => s + o.subtotal, 0)
+      };
+    }).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  }
+
+  function getAllOrders() {
+    return readJSON(ORDERS_KEY, []).sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  function updateOrderStatus(orderId, status) {
+    const orders = readJSON(ORDERS_KEY, []);
+    const order = orders.find(o => o.id === orderId);
+    if (!order) throw fail('Sipariş bulunamadı.', 'not-found');
+    order.status = status;
+    order.history = order.history || [];
+    order.history.push({ status, at: Date.now() });
+    writeJSON(ORDERS_KEY, orders);
+    return order;
+  }
+
   /* ---------------- payment ---------------- */
   async function processPayment({ amount, card, orderDraft }) {
     if (CONFIG.payment.mode === 'iyzico') {
@@ -230,8 +290,9 @@ window.OLYMPOS_BACKEND = (() => {
 
   return {
     CONFIG,
-    register, login, logout, currentUser, requireAuth, updateProfile,
+    register, login, logout, currentUser, requireAuth, requireAdmin, updateProfile,
     createOrder, getOrdersForUser, findOrder,
-    processPayment
+    processPayment,
+    getAllUsers, getAllOrders, updateOrderStatus
   };
 })();

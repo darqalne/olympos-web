@@ -221,7 +221,8 @@
     const original = btn.textContent;
     btn.disabled = true; btn.textContent = OLYMPOS_I18N.t('login.loggingIn');
     try {
-      await OLYMPOS_BACKEND.login({ email: form.email.value.trim(), password: form.password.value });
+      const user = await OLYMPOS_BACKEND.login({ email: form.email.value.trim(), password: form.password.value });
+      if (user.isAdmin) { window.location.href = 'yonetici.html'; return; }
       const params = new URLSearchParams(window.location.search);
       window.location.href = params.get('sonra') || 'hesabim.html';
     } catch (err) {

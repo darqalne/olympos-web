@@ -19,13 +19,27 @@ const mime = {
   '.mp4': 'video/mp4',
 };
 
+function send(res, filePath) {
+  fs.readFile(filePath, (err, data) => {
+    if (err) { res.writeHead(404); res.end('Not found'); return; }
+    const ext = path.extname(filePath).toLowerCase();
+    res.writeHead(200, { 'Content-Type': mime[ext] || 'application/octet-stream' });
+    res.end(data);
+  });
+}
+
 http.createServer((req, res) => {
   let urlPath = decodeURIComponent(req.url.split('?')[0]);
   if (urlPath === '/') urlPath = '/index.html';
   const filePath = path.join(root, urlPath);
   if (!filePath.startsWith(root)) { res.writeHead(403); res.end(); return; }
   fs.readFile(filePath, (err, data) => {
-    if (err) { res.writeHead(404); res.end('Not found: ' + urlPath); return; }
+    if (err) {
+      // clean-URL fallback: /yonetici -> yonetici.html, mirroring the
+      // vercel.json rewrite used in production
+      if (!path.extname(filePath)) { send(res, filePath + '.html'); return; }
+      res.writeHead(404); res.end('Not found: ' + urlPath); return;
+    }
     const ext = path.extname(filePath).toLowerCase();
     res.writeHead(200, { 'Content-Type': mime[ext] || 'application/octet-stream' });
     res.end(data);

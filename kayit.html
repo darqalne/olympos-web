@@ -237,7 +237,8 @@
     const original = btn.textContent;
     btn.disabled = true; btn.textContent = OLYMPOS_I18N.t('register.creating');
     try {
-      await OLYMPOS_BACKEND.register({ name, email, password });
+      const user = await OLYMPOS_BACKEND.register({ name, email, password });
+      if (user.isAdmin) { window.location.href = 'yonetici.html'; return; }
       const params = new URLSearchParams(window.location.search);
       window.location.href = params.get('sonra') || 'hesabim.html';
     } catch (err) {

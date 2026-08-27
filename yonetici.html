@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yönetici Paneli — Olympos Leather</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="assets/img/brand/logo-mark.png">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/tailwind.css">
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="font-body" id="admin-body" style="visibility:hidden;">
+
+<div class="admin-shell">
+  <div class="admin-sidebar-backdrop" id="sidebar-backdrop" style="display:none; position:fixed; inset:0; background:rgba(24,16,10,0.5); z-index:29;"></div>
+
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <div class="admin-sidebar-head">
+      <img src="assets/img/brand/logo-mark.png" alt="">
+      <span>YÖNETİCİ PANELİ</span>
+    </div>
+    <nav class="admin-nav">
+      <button type="button" class="admin-nav-link active" data-panel="dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Genel Bakış
+      </button>
+      <button type="button" class="admin-nav-link" data-panel="users">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+        Kullanıcılar
+        <span class="admin-nav-count" id="nav-count-users">0</span>
+      </button>
+      <button type="button" class="admin-nav-link" data-panel="orders">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Siparişler
+        <span class="admin-nav-count" id="nav-count-orders">0</span>
+      </button>
+      <button type="button" class="admin-nav-link" data-panel="products">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41 12 22l-9-9V4a1 1 0 0 1 1-1h9l9 9a1 1 0 0 1 0 1.41Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+        Ürünler
+        <span class="admin-nav-count" id="nav-count-products">0</span>
+      </button>
+    </nav>
+    <div class="admin-sidebar-foot">
+      <p class="who" id="side-who">—</p>
+      <p class="email" id="side-email">—</p>
+      <div class="links">
+        <a href="index.html">Siteye Dön</a>
+        <button type="button" id="logout-btn">Çıkış Yap</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <div style="display:flex; align-items:center; gap:0.9rem;">
+        <button type="button" class="icon-btn admin-menu-toggle" id="sidebar-toggle" aria-label="Menü">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div>
+          <h1 id="topbar-title">Genel Bakış</h1>
+          <p id="topbar-sub">Mağazanın anlık durumu</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- ============ DASHBOARD ============ -->
+      <section class="admin-panel active" data-panel="dashboard">
+        <div class="storage-note">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+          <span>Bu panel şu an <strong>tarayıcı içi mock veritabanı</strong> ile çalışıyor — kullanıcılar, siparişler ve ürün düzenlemeleri bu tarayıcıda saklanıyor. Gerçek bir veritabanına bağlandığında, bu ekranlar aynı kalacak, sadece arkadaki veri kaynağı değişecek.</span>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <p class="value" id="stat-users">0</p>
+            <p class="label">Toplam Kullanıcı</p>
+          </div>
+          <div class="stat-card">
+            <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+            <p class="value" id="stat-orders">0</p>
+            <p class="label">Toplam Sipariş</p>
+          </div>
+          <div class="stat-card">
+            <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <p class="value" id="stat-revenue">0,00 ₺</p>
+            <p class="label">Toplam Ciro</p>
+          </div>
+          <div class="stat-card">
+            <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41 12 22l-9-9V4a1 1 0 0 1 1-1h9l9 9a1 1 0 0 1 0 1.41Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
+            <p class="value" id="stat-products">0</p>
+            <p class="label">Yayındaki Ürün</p>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h2>Son Siparişler</h2>
+              <p class="sub">En son verilen 5 sipariş</p>
+            </div>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Sipariş No</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th><th>Durum</th></tr></thead>
+              <tbody id="dash-recent-orders"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ USERS ============ -->
+      <section class="admin-panel" data-panel="users">
+        <div class="admin-card" style="margin-top:0;">
+          <div class="admin-card-head">
+            <div>
+              <h2>Kullanıcılar</h2>
+              <p class="sub">Kayıtlı tüm hesaplar ve bilgileri</p>
+            </div>
+            <div class="admin-toolbar">
+              <div class="admin-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="users-search" placeholder="İsim veya e-posta ara…">
+              </div>
+            </div>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Kullanıcı</th><th>Telefon</th><th>Şehir</th><th>Kayıt Tarihi</th><th>Sipariş</th><th>Toplam Harcama</th></tr></thead>
+              <tbody id="users-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ORDERS ============ -->
+      <section class="admin-panel" data-panel="orders">
+        <div class="admin-card" style="margin-top:0;">
+          <div class="admin-card-head">
+            <div>
+              <h2>Siparişler</h2>
+              <p class="sub">Kayıtlı ve misafir tüm siparişler</p>
+            </div>
+            <div class="admin-toolbar">
+              <select class="status-select" id="orders-status-filter">
+                <option value="">Tüm Durumlar</option>
+                <option value="received">Alındı</option>
+                <option value="preparing">Hazırlanıyor</option>
+                <option value="shipped">Kargoya Verildi</option>
+                <option value="delivered">Teslim Edildi</option>
+              </select>
+              <div class="admin-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="orders-search" placeholder="Sipariş no, isim veya e-posta…">
+              </div>
+            </div>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Sipariş No</th><th>Müşteri</th><th>Tarih</th><th>Ürün</th><th>Tutar</th><th>Durum</th><th></th></tr></thead>
+              <tbody id="orders-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PRODUCTS ============ -->
+      <section class="admin-panel" data-panel="products">
+        <div class="admin-card" style="margin-top:0;">
+          <div class="admin-card-head">
+            <div>
+              <h2>Ürünler</h2>
+              <p class="sub">Başlık, açıklama, fiyat ve görselleri düzenleyin</p>
+            </div>
+            <div class="admin-toolbar">
+              <div class="admin-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="products-search" placeholder="Ürün ara…">
+              </div>
+              <button type="button" class="btn btn-accent btn-sm" id="add-product-btn">+ Yeni Ürün</button>
+            </div>
+          </div>
+          <div class="admin-product-grid" id="products-grid"></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ generic view modal (user / order detail) ============ -->
+<div class="admin-modal-backdrop" id="view-modal-backdrop">
+  <div class="admin-modal">
+    <div class="admin-modal-head">
+      <h3 id="view-modal-title">Detay</h3>
+      <button type="button" class="icon-btn" data-close-view aria-label="Kapat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="admin-modal-body" id="view-modal-body"></div>
+    <div class="admin-modal-foot">
+      <button type="button" class="btn btn-outline btn-sm" data-close-view>Kapat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ product create/edit modal ============ -->
+<div class="admin-modal-backdrop" id="product-modal-backdrop">
+  <div class="admin-modal">
+    <div class="admin-modal-head">
+      <h3 id="product-modal-title">Ürünü Düzenle</h3>
+      <button type="button" class="icon-btn" data-close-product aria-label="Kapat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="product-form">
+      <div class="admin-modal-body">
+        <div class="field-row">
+          <div class="field">
+            <label for="pf-name">Başlık</label>
+            <input id="pf-name" required>
+          </div>
+          <div class="field">
+            <label for="pf-category">Kategori</label>
+            <select id="pf-category">
+              <option value="kartlik">Kartlık</option>
+              <option value="cuzdan">Cüzdan</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="pf-tagline">Kısa Slogan</label>
+          <input id="pf-tagline" placeholder="Ör. Sadeliğin en ince hali">
+        </div>
+
+        <div class="field">
+          <label for="pf-description">Açıklama</label>
+          <textarea id="pf-description" rows="4"></textarea>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="pf-price">Fiyat (₺)</label>
+            <input id="pf-price" type="number" min="0" step="0.01" required>
+          </div>
+          <div class="field">
+            <label for="pf-compareAt">İndirim Öncesi Fiyat (₺)</label>
+            <input id="pf-compareAt" type="number" min="0" step="0.01" placeholder="Boş bırakılırsa indirim gösterilmez">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="pf-badge">Rozet</label>
+            <input id="pf-badge" placeholder="Ör. Yeni, Çok Satan (boş = yok)">
+          </div>
+          <div class="field">
+            <label for="pf-color">Renk</label>
+            <input id="pf-color" placeholder="Ör. Siyah">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="pf-size">Ölçü</label>
+            <input id="pf-size" placeholder="Ör. 8 × 10 cm">
+          </div>
+          <div class="field">
+            <label for="pf-swatch">Renk Örneği</label>
+            <div class="color-field">
+              <input type="color" id="pf-swatch-picker">
+              <input type="text" id="pf-swatch" placeholder="#241811">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="pf-material">Malzeme</label>
+            <input id="pf-material" placeholder="%100 dana derisi">
+          </div>
+          <div class="field">
+            <label for="pf-slots">Bölmeler</label>
+            <input id="pf-slots" placeholder="Ör. 4 kart bölmesi">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Görseller</label>
+          <div class="image-list" id="pf-images"></div>
+          <div class="image-add-row">
+            <input type="text" id="pf-image-url" placeholder="Görsel yolu/URL yapıştırın (assets/img/products/...)">
+            <button type="button" class="btn btn-outline btn-sm" id="pf-image-add-btn">Ekle</button>
+            <label class="upload-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg>
+              Bilgisayardan Yükle
+              <input type="file" id="pf-image-upload" accept="image/*" multiple style="display:none;">
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="admin-modal-foot">
+        <button type="button" class="btn btn-outline btn-sm" data-close-product>Vazgeç</button>
+        <button type="submit" class="btn btn-primary btn-sm">Kaydet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+(() => {
+  const admin = OLYMPOS_BACKEND.requireAdmin();
+  if (!admin) return; // requireAdmin already redirected
+
+  document.getElementById('admin-body').style.visibility = 'visible';
+  document.getElementById('side-who').textContent = admin.name;
+  document.getElementById('side-email').textContent = admin.email;
+
+  const STATUS_LABEL = { received: 'Alındı', preparing: 'Hazırlanıyor', shipped: 'Kargoya Verildi', delivered: 'Teslim Edildi' };
+  const PANEL_META = {
+    dashboard: { title: 'Genel Bakış', sub: 'Mağazanın anlık durumu' },
+    users: { title: 'Kullanıcılar', sub: 'Kayıtlı tüm hesaplar' },
+    orders: { title: 'Siparişler', sub: 'Kayıtlı ve misafir tüm siparişler' },
+    products: { title: 'Ürünler', sub: 'Katalogdaki tüm ürünler' }
+  };
+
+  function esc(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+  }
+  function formatDate(ts) {
+    if (!ts) return '—';
+    return new Date(ts).toLocaleDateString('tr-TR', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+  function initials(name) {
+    return (name || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  }
+
+  /* ---------------- navigation ---------------- */
+  const sidebar = document.getElementById('admin-sidebar');
+  const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+  function closeSidebar() { sidebar.classList.remove('open'); sidebarBackdrop.style.display = 'none'; }
+  document.getElementById('sidebar-toggle').addEventListener('click', () => {
+    sidebar.classList.add('open');
+    sidebarBackdrop.style.display = 'block';
+  });
+  sidebarBackdrop.addEventListener('click', closeSidebar);
+
+  document.querySelectorAll('.admin-nav-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.admin-nav-link').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const key = btn.dataset.panel;
+      document.querySelectorAll('.admin-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === key));
+      document.getElementById('topbar-title').textContent = PANEL_META[key].title;
+      document.getElementById('topbar-sub').textContent = PANEL_META[key].sub;
+      closeSidebar();
+      if (key === 'dashboard') renderDashboard();
+      if (key === 'users') renderUsers();
+      if (key === 'orders') renderOrders();
+      if (key === 'products') renderProducts();
+    });
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    OLYMPOS_BACKEND.logout();
+    window.location.href = 'index.html';
+  });
+
+  /* ---------------- view modal (users / orders) ---------------- */
+  const viewBackdrop = document.getElementById('view-modal-backdrop');
+  const viewTitle = document.getElementById('view-modal-title');
+  const viewBody = document.getElementById('view-modal-body');
+  function openView(title, html) {
+    viewTitle.textContent = title;
+    viewBody.innerHTML = html;
+    viewBackdrop.classList.add('open');
+  }
+  function closeView() { viewBackdrop.classList.remove('open'); }
+  document.querySelectorAll('[data-close-view]').forEach(el => el.addEventListener('click', closeView));
+  viewBackdrop.addEventListener('click', (e) => { if (e.target === viewBackdrop) closeView(); });
+
+  /* ---------------- dashboard ---------------- */
+  function renderDashboard() {
+    const users = OLYMPOS_BACKEND.getAllUsers();
+    const orders = OLYMPOS_BACKEND.getAllOrders();
+    const products = OLYMPOS.adminListProducts().filter(p => !p._hidden);
+    const revenue = orders.reduce((s, o) => s + o.subtotal, 0);
+
+    document.getElementById('stat-users').textContent = users.length;
+    document.getElementById('stat-orders').textContent = orders.length;
+    document.getElementById('stat-revenue').textContent = OLYMPOS.formatPrice(revenue);
+    document.getElementById('stat-products').textContent = products.length;
+    document.getElementById('nav-count-users').textContent = users.length;
+    document.getElementById('nav-count-orders').textContent = orders.length;
+    document.getElementById('nav-count-products').textContent = products.length;
+
+    const recent = orders.slice(0, 5);
+    const body = document.getElementById('dash-recent-orders');
+    body.innerHTML = recent.length ? recent.map(o => `
+      <tr>
+        <td class="strong">${esc(o.number)}</td>
+        <td>${esc(o.shipping?.name || o.email)}</td>
+        <td class="muted">${formatDate(o.createdAt)}</td>
+        <td>${OLYMPOS.formatPrice(o.subtotal)}</td>
+        <td><span class="status-pill status-${o.status}">${STATUS_LABEL[o.status] || o.status}</span></td>
+      </tr>
+    `).join('') : `<tr class="admin-empty-row"><td colspan="5">Henüz sipariş yok.</td></tr>`;
+  }
+
+  /* ---------------- users ---------------- */
+  function renderUsers() {
+    const q = document.getElementById('users-search').value.trim().toLowerCase();
+    const users = OLYMPOS_BACKEND.getAllUsers().filter(u =>
+      !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+    );
+    const body = document.getElementById('users-table-body');
+    if (users.length === 0) {
+      body.innerHTML = `<tr class="admin-empty-row"><td colspan="6">Eşleşen kullanıcı yok.</td></tr>`;
+      return;
+    }
+    body.innerHTML = users.map(u => `
+      <tr class="clickable" data-user="${esc(u.id)}">
+        <td>
+          <div style="display:flex; align-items:center; gap:0.7rem;">
+            <span class="avatar-chip">${esc(initials(u.name))}</span>
+            <div>
+              <p class="strong">${esc(u.name)} ${u.isAdmin ? '<span class=\"chip chip-custom\">Admin</span>' : ''}</p>
+              <p class="muted">${esc(u.email)}</p>
+            </div>
+          </div>
+        </td>
+        <td>${esc(u.phone) || '<span class="muted">—</span>'}</td>
+        <td>${esc(u.city) || '<span class="muted">—</span>'}</td>
+        <td class="muted">${formatDate(u.createdAt)}</td>
+        <td>${u.orderCount}</td>
+        <td class="strong">${OLYMPOS.formatPrice(u.totalSpent)}</td>
+      </tr>
+    `).join('');
+    body.querySelectorAll('tr[data-user]').forEach(row => {
+      row.addEventListener('click', () => openUserDetail(row.dataset.user));
+    });
+  }
+
+  function openUserDetail(id) {
+    const user = OLYMPOS_BACKEND.getAllUsers().find(u => u.id === id);
+    if (!user) return;
+    const orders = OLYMPOS_BACKEND.getOrdersForUser(id);
+    const ordersHTML = orders.length ? orders.map(o => `
+      <div class="order-item-row">
+        <span>${esc(o.number)} · ${formatDate(o.createdAt)}</span>
+        <span><span class="status-pill status-${o.status}" style="margin-right:.6rem;">${STATUS_LABEL[o.status] || o.status}</span>${OLYMPOS.formatPrice(o.subtotal)}</span>
+      </div>
+    `).join('') : '<p class="muted" style="font-size:.85rem;">Bu kullanıcının henüz siparişi yok.</p>';
+
+    openView(user.name, `
+      <div class="detail-grid">
+        <div class="detail-item"><p class="k">E-posta</p><p class="v">${esc(user.email)}</p></div>
+        <div class="detail-item"><p class="k">Telefon</p><p class="v">${esc(user.phone) || '—'}</p></div>
+        <div class="detail-item"><p class="k">Adres</p><p class="v">${esc(user.address) || '—'}</p></div>
+        <div class="detail-item"><p class="k">Şehir / Posta Kodu</p><p class="v">${esc(user.city) || '—'} ${esc(user.zip) || ''}</p></div>
+        <div class="detail-item"><p class="k">Kayıt Tarihi</p><p class="v">${formatDate(user.createdAt)}</p></div>
+        <div class="detail-item"><p class="k">Toplam Harcama</p><p class="v">${OLYMPOS.formatPrice(user.totalSpent)}</p></div>
+      </div>
+      <hr class="detail-divider">
+      <p class="k" style="margin-bottom:.7rem;">SİPARİŞLERİ (${orders.length})</p>
+      ${ordersHTML}
+    `);
+  }
+
+  /* ---------------- orders ---------------- */
+  function renderOrders() {
+    const q = document.getElementById('orders-search').value.trim().toLowerCase();
+    const statusFilter = document.getElementById('orders-status-filter').value;
+    const orders = OLYMPOS_BACKEND.getAllOrders().filter(o => {
+      if (statusFilter && o.status !== statusFilter) return false;
+      if (!q) return true;
+      const hay = `${o.number} ${o.email} ${o.shipping?.name || ''}`.toLowerCase();
+      return hay.includes(q);
+    });
+    const body = document.getElementById('orders-table-body');
+    if (orders.length === 0) {
+      body.innerHTML = `<tr class="admin-empty-row"><td colspan="7">Eşleşen sipariş yok.</td></tr>`;
+      return;
+    }
+    body.innerHTML = orders.map(o => `
+      <tr>
+        <td class="strong">${esc(o.number)}</td>
+        <td>
+          <p class="strong" style="font-weight:500;">${esc(o.shipping?.name || '—')}</p>
+          <p class="muted">${esc(o.email)}</p>
+        </td>
+        <td class="muted">${formatDate(o.createdAt)}</td>
+        <td>${o.items.reduce((s, i) => s + i.qty, 0)} ürün</td>
+        <td class="strong">${OLYMPOS.formatPrice(o.subtotal)}</td>
+        <td>
+          <select class="status-select" data-order-status="${esc(o.id)}">
+            ${Object.keys(STATUS_LABEL).map(k => `<option value="${k}" ${k === o.status ? 'selected' : ''}>${STATUS_LABEL[k]}</option>`).join('')}
+          </select>
+        </td>
+        <td><button type="button" class="btn btn-outline btn-sm" data-order-detail="${esc(o.id)}">Detay</button></td>
+      </tr>
+    `).join('');
+
+    body.querySelectorAll('[data-order-status]').forEach(sel => {
+      sel.addEventListener('change', () => {
+        OLYMPOS_BACKEND.updateOrderStatus(sel.dataset.orderStatus, sel.value);
+        OLYMPOS.toast('Sipariş durumu güncellendi.');
+        renderDashboard();
+      });
+    });
+    body.querySelectorAll('[data-order-detail]').forEach(btn => {
+      btn.addEventListener('click', () => openOrderDetail(btn.dataset.orderDetail));
+    });
+  }
+
+  function openOrderDetail(id) {
+    const order = OLYMPOS_BACKEND.getAllOrders().find(o => o.id === id);
+    if (!order) return;
+    const itemsHTML = order.items.map(i => `
+      <div class="order-item-row">
+        <span>${esc(i.name)} × ${i.qty}</span>
+        <span>${OLYMPOS.formatPrice(i.price * i.qty)}</span>
+      </div>
+    `).join('');
+    openView(order.number, `
+      <div class="detail-grid">
+        <div class="detail-item"><p class="k">Alıcı</p><p class="v">${esc(order.shipping?.name || '—')}</p></div>
+        <div class="detail-item"><p class="k">E-posta</p><p class="v">${esc(order.email)}</p></div>
+        <div class="detail-item"><p class="k">Telefon</p><p class="v">${esc(order.shipping?.phone) || '—'}</p></div>
+        <div class="detail-item"><p class="k">Tarih</p><p class="v">${formatDate(order.createdAt)}</p></div>
+        <div class="detail-item" style="grid-column:1/-1;"><p class="k">Adres</p><p class="v">${esc(order.shipping?.address) || '—'}, ${esc(order.shipping?.city) || ''} ${esc(order.shipping?.zip) || ''}</p></div>
+      </div>
+      <hr class="detail-divider">
+      <p class="k" style="margin-bottom:.7rem;">ÜRÜNLER</p>
+      ${itemsHTML}
+      <hr class="detail-divider">
+      <div class="order-item-row" style="border:0; font-weight:600;">
+        <span>Toplam</span><span>${OLYMPOS.formatPrice(order.subtotal)}</span>
+      </div>
+    `);
+  }
+
+  /* ---------------- products ---------------- */
+  function renderProducts() {
+    const q = document.getElementById('products-search').value.trim().toLowerCase();
+    const products = OLYMPOS.adminListProducts().filter(p => !q || p.name.toLowerCase().includes(q));
+    const grid = document.getElementById('products-grid');
+    if (products.length === 0) {
+      grid.innerHTML = `<p class="muted" style="padding:2rem 0;">Eşleşen ürün yok.</p>`;
+      return;
+    }
+    grid.innerHTML = products.map(p => `
+      <div class="admin-product-card ${p._hidden ? 'is-hidden' : ''}">
+        <div class="admin-product-thumb">
+          ${p._hidden ? '<span class="chip chip-hidden">Gizli</span>' : p._source === 'custom' ? '<span class="chip chip-custom">Yeni</span>' : ''}
+          <img src="${esc(p.images && p.images[0] || 'https://placehold.co/400x500?text=Görsel+Yok')}" alt="">
+        </div>
+        <div class="admin-product-body">
+          <p class="name">${esc(p.name)}</p>
+          <p class="meta">${esc(p.categoryLabel)}${p.badge ? ' · ' + esc(p.badge) : ''}</p>
+          <p class="price">${OLYMPOS.formatPrice(p.price)}${p.compareAt ? ` <span class="price-strike">${OLYMPOS.formatPrice(p.compareAt)}</span>` : ''}</p>
+          <div class="admin-product-actions">
+            <button type="button" class="btn btn-outline btn-sm" data-edit-product="${esc(p.id)}">Düzenle</button>
+            <button type="button" class="btn btn-outline btn-sm" data-toggle-hidden="${esc(p.id)}" data-hidden="${p._hidden ? '1' : '0'}">${p._hidden ? 'Yayınla' : 'Gizle'}</button>
+            ${p._source === 'custom'
+              ? `<button type="button" class="btn btn-outline btn-sm" data-delete-product="${esc(p.id)}">Sil</button>`
+              : (p._overrideKeys && p._overrideKeys.length ? `<button type="button" class="btn btn-outline btn-sm" data-reset-product="${esc(p.id)}">Sıfırla</button>` : '')}
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('[data-edit-product]').forEach(btn => {
+      btn.addEventListener('click', () => openProductModal(btn.dataset.editProduct));
+    });
+    grid.querySelectorAll('[data-toggle-hidden]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        OLYMPOS.adminSetHidden(btn.dataset.toggleHidden, btn.dataset.hidden !== '1');
+        OLYMPOS.toast(btn.dataset.hidden === '1' ? 'Ürün yayına alındı.' : 'Ürün gizlendi.');
+        renderProducts();
+        renderDashboard();
+      });
+    });
+    grid.querySelectorAll('[data-reset-product]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!confirm('Bu üründeki tüm düzenlemeler silinip orijinal haline döndürülsün mü?')) return;
+        OLYMPOS.adminResetProduct(btn.dataset.resetProduct);
+        OLYMPOS.toast('Ürün orijinal haline döndürüldü.');
+        renderProducts();
+      });
+    });
+    grid.querySelectorAll('[data-delete-product]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!confirm('Bu ürünü kalıcı olarak silmek istediğinize emin misiniz?')) return;
+        OLYMPOS.adminDeleteCustomProduct(btn.dataset.deleteProduct);
+        OLYMPOS.toast('Ürün silindi.');
+        renderProducts();
+        renderDashboard();
+      });
+    });
+  }
+
+  /* ---------------- product modal ---------------- */
+  const productBackdrop = document.getElementById('product-modal-backdrop');
+  const productForm = document.getElementById('product-form');
+  const pfImages = document.getElementById('pf-images');
+  let editingProductId = null;
+
+  function addImageRow(url) {
+    const row = document.createElement('div');
+    row.className = 'image-row';
+    row.innerHTML = `
+      <img class="thumb" src="${esc(url)}" onerror="this.style.opacity=0.15">
+      <input type="text" value="${esc(url)}">
+      <button type="button" aria-label="Kaldır">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    `;
+    const input = row.querySelector('input');
+    const img = row.querySelector('img');
+    input.addEventListener('input', () => { img.src = input.value; });
+    row.querySelector('button').addEventListener('click', () => row.remove());
+    pfImages.appendChild(row);
+  }
+
+  function fileToResizedDataURL(file, maxDim = 1400, quality = 0.85) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        img.onerror = reject;
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) {
+            const scale = maxDim / Math.max(width, height);
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  document.getElementById('pf-image-add-btn').addEventListener('click', () => {
+    const input = document.getElementById('pf-image-url');
+    const val = input.value.trim();
+    if (!val) return;
+    addImageRow(val);
+    input.value = '';
+  });
+  document.getElementById('pf-image-upload').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    for (const file of files) {
+      try { addImageRow(await fileToResizedDataURL(file)); }
+      catch { OLYMPOS.toast('Görsel yüklenemedi.'); }
+    }
+    e.target.value = '';
+  });
+
+  const swatchPicker = document.getElementById('pf-swatch-picker');
+  const swatchText = document.getElementById('pf-swatch');
+  swatchPicker.addEventListener('input', () => { swatchText.value = swatchPicker.value; });
+  swatchText.addEventListener('input', () => { if (/^#[0-9a-fA-F]{6}$/.test(swatchText.value)) swatchPicker.value = swatchText.value; });
+
+  function openProductModal(id) {
+    editingProductId = id || null;
+    const p = id ? OLYMPOS.adminGetProduct(id) : null;
+    document.getElementById('product-modal-title').textContent = p ? 'Ürünü Düzenle' : 'Yeni Ürün';
+    document.getElementById('pf-name').value = p ? p.name : '';
+    document.getElementById('pf-category').value = p ? p.category : 'kartlik';
+    document.getElementById('pf-tagline').value = p ? p.tagline || '' : '';
+    document.getElementById('pf-description').value = p ? p.description || '' : '';
+    document.getElementById('pf-price').value = p ? p.price : '';
+    document.getElementById('pf-compareAt').value = p && p.compareAt ? p.compareAt : '';
+    document.getElementById('pf-badge').value = p && p.badge ? p.badge : '';
+    document.getElementById('pf-color').value = p ? p.color || '' : '';
+    document.getElementById('pf-size').value = p ? p.size || '' : '';
+    document.getElementById('pf-material').value = p ? p.material || '%100 dana derisi' : '%100 dana derisi';
+    document.getElementById('pf-slots').value = p ? p.slots || '' : '';
+    const swatch = p && p.swatch ? p.swatch : '#241811';
+    swatchText.value = swatch;
+    swatchPicker.value = /^#[0-9a-fA-F]{6}$/.test(swatch) ? swatch : '#241811';
+
+    pfImages.innerHTML = '';
+    (p && p.images ? p.images : []).forEach(addImageRow);
+
+    productBackdrop.classList.add('open');
+  }
+  function closeProductModal() { productBackdrop.classList.remove('open'); }
+  document.getElementById('add-product-btn').addEventListener('click', () => openProductModal(null));
+  document.querySelectorAll('[data-close-product]').forEach(el => el.addEventListener('click', closeProductModal));
+  productBackdrop.addEventListener('click', (e) => { if (e.target === productBackdrop) closeProductModal(); });
+
+  productForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const category = document.getElementById('pf-category').value;
+    const categoryLabel = category === 'cuzdan' ? 'Cüzdan' : 'Kartlık';
+    const compareAtRaw = document.getElementById('pf-compareAt').value;
+    const fields = {
+      name: document.getElementById('pf-name').value.trim(),
+      category, categoryLabel,
+      tagline: document.getElementById('pf-tagline').value.trim(),
+      description: document.getElementById('pf-description').value.trim(),
+      price: parseFloat(document.getElementById('pf-price').value) || 0,
+      compareAt: compareAtRaw ? parseFloat(compareAtRaw) : null,
+      badge: document.getElementById('pf-badge').value.trim() || null,
+      color: document.getElementById('pf-color').value.trim(),
+      size: document.getElementById('pf-size').value.trim(),
+      swatch: swatchText.value.trim() || '#241811',
+      material: document.getElementById('pf-material').value.trim(),
+      slots: document.getElementById('pf-slots').value.trim(),
+      images: Array.from(pfImages.querySelectorAll('input')).map(i => i.value.trim()).filter(Boolean)
+    };
+    if (!fields.name) { OLYMPOS.toast('Ürün başlığı gerekli.'); return; }
+
+    if (editingProductId) OLYMPOS.adminUpdateProduct(editingProductId, fields);
+    else OLYMPOS.adminAddProduct(fields);
+
+    OLYMPOS.toast(editingProductId ? 'Ürün güncellendi.' : 'Ürün eklendi.');
+    closeProductModal();
+    renderProducts();
+    renderDashboard();
+  });
+
+  /* ---------------- search bindings ---------------- */
+  document.getElementById('users-search').addEventListener('input', renderUsers);
+  document.getElementById('orders-search').addEventListener('input', renderOrders);
+  document.getElementById('orders-status-filter').addEventListener('change', renderOrders);
+  document.getElementById('products-search').addEventListener('input', renderProducts);
+
+  /* ---------------- boot ---------------- */
+  renderDashboard();
+  renderUsers();
+  renderOrders();
+  renderProducts();
+})();
+</script>
+</body>
+</html>
