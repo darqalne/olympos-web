@@ -69,7 +69,12 @@ window.OLYMPOS_BACKEND = (() => {
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  function publicUser(u) { return { id: u.id, name: u.name, email: u.email }; }
+  function publicUser(u) {
+    return {
+      id: u.id, name: u.name, email: u.email,
+      phone: u.phone || '', address: u.address || '', city: u.city || '', zip: u.zip || ''
+    };
+  }
 
   /* ---------------- auth ---------------- */
   async function register({ name, email, password }) {
@@ -133,6 +138,38 @@ window.OLYMPOS_BACKEND = (() => {
     return user;
   }
 
+  async function updateProfile({ name, email, password, phone, address, city, zip }) {
+    const session = readJSON(SESSION_KEY, null);
+    if (!session) throw fail('Oturum bulunamadı.', 'not-authenticated');
+    if (!name || !email) throw fail('Ad soyad ve e-posta gerekli.', 'missing-fields');
+    if (password && password.length < 6) throw fail('Şifre en az 6 karakter olmalı.', 'weak-password');
+
+    if (CONFIG.auth.mode === 'firebase') {
+      // TODO: updateProfile(auth.currentUser, { displayName: name }),
+      // updateEmail(auth.currentUser, email), updatePassword(...) if password set
+      throw fail('Firebase auth henüz yapılandırılmadı.', 'not-configured');
+    }
+
+    await fakeLatency();
+    const users = readJSON(USERS_KEY, []);
+    const user = users.find(u => u.id === session.userId);
+    if (!user) throw fail('Kullanıcı bulunamadı.', 'not-found');
+    if (users.some(u => u.id !== user.id && u.email === email.toLowerCase())) {
+      throw fail('Bu e-posta ile zaten bir hesap var.', 'email-exists');
+    }
+
+    user.name = name;
+    user.email = email.toLowerCase();
+    user.phone = phone || '';
+    user.address = address || '';
+    user.city = city || '';
+    user.zip = zip || '';
+    if (password) user.passwordHash = await hash(password);
+
+    writeJSON(USERS_KEY, users);
+    return publicUser(user);
+  }
+
   /* ---------------- orders ---------------- */
   async function createOrder({ items, subtotal, shipping }) {
     await fakeLatency();
@@ -192,7 +229,7 @@ window.OLYMPOS_BACKEND = (() => {
 
   return {
     CONFIG,
-    register, login, logout, currentUser, requireAuth,
+    register, login, logout, currentUser, requireAuth, updateProfile,
     createOrder, getOrdersForUser, findOrder,
     processPayment
   };
