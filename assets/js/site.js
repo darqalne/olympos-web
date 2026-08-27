@@ -99,11 +99,16 @@ const OLYMPOS = (() => {
 
   const CART_KEY = 'olympos_cart_v1';
 
-  function getProducts() { return PRODUCTS; }
-  function getProduct(id) { return PRODUCTS.find(p => p.id === id) || null; }
+  // PRODUCTS above carries the Turkish source text; getProducts/getProduct
+  // always hand back the copy localized for whatever language is active.
+  function getProducts() { return PRODUCTS.map(p => window.OLYMPOS_I18N.tProduct(p)); }
+  function getProduct(id) {
+    const p = PRODUCTS.find(p => p.id === id) || null;
+    return p ? window.OLYMPOS_I18N.tProduct(p) : null;
+  }
 
   function formatPrice(n) {
-    return n.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+    return n.toLocaleString(window.OLYMPOS_I18N.getLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
   }
 
   /* ---------------- cart storage ---------------- */
@@ -131,7 +136,7 @@ const OLYMPOS = (() => {
     writeCart(cart);
     openDrawer();
     const p = getProduct(id);
-    if (p) toast(`${p.name} sepete eklendi`, 'cart');
+    if (p) toast(window.OLYMPOS_I18N.t('cart.addedToast', { name: p.name }), 'cart');
     pulseCartIcon();
   }
   function setQty(id, qty) {
@@ -208,22 +213,23 @@ const OLYMPOS = (() => {
     if (emptyEl) emptyEl.style.display = 'none';
     if (footEl) footEl.style.display = 'block';
 
+    const T = window.OLYMPOS_I18N;
     list.innerHTML = lines.map(l => `
       <div class="cart-line" data-line="${l.id}">
         <img src="${l.product.images[0]}" alt="${l.product.name}">
         <div style="flex:1; min-width:0;">
           <div style="display:flex; justify-content:space-between; gap:.5rem;">
             <p style="font-family:var(--font-display); font-size:.95rem; color:var(--umber-800);">${l.product.name}</p>
-            <button aria-label="Kaldır" data-remove="${l.id}" style="color:var(--umber-500);">
+            <button aria-label="${T.t('cart.removeAria')}" data-remove="${l.id}" style="color:var(--umber-500);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
             </button>
           </div>
           <p style="font-size:.78rem; color:var(--umber-500); margin-top:2px;">${l.product.color}</p>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-top:.6rem;">
             <div class="qty-stepper">
-              <button data-step="-1" data-id="${l.id}" aria-label="Azalt">−</button>
+              <button data-step="-1" data-id="${l.id}" aria-label="${T.t('cart.decreaseAria')}">−</button>
               <span>${l.qty}</span>
-              <button data-step="1" data-id="${l.id}" aria-label="Artır">+</button>
+              <button data-step="1" data-id="${l.id}" aria-label="${T.t('cart.increaseAria')}">+</button>
             </div>
             <span style="font-size:.88rem; color:var(--umber-800); font-weight:500;">${formatPrice(l.product.price * l.qty)}</span>
           </div>
@@ -299,16 +305,17 @@ const OLYMPOS = (() => {
 
   /* ---------------- product card markup ---------------- */
   function productCardHTML(p, opts = {}) {
+    const T = window.OLYMPOS_I18N;
     const cmp = p.compareAt ? `<span class="price-strike">${formatPrice(p.compareAt)}</span> ` : '';
     return `
     <article class="product-card">
-      <a href="urun.html?id=${p.id}" aria-label="${p.name} ürününü görüntüle">
+      <a href="urun.html?id=${p.id}" aria-label="${T.t('product.viewProductAria', { name: p.name })}">
         <div class="product-frame">
           ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
           <img src="${p.images[0]}" alt="${p.name} — ${p.tagline}" loading="lazy" width="800" height="1000" style="object-position:${p.imagePosition || 'center'};">
           <div class="frame-overlay"></div>
           <div class="quick-add">
-            <button class="btn btn-accent btn-sm btn-block" data-quick-add="${p.id}">Sepete Ekle</button>
+            <button class="btn btn-accent btn-sm btn-block" data-quick-add="${p.id}">${T.t('product.addToCart')}</button>
           </div>
         </div>
       </a>
@@ -396,6 +403,7 @@ const OLYMPOS = (() => {
   }
 
   /* ---------------- shop grid (magaza.html) ---------------- */
+  let shopGridRender = null;
   function initShopGrid() {
     const grid = document.getElementById('shop-grid');
     if (!grid) return;
@@ -411,15 +419,16 @@ const OLYMPOS = (() => {
       list = [...list];
       if (sortVal === 'price-asc') list.sort((a, b) => a.price - b.price);
       if (sortVal === 'price-desc') list.sort((a, b) => b.price - a.price);
-      if (sortVal === 'name') list.sort((a, b) => a.name.localeCompare(b.name, 'tr'));
+      if (sortVal === 'name') list.sort((a, b) => a.name.localeCompare(b.name, window.OLYMPOS_I18N.getLang()));
 
       grid.classList.remove('in-view');
       grid.innerHTML = list.map(p => productCardHTML(p)).join('');
       attachStitchFX(grid);
       requestAnimationFrame(() => grid.classList.add('in-view'));
       bindQuickAdd(grid);
-      if (countEl) countEl.textContent = `${list.length} ürün`;
+      if (countEl) countEl.textContent = window.OLYMPOS_I18N.t('shop.resultCount', { n: list.length });
     }
+    shopGridRender = render;
 
     filterBtns.forEach(btn => btn.addEventListener('click', () => {
       filterBtns.forEach(b => b.classList.remove('active'));
@@ -432,12 +441,11 @@ const OLYMPOS = (() => {
   }
 
   /* ---------------- product detail (urun.html) ---------------- */
-  function initProductDetail() {
+  let productDetailId = null;
+  function paintProductDetail() {
     const root = document.getElementById('product-detail');
-    if (!root) return;
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id') || getProducts()[0].id;
-    const p = getProduct(id) || getProducts()[0];
+    if (!root || !productDetailId) return;
+    const p = getProduct(productDetailId) || getProducts()[0];
 
     document.title = `${p.name} — Olympos Leather`;
     const metaDesc = `${p.name} — ${p.tagline} ${p.description}`.slice(0, 160);
@@ -473,7 +481,7 @@ const OLYMPOS = (() => {
     if (mainImg) { mainImg.src = p.images[0]; mainImg.style.objectPosition = imgPos; }
     if (thumbsWrap) {
       thumbsWrap.innerHTML = p.images.map((src, i) => `
-        <button class="gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" aria-label="Görsel ${i + 1}">
+        <button class="gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" aria-label="${window.OLYMPOS_I18N.t('product.imageAria', { n: i + 1 })}">
           <img src="${src}" alt="${p.name} detay ${i + 1}" width="120" height="150" style="width:100%; height:100%; object-fit:cover; object-position:${imgPos};">
         </button>`).join('');
       thumbsWrap.querySelectorAll('.gallery-thumb').forEach(btn => {
@@ -487,20 +495,6 @@ const OLYMPOS = (() => {
         });
       });
     }
-
-    // quantity stepper on PDP
-    const qtyEl = document.getElementById('pdp-qty');
-    document.getElementById('pdp-qty-minus')?.addEventListener('click', () => {
-      qtyEl.textContent = Math.max(1, parseInt(qtyEl.textContent, 10) - 1);
-    });
-    document.getElementById('pdp-qty-plus')?.addEventListener('click', () => {
-      qtyEl.textContent = Math.min(9, parseInt(qtyEl.textContent, 10) + 1);
-    });
-
-    document.getElementById('pdp-add-to-cart')?.addEventListener('click', () => {
-      const qty = qtyEl ? parseInt(qtyEl.textContent, 10) : 1;
-      addToCart(p.id, qty);
-    });
 
     // breadcrumb
     document.querySelectorAll('[data-field="breadcrumb"]').forEach(el => el.textContent = p.name);
@@ -530,6 +524,30 @@ const OLYMPOS = (() => {
         availability: 'https://schema.org/InStock',
         url: origin + '/urun.html?id=' + p.id
       }
+    }, 'product');
+  }
+
+  function initProductDetail() {
+    const root = document.getElementById('product-detail');
+    if (!root) return;
+    const params = new URLSearchParams(window.location.search);
+    productDetailId = params.get('id') || getProducts()[0].id;
+
+    paintProductDetail();
+
+    // quantity stepper + add-to-cart: bound once, read the live product
+    // (via productDetailId, unaffected by later language switches) at
+    // click-time so re-painting for a new language never double-binds.
+    const qtyEl = document.getElementById('pdp-qty');
+    document.getElementById('pdp-qty-minus')?.addEventListener('click', () => {
+      qtyEl.textContent = Math.max(1, parseInt(qtyEl.textContent, 10) - 1);
+    });
+    document.getElementById('pdp-qty-plus')?.addEventListener('click', () => {
+      qtyEl.textContent = Math.min(9, parseInt(qtyEl.textContent, 10) + 1);
+    });
+    document.getElementById('pdp-add-to-cart')?.addEventListener('click', () => {
+      const qty = qtyEl ? parseInt(qtyEl.textContent, 10) : 1;
+      addToCart(productDetailId, qty);
     });
 
     initReveal();
@@ -552,12 +570,13 @@ const OLYMPOS = (() => {
     if (!form) return;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      const T = window.OLYMPOS_I18N;
       const btn = form.querySelector('button[type="submit"]');
       const original = btn.textContent;
-      btn.textContent = 'Gönderiliyor…';
+      btn.textContent = T.t('contact.formSending');
       btn.disabled = true;
       setTimeout(() => {
-        toast('Mesajınız alındı. En kısa sürede dönüş yapacağız.', 'info');
+        toast(T.t('contact.formSuccessToast'), 'info');
         form.reset();
         btn.textContent = original;
         btn.disabled = false;
@@ -574,9 +593,11 @@ const OLYMPOS = (() => {
      Built from location.origin at runtime rather than a hardcoded domain,
      so it's correct on the live site, a preview deploy, or localhost
      without needing to bake a production URL into the page. */
-  function injectLD(obj) {
+  function injectLD(obj, id) {
+    if (id) document.querySelector(`script[data-ld-id="${id}"]`)?.remove();
     const script = document.createElement('script');
     script.type = 'application/ld+json';
+    if (id) script.setAttribute('data-ld-id', id);
     script.textContent = JSON.stringify(obj);
     document.head.appendChild(script);
   }
@@ -589,7 +610,7 @@ const OLYMPOS = (() => {
       url: origin + '/index.html',
       logo: origin + '/assets/img/brand/logo.png',
       sameAs: ['https://www.instagram.com/olymposleathers/']
-    });
+    }, 'organization');
 
     const crumbNav = document.querySelector('nav[aria-label="Breadcrumb"]');
     if (crumbNav) {
@@ -600,7 +621,7 @@ const OLYMPOS = (() => {
         name: el.textContent.trim(),
         item: el.tagName === 'A' ? origin + '/' + el.getAttribute('href') : undefined
       }));
-      injectLD({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items });
+      injectLD({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items }, 'breadcrumb');
     }
   }
 
@@ -632,6 +653,15 @@ const OLYMPOS = (() => {
     initFooterYear();
     initHeroVideo();
     initStructuredData();
+
+    // repaint anything site.js rendered in JS (product cards, cart
+    // lines, PDP fields) whenever the language switcher fires —
+    // static markup is handled separately by i18n.js itself.
+    window.addEventListener('olympos:langchange', () => {
+      renderCartDrawer();
+      if (shopGridRender) shopGridRender();
+      if (productDetailId) paintProductDetail();
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

@@ -57,6 +57,7 @@ window.OLYMPOS_BACKEND = (() => {
   }
   function writeJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
   function uid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+  function bt(key) { return window.OLYMPOS_I18N.t('backend.' + key); }
   function fail(message, code) { const e = new Error(message); e.code = code; return e; }
   function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
   function fakeLatency() { return wait(350 + Math.random() * 250); }
@@ -78,19 +79,19 @@ window.OLYMPOS_BACKEND = (() => {
 
   /* ---------------- auth ---------------- */
   async function register({ name, email, password }) {
-    if (!name || !email || !password) throw fail('Tüm alanları doldurun.', 'missing-fields');
-    if (password.length < 6) throw fail('Şifre en az 6 karakter olmalı.', 'weak-password');
+    if (!name || !email || !password) throw fail(bt('missingFields'), 'missing-fields');
+    if (password.length < 6) throw fail(bt('weakPassword'), 'weak-password');
 
     if (CONFIG.auth.mode === 'firebase') {
       // TODO: createUserWithEmailAndPassword(auth, email, password),
       // then updateProfile(user, { displayName: name })
-      throw fail('Firebase auth henüz yapılandırılmadı.', 'not-configured');
+      throw fail(bt('notConfigured'), 'not-configured');
     }
 
     await fakeLatency();
     const users = readJSON(USERS_KEY, []);
     if (users.some(u => u.email === email.toLowerCase())) {
-      throw fail('Bu e-posta ile zaten bir hesap var.', 'email-exists');
+      throw fail(bt('emailExists'), 'email-exists');
     }
     const user = { id: uid(), name, email: email.toLowerCase(), passwordHash: await hash(password), createdAt: Date.now() };
     users.push(user);
@@ -100,18 +101,18 @@ window.OLYMPOS_BACKEND = (() => {
   }
 
   async function login({ email, password }) {
-    if (!email || !password) throw fail('E-posta ve şifre gerekli.', 'missing-fields');
+    if (!email || !password) throw fail(bt('loginMissingFields'), 'missing-fields');
 
     if (CONFIG.auth.mode === 'firebase') {
       // TODO: signInWithEmailAndPassword(auth, email, password)
-      throw fail('Firebase auth henüz yapılandırılmadı.', 'not-configured');
+      throw fail(bt('notConfigured'), 'not-configured');
     }
 
     await fakeLatency();
     const users = readJSON(USERS_KEY, []);
     const pwHash = await hash(password);
     const user = users.find(u => u.email === email.toLowerCase() && u.passwordHash === pwHash);
-    if (!user) throw fail('E-posta veya şifre hatalı.', 'invalid-credentials');
+    if (!user) throw fail(bt('invalidCredentials'), 'invalid-credentials');
     writeJSON(SESSION_KEY, { userId: user.id });
     return publicUser(user);
   }
@@ -140,22 +141,22 @@ window.OLYMPOS_BACKEND = (() => {
 
   async function updateProfile({ name, email, password, phone, address, city, zip }) {
     const session = readJSON(SESSION_KEY, null);
-    if (!session) throw fail('Oturum bulunamadı.', 'not-authenticated');
-    if (!name || !email) throw fail('Ad soyad ve e-posta gerekli.', 'missing-fields');
-    if (password && password.length < 6) throw fail('Şifre en az 6 karakter olmalı.', 'weak-password');
+    if (!session) throw fail(bt('notAuthenticated'), 'not-authenticated');
+    if (!name || !email) throw fail(bt('profileMissingFields'), 'missing-fields');
+    if (password && password.length < 6) throw fail(bt('weakPassword'), 'weak-password');
 
     if (CONFIG.auth.mode === 'firebase') {
       // TODO: updateProfile(auth.currentUser, { displayName: name }),
       // updateEmail(auth.currentUser, email), updatePassword(...) if password set
-      throw fail('Firebase auth henüz yapılandırılmadı.', 'not-configured');
+      throw fail(bt('notConfigured'), 'not-configured');
     }
 
     await fakeLatency();
     const users = readJSON(USERS_KEY, []);
     const user = users.find(u => u.id === session.userId);
-    if (!user) throw fail('Kullanıcı bulunamadı.', 'not-found');
+    if (!user) throw fail(bt('userNotFound'), 'not-found');
     if (users.some(u => u.id !== user.id && u.email === email.toLowerCase())) {
-      throw fail('Bu e-posta ile zaten bir hesap var.', 'email-exists');
+      throw fail(bt('emailExists'), 'email-exists');
     }
 
     user.name = name;
@@ -214,7 +215,7 @@ window.OLYMPOS_BACKEND = (() => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount, card, orderDraft })
       });
-      if (!res.ok) throw fail('Ödeme başarısız. Lütfen tekrar deneyin.', 'payment-failed');
+      if (!res.ok) throw fail(bt('paymentFailed'), 'payment-failed');
       return res.json();
     }
 
@@ -222,8 +223,8 @@ window.OLYMPOS_BACKEND = (() => {
     // simulates a decline for the standard test "declined" number
     await fakeLatency();
     const digits = (card.number || '').replace(/\s/g, '');
-    if (digits.length < 12) throw fail('Kart numarası geçersiz.', 'invalid-card');
-    if (digits === '4000000000000002') throw fail('Kart reddedildi.', 'card-declined');
+    if (digits.length < 12) throw fail(bt('invalidCard'), 'invalid-card');
+    if (digits === '4000000000000002') throw fail(bt('cardDeclined'), 'card-declined');
     return { success: true, transactionId: 'MOCK-' + uid() };
   }
 

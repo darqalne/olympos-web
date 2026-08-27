@@ -164,6 +164,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .icon-btn:hover { background: rgba(74,51,32,0.08); transform: translateY(-1px); }
 
+/* ---------- language switcher ---------- */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.lang-btn {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--umber-500);
+  padding: 0.32rem 0.6rem;
+  border-radius: 999px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.lang-btn:hover { color: var(--umber-800); }
+.lang-btn.active { background: var(--umber-700); color: var(--cream-2); }
+.mobile-lang-switch .lang-btn { font-size: 0.85rem; padding: 0.5rem 0.85rem; }
+
 .cart-count {
   position: absolute;
   top: 0; right: 0;

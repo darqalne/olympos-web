@@ -1,0 +1,645 @@
+/* =========================================================
+   OLYMPOS LEATHER — i18n engine
+   Client-side language switch (tr default, en, de). No page
+   reload: data-i18n[-html/-placeholder/-aria-label/-title]
+   attributes get re-applied in place, and an
+   'olympos:langchange' event lets site.js re-paint any
+   JS-rendered content (product cards, cart lines, etc.) in
+   the new language.
+   ========================================================= */
+window.OLYMPOS_I18N = (() => {
+
+  const LANG_KEY = 'olympos_lang_v1';
+  const DEFAULT_LANG = 'tr';
+  const LOCALES = { tr: 'tr-TR', en: 'en-US', de: 'de-DE' };
+
+  /* ---------------- product field translations ----------------
+     PRODUCTS in site.js carries the Turkish text as the base/
+     source of truth. This only needs the EN/DE overrides — 'tr'
+     is read straight off the product object. */
+  const PRODUCT_I18N = {
+    original: {
+      en: {
+        name: 'Original', categoryLabel: 'Cardholders', color: 'Black / Mustard Yellow',
+        size: '7.5 × 10.5 cm', material: '100% cowhide', slots: '4 card slots, 1 hidden pocket',
+        tagline: 'The signature cut carrying the Olympos silhouette', badge: 'Bestseller',
+        description: "The collection's first piece. Cut from a single piece of vegetable-tanned cowhide; the mountain-shaped negative cut on the front reveals the mustard-yellow leather beneath. Hand-stitched, hand-painted edges."
+      },
+      de: {
+        name: 'Original', categoryLabel: 'Kartenetuis', color: 'Schwarz / Senfgelb',
+        size: '7,5 × 10,5 cm', material: '100% Rindsleder', slots: '4 Kartenfächer, 1 verstecktes Fach',
+        tagline: 'Der Signatur-Schnitt im Olympos-Silhouettenstil', badge: 'Bestseller',
+        description: 'Das erste Stück der Kollektion. Aus einem einzigen Stück pflanzlich gegerbtem Rindsleder geschnitten; der bergförmige Negativschnitt auf der Vorderseite gibt das senfgelbe Leder darunter frei. Handgenäht, Kanten von Hand gefärbt.'
+      }
+    },
+    eclipse: {
+      en: {
+        name: 'Eclipse', categoryLabel: 'Cardholders', color: 'Black',
+        size: '8 × 10 cm', material: '100% cowhide', slots: '5 card slots, coin pocket',
+        tagline: 'The sharp contrast of matte and patent texture', badge: null,
+        description: 'Two different faces of the same leather — matte-tanned and high-gloss patent — cross diagonally on a single body. Simple, low-profile, made for everyday carry.'
+      },
+      de: {
+        name: 'Eclipse', categoryLabel: 'Kartenetuis', color: 'Schwarz',
+        size: '8 × 10 cm', material: '100% Rindsleder', slots: '5 Kartenfächer, Münzfach',
+        tagline: 'Der scharfe Kontrast von Matt und Lack', badge: null,
+        description: 'Zwei verschiedene Seiten desselben Leders — matt gegerbt und hochglänzendes Lackleder — kreuzen sich diagonal auf einem Körper. Schlicht, flach, für den täglichen Gebrauch gemacht.'
+      }
+    },
+    flare: {
+      en: {
+        name: 'Flare', categoryLabel: 'Cardholders', color: 'Black',
+        size: '7 × 9.5 cm', material: '100% cowhide', slots: '3 card slots',
+        tagline: 'Simplicity at its finest', badge: 'New',
+        description: 'A minimal cardholder cut from a single piece of leather, stripped of ornament. One seam running the length of the body — understated but built to last a day-to-day carry.'
+      },
+      de: {
+        name: 'Flare', categoryLabel: 'Kartenetuis', color: 'Schwarz',
+        size: '7 × 9,5 cm', material: '100% Rindsleder', slots: '3 Kartenfächer',
+        tagline: 'Schlichtheit in ihrer feinsten Form', badge: 'Neu',
+        description: 'Ein minimalistisches, aus einem Stück Leder geschnittenes Kartenetui, ganz ohne Schmuck. Eine einzige Nahtlinie über die gesamte Länge — unauffällig, aber für den täglichen Gebrauch gemacht.'
+      }
+    },
+    classy: {
+      en: {
+        name: 'Classy', categoryLabel: 'Wallets', color: 'Black',
+        size: '9 × 11 cm (folded)', material: '100% cowhide', slots: '8 card slots, 2 hidden pockets, bill compartment',
+        tagline: 'Traditional bifold cut, single piece of leather', badge: null,
+        description: "The Olympos take on the familiar bifold wallet. Cut from a single piece of leather — the inside and outside come from the same hide — it shapes itself to its owner's hand and develops a patina over time."
+      },
+      de: {
+        name: 'Classy', categoryLabel: 'Geldbörsen', color: 'Schwarz',
+        size: '9 × 11 cm (gefaltet)', material: '100% Rindsleder', slots: '8 Kartenfächer, 2 versteckte Fächer, Scheinfach',
+        tagline: 'Klassischer Bifold-Schnitt, aus einem Stück Leder', badge: null,
+        description: 'Olymposs Interpretation der klassischen Bifold-Geldbörse. Aus einem einzigen Stück Leder geschnitten — Innen- und Außenseite stammen von derselben Haut — passt sie sich mit der Zeit der Hand ihres Besitzers an und entwickelt eine Patina.'
+      }
+    }
+  };
+
+  const T = {
+    tr: {
+      announce: { handmade: 'El Yapımı', material: '%100 Dana Derisi', tagline: 'Zamansız Kesimler' },
+      nav: { home: 'Ana Sayfa', shop: 'Mağaza', about: 'Hakkımızda', contact: 'İletişim', faq: 'SSS', account: 'Hesabım', cart: 'Sepetim', track: 'Sipariş Takip' },
+      header: { searchAria: 'Ara', accountAria: 'Hesabım', cartAria: 'Sepeti aç', menuOpenAria: 'Menüyü aç', menuCloseAria: 'Menüyü kapat', homeAria: 'Olympos Leather anasayfa', langAria: 'Dil seçimi' },
+      cart: {
+        title: 'Sepetiniz', closeAria: 'Sepeti kapat', emptyMsg: 'Sepetiniz şu an boş.', browseShop: 'Mağazaya Göz At',
+        subtotal: 'Ara Toplam', myCart: 'Sepetim', checkout: 'Ödemeye Geç', shippingNote: 'Kargo ve vergiler ödeme sırasında hesaplanır.',
+        removeAria: 'Kaldır', decreaseAria: 'Azalt', increaseAria: 'Artır', addedToast: '{name} sepete eklendi'
+      },
+      footer: {
+        tagline: "İzmir'de, tek parça dana derisinden elde üretilen kartlık ve cüzdanlar.",
+        explore: 'Keşfet', categories: 'Kategoriler', cardholders: 'Kartlık', wallets: 'Cüzdan',
+        contactUs: 'Bize Ulaşın', location: 'İzmir, Türkiye', rights: 'Tüm hakları saklıdır.',
+        privacy: 'Gizlilik Politikası', handmade: 'Elde imal edildi'
+      },
+      breadcrumbAria: 'Sayfa izi',
+      product: {
+        addToCart: 'Sepete Ekle', viewProductAria: '{name} ürününü görüntüle', imageAria: 'Görsel {n}',
+        material: 'Malzeme', size: 'Ölçü', slots: 'Bölmeler', decreaseAria: 'Azalt', increaseAria: 'Artır',
+        stockNote: 'Stokta — 2-4 iş günü içinde kargoya verilir.',
+        detailTitle: 'Ürün Detayı', detailText: 'Kalıp elde kesilir, kenarlar elle boyanır ve cilalanır. Dikişler mumlu iplikle, saddle-stitch tekniğiyle atılır. Doğal deri olduğu için desen ve tonda hafif farklılıklar olabilir — bu bir kusur değil, deriye özgü bir imzadır.',
+        careTitle: 'Bakım Önerileri', careText: 'Sudan ve doğrudan güneş ışığından koruyun. Yumuşak kuru bir bezle silin, 3-6 ayda bir renksiz deri bakım kremi uygulayın. Zamanla oluşan patina, derinin doğal olgunlaşmasıdır.',
+        shippingTitle: 'Kargo & İade', shippingText: 'Siparişler 2-4 iş günü içinde kargoya teslim edilir. Kullanılmamış ürünlerde teslimattan itibaren 14 gün içinde iade hakkınız vardır.',
+        relatedEyebrow: 'Birlikte İyi Gider', relatedTitle: 'Benzer Parçalar'
+      },
+      home: {
+        heroBadge: 'El İşçiliği Deri Atölyesi', heroTitleHtml: 'DERİNİN<br>EN ÖZEL<br>HALİ',
+        heroSubtitle: "Tek parça dana derisinden, elde dikilen kartlıklar ve cüzdanlar — Olympos'un zirvesinden ilham alan kesimlerle.",
+        cta1: 'Koleksiyonu Keşfet', cta2: 'Hikayemiz', videoBadge: 'El Yapımı — Tanıtım',
+        trustHandstitch: 'Elde Dikim & Kesim', trustMadeIn: 'Türkiye\'de Üretim', trustGift: 'Özenli Hediye Paketi',
+        featuredEyebrow: 'Koleksiyon', featuredTitle: 'Öne Çıkan Parçalar', allProducts: 'Tüm Ürünler',
+        craftEyebrow: 'Atölyeden', craftTitleHtml: 'Her dikiş,<br>elle atılır.',
+        craftText: "Kalıp kesiminden kenar boyamaya, mumlu iplikle atılan saddle stitch dikişe kadar her adım İzmir'deki atölyemizde, tek tek elden geçer.",
+        craftCta: 'Hikayemizi Okuyun', moodHandle: '@olymposleather', moodContact: 'Bize Ulaşın',
+        newsletterEyebrow: 'Bültenimize Katılın', newsletterTitle: 'Yeni koleksiyonlardan ilk siz haberdar olun',
+        newsletterPlaceholder: 'E-posta adresiniz', newsletterSubmit: 'Abone Ol', newsletterToast: 'Abone oldunuz — teşekkürler.',
+        taglineQuote: '"Her parça, bir deri postundan doğar — iki eş yoktur."', taglineCta: 'Atölyeyi Tanıyın'
+      },
+      shop: {
+        eyebrow: 'Tüm Ürünler', title: 'Mağaza',
+        subtitle: 'Her parça tek bir deri postundan kesilir, elde dikilir ve elde kenar boyanır. Doğal deri olduğu için desende hafif renk farkları görülebilir.',
+        filterAll: 'Tümü', filterKartlik: 'Kartlık', filterCuzdan: 'Cüzdan', filterGroupAria: 'Kategori filtrele',
+        sortAria: 'Sırala', sortFeatured: 'Öne Çıkanlar', sortPriceAsc: 'Fiyat: Düşükten Yükseğe', sortPriceDesc: 'Fiyat: Yüksekten Düşüğe', sortName: 'İsim: A–Z',
+        resultCount: '{n} ürün'
+      },
+      about: {
+        heroTitleHtml: 'Zirveden Doğan<br>Bir Zanaat',
+        heroText: 'Olympos, Antalya kıyılarındaki antik kentin adını taşır — zamana direnen taşlar gibi, zamana direnen deri işçiliği için.',
+        originEyebrow: 'Başlangıç', originTitle: 'Bir isim, iki anlam taşır.',
+        originP1: 'Olympos, Likya kıyısında, dağın eteğinden denize uzanan antik bir kent. Kesme taşları bugün de ayakta — ustalıkla işlenmiş her yüzey, zamana rağmen duruyor.',
+        originP2: 'Biz de aynı sabrı deriye uyguluyoruz: kalıptan kesime, dikişten kenar boyamaya kadar her adım elden geçiyor. Seri üretim hızının değil, zanaatkârın elinin izini taşıyan parçalar üretiyoruz.',
+        valuesEyebrow: 'Değerlerimiz', valuesTitle: 'Neye Değer Veriyoruz',
+        craftTitle: 'El İşçiliği', craftText: 'Her kalıp elle kesilir, her dikiş mumlu iplikle elle atılır. Makine dikişi kullanmıyoruz.',
+        leatherTitle: 'Seçilmiş Deri', leatherText: 'Yalnızca tam tane (full-grain) %100 dana derisi kullanıyoruz — dayanıklı, nefes alan, zamanla güzelleşen.',
+        designTitle: 'Zamansız Tasarım', designText: 'Trend değil, sadelik. Negatif kesimlerimiz süs için değil, formun kendisi için var.',
+        processQuote: '"Bir kartlık bizim elimizden kaç dakikada değil, kaç yıl taşınacağı düşünülerek çıkar."',
+        cutTitle: 'Kesim', cutText: 'Her kalıp, deri postundaki en kaliteli bölgeden elle seçilir ve kesilir.',
+        stitchTitle: 'Dikiş', stitchText: 'Saddle-stitch tekniğiyle, iki iğneyle karşılıklı atılan mumlu iplik dikişi.',
+        edgeTitle: 'Kenar', edgeText: 'Kenarlar zımparalanır, elle boyanır ve cilalanarak pürüzsüz hale getirilir.',
+        checkTitle: 'Kontrol', checkText: 'Kargoya çıkmadan önce her parça elden geçirilerek tek tek kontrol edilir.',
+        ctaEyebrow: 'Koleksiyon', ctaTitle: 'Elinizde taşıyarak tanıyın', ctaButton: 'Mağazaya Git'
+      },
+      contact: {
+        eyebrow: 'İletişim', title: 'Bize Ulaşın', subtitle: 'Sorularınız, özel sipariş talepleriniz ya da toptan işbirlikleri için buradayız.',
+        emailLabel: 'E-posta', workshopLabel: 'Atölye', hoursLabel: 'Çalışma Saatleri', hoursValue: 'Pazartesi – Cumartesi, 09:00 – 18:00',
+        socialLabel: 'Sosyal Medya', mapTitle: 'Olympos Leather — Google Harita',
+        formName: 'Ad Soyad', formEmail: 'E-posta', formSubject: 'Konu',
+        subjGeneral: 'Genel Soru', subjOrder: 'Sipariş Durumu', subjCustom: 'Özel Sipariş', subjWholesale: 'Toptan İşbirliği',
+        formMessage: 'Mesajınız', formSubmit: 'Mesaj Gönder', formSending: 'Gönderiliyor…',
+        formSuccessToast: 'Mesajınız alındı. En kısa sürede dönüş yapacağız.'
+      },
+      faq: {
+        eyebrow: 'Yardım', title: 'Sıkça Sorulan Sorular', subtitle: 'Malzeme, kargo, iade ve bakım hakkında en çok sorulan sorular.',
+        q1: 'Ürünleriniz hangi malzemeden ve nasıl üretiliyor?',
+        a1: 'Her parça %100 dana derisinden, tek bir posttan elle kesilir. Kalıp elde kesilir, kenarlar elle boyanır ve cilalanır; dikişler mumlu iplikle, saddle-stitch tekniğiyle atılır. Doğal deri olduğu için desen ve tonda hafif farklılıklar olabilir — bu bir kusur değil, deriye özgü bir imzadır.',
+        q2: 'Kargo süresi ne kadar sürer?', a2: 'Siparişler 2-4 iş günü içinde kargoya teslim edilir. Kargo ücreti ödeme adımında hesaplanır ve gösterilir.',
+        q3: 'İade hakkım var mı?', a3: 'Kullanılmamış ürünlerde teslimattan itibaren 14 gün içinde iade hakkınız vardır.',
+        q4: 'Deri ürünlerimin bakımını nasıl yapmalıyım?', a4: 'Sudan ve doğrudan güneş ışığından koruyun. Yumuşak kuru bir bezle silin, 3-6 ayda bir renksiz deri bakım kremi uygulayın. Zamanla oluşan patina, derinin doğal olgunlaşmasıdır.',
+        q5: 'Siparişimi nasıl takip edebilirim?',
+        a5Html: 'Sipariş numaranız ve siparişte kullandığınız e-posta adresiyle <a href="siparis-takip.html" class="underline hover:text-umber-800">Sipariş Takip</a> sayfasından anlık durumu görebilirsiniz. Hesabınıza giriş yaptıysanız geçmiş siparişlerinizi <a href="hesabim.html" class="underline hover:text-umber-800">Hesabım</a> sayfasında da bulabilirsiniz.'
+      },
+      notFound: { eyebrow: '404', title: 'Sayfa Bulunamadı', text: 'Aradığınız sayfa taşınmış, kaldırılmış olabilir ya da hiç var olmadı. Ama koleksiyonumuz yerinde duruyor.', home: 'Ana Sayfaya Dön', shop: 'Mağazaya Göz At' },
+      privacy: {
+        eyebrow: 'Yasal', title: 'Gizlilik Politikası', updated: 'Son güncelleme: 27 Ağustos 2026',
+        s1Title: '1. Veri Sorumlusu',
+        s1Html: 'Bu internet sitesi, esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("biz", "Olympos Leather") tarafından işletilmektedir. Kişisel verilerinizle ilgili sorularınız için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden bize ulaşabilirsiniz.',
+        s2Title: '2. Hangi Verileri Topluyoruz',
+        s2Text: 'Sipariş verdiğinizde veya bizimle iletişime geçtiğinizde ad-soyad, e-posta adresi, telefon numarası, teslimat adresi ve sipariş içeriği gibi bilgileri topluyoruz. Ödeme sırasında girilen kart bilgileri tarafımızca saklanmaz; ödeme, sitemizin ödeme altyapısı üzerinden güvenli şekilde işlenir.',
+        s3Title: '3. Verilerinizi Neden Topluyoruz',
+        s3Text: 'Topladığımız verileri; siparişinizi hazırlamak ve kargoya vermek, sizinle sipariş durumu hakkında iletişim kurmak, hesabınızı ve sipariş geçmişinizi yönetmenizi sağlamak, yasal yükümlülüklerimizi (örneğin fatura/irsaliye düzenleme) yerine getirmek amacıyla kullanırız. Verileriniz pazarlama amacıyla üçüncü taraflara satılmaz veya kiralanmaz.',
+        s4Title: '4. Verilerin Paylaşımı',
+        s4Text: 'Siparişinizi teslim edebilmek için ad, adres ve telefon bilginiz anlaşmalı kargo firmasıyla paylaşılır. Bunun dışında verileriniz, yasal bir zorunluluk olmadıkça üçüncü taraflarla paylaşılmaz.',
+        s5Title: '5. Çerezler ve Yerel Depolama',
+        s5Text: 'Sepetinizdeki ürünleri ve oturum bilginizi hatırlayabilmek için tarayıcınızın yerel depolama (localStorage) alanını kullanırız. Bu veriler yalnızca kendi cihazınızda tutulur ve tarayıcı ayarlarınızdan istediğiniz zaman temizlenebilir.',
+        s6Title: '6. Veri Güvenliği',
+        s6Text: 'Kişisel verilerinizi korumak için makul teknik ve idari önlemleri alırız. Buna rağmen internet üzerinden hiçbir veri iletiminin %100 güvenli olmadığını hatırlatmak isteriz.',
+        s7Title: '7. Haklarınız',
+        s7Html: '6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında; işlenen verileriniz hakkında bilgi talep etme, verilerinizin düzeltilmesini veya silinmesini isteme ve verilerinizin işlenmesine itiraz etme hakkına sahipsiniz. Bu haklarınızı kullanmak için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden bize yazabilirsiniz.',
+        s8Title: '8. Değişiklikler',
+        s8Text: 'Bu gizlilik politikası zaman zaman güncellenebilir. Güncel sürüm her zaman bu sayfada yayınlanır.'
+      },
+      account: {
+        eyebrow: 'Hesap', title: 'Hesabım', linkInfo: 'Bilgilerim', linkCart: 'Sepetim', linkTrack: 'Sipariş Takibi',
+        welcome: 'Hoş Geldiniz', editProfile: 'Bilgilerimi Düzenle', logout: 'Çıkış Yap',
+        ordersTitle: 'Siparişlerim', ordersEmpty: 'Henüz bir siparişiniz yok.', browseShop: 'Mağazaya Göz At',
+        statusReceived: 'Alındı', statusPreparing: 'Hazırlanıyor', statusShipped: 'Kargoya Verildi', statusDelivered: 'Teslim Edildi',
+        itemsUnit: 'ürün'
+      },
+      profile: {
+        backToAccount: "Hesabım'a Dön", eyebrow: 'Hesap', title: 'Bilgilerim',
+        subtitle: 'Ad soyad, e-posta, şifre ve teslimat adresinizi buradan güncelleyebilirsiniz.',
+        personalTitle: 'Kişisel Bilgiler', nameLabel: 'Ad Soyad', emailLabel: 'E-posta', phoneLabel: 'Telefon',
+        passwordTitle: 'Şifre', passwordHint: 'Şifrenizi değiştirmek istemiyorsanız bu alanı boş bırakın.',
+        newPasswordLabel: 'Yeni Şifre', newPasswordPlaceholder: 'En az 6 karakter',
+        addressTitle: 'Teslimat Adresi', addressLabel: 'Adres', cityLabel: 'Şehir', zipLabel: 'Posta Kodu',
+        saveButton: 'Değişiklikleri Kaydet', saving: 'Kaydediliyor…', successMsg: 'Bilgileriniz güncellendi.'
+      },
+      cartPage: {
+        backToAccount: "Hesabım'a Dön", eyebrow: 'Sepet', title: 'Sepetim', emptyMsg: 'Sepetiniz şu an boş.', browseShop: 'Mağazaya Göz At',
+        summaryTitle: 'Sipariş Özeti', subtotal: 'Ara Toplam', shippingNote: 'Kargo ve vergiler ödeme sırasında hesaplanır.',
+        checkout: 'Ödemeye Geç', continueShopping: 'Alışverişe Devam Et'
+      },
+      checkout: {
+        eyebrow: 'Ödeme', title: 'Siparişi Tamamla', emptyMsg: 'Sepetiniz boş, ödeme adımına geçemezsiniz.', browseShop: 'Mağazaya Göz At',
+        deliveryTitle: 'Teslimat Bilgileri', nameLabel: 'Ad Soyad', emailLabel: 'E-posta', phoneLabel: 'Telefon',
+        addressLabel: 'Adres', cityLabel: 'Şehir', zipLabel: 'Posta Kodu',
+        cardTitle: 'Kart Bilgileri', cardDisclaimer: 'Bu bir vitrin ortamıdır — gerçek bir kart ile ödeme alınmaz. Test için herhangi bir kart numarası kullanabilirsiniz.',
+        cardNameLabel: 'Kart Üzerindeki İsim', cardNumberLabel: 'Kart Numarası', cardExpLabel: 'Son Kullanma (AA/YY)', cardCvcLabel: 'CVC',
+        submit: 'Siparişi Onayla', processing: 'İşleniyor…',
+        summaryTitle: 'Sipariş Özeti', editCart: 'Sepeti Düzenle', subtotal: 'Ara Toplam',
+        successTitle: 'Siparişiniz Alındı', successOrderNumber: 'Sipariş numaranız:', successNote: 'Bu numarayı sipariş takip sayfasında kullanabilirsiniz.',
+        trackOrder: 'Siparişimi Takip Et', continueShopping: 'Alışverişe Devam Et',
+        genericError: 'Ödeme işlenemedi. Lütfen tekrar deneyin.'
+      },
+      track: {
+        backToAccount: "Hesabım'a Dön", eyebrow: 'Sipariş Takip', title: 'Siparişinizi Takip Edin',
+        subtitle: 'Sipariş numaranızı ve siparişte kullandığınız e-posta adresini girin.',
+        numberLabel: 'Sipariş Numarası', numberPlaceholder: 'OLY-XXXXXXXX', emailLabel: 'E-posta', submit: 'Siparişi Bul',
+        notFound: 'Bu bilgilerle bir sipariş bulunamadı.', itemsUnit: 'ürün',
+        stepReceived: 'Sipariş Alındı', stepPreparing: 'Hazırlanıyor', stepShipped: 'Kargoya Verildi', stepDelivered: 'Teslim Edildi'
+      },
+      login: {
+        eyebrow: 'Hesap', title: 'Giriş Yap', noAccount: 'Hesabınız yok mu?', createAccount: 'Hesap oluşturun',
+        emailLabel: 'E-posta', passwordLabel: 'Şifre', submit: 'Giriş Yap', loggingIn: 'Giriş yapılıyor…',
+        guestTrack: 'Hesap açmadan mı sipariş verdiniz?', trackLink: 'Sipariş takip edin'
+      },
+      register: {
+        eyebrow: 'Hesap', title: 'Hesap Oluştur', haveAccount: 'Zaten hesabınız var mı?', loginLink: 'Giriş yapın',
+        nameLabel: 'Ad Soyad', emailLabel: 'E-posta', passwordLabel: 'Şifre', password2Label: 'Şifre (Tekrar)',
+        submit: 'Hesap Oluştur', creating: 'Oluşturuluyor…', passwordMismatch: 'Şifreler eşleşmiyor.'
+      },
+      backend: {
+        missingFields: 'Tüm alanları doldurun.', weakPassword: 'Şifre en az 6 karakter olmalı.', emailExists: 'Bu e-posta ile zaten bir hesap var.',
+        loginMissingFields: 'E-posta ve şifre gerekli.', invalidCredentials: 'E-posta veya şifre hatalı.', notConfigured: 'Firebase auth henüz yapılandırılmadı.',
+        notAuthenticated: 'Oturum bulunamadı.', profileMissingFields: 'Ad soyad ve e-posta gerekli.', userNotFound: 'Kullanıcı bulunamadı.',
+        invalidCard: 'Kart numarası geçersiz.', cardDeclined: 'Kart reddedildi.', paymentFailed: 'Ödeme başarısız. Lütfen tekrar deneyin.',
+        genericError: 'Bir şeyler ters gitti.'
+      }
+    },
+
+    en: {
+      announce: { handmade: 'Handmade', material: '100% Cowhide', tagline: 'Timeless Cuts' },
+      nav: { home: 'Home', shop: 'Shop', about: 'About', contact: 'Contact', faq: 'FAQ', account: 'Account', cart: 'Cart', track: 'Track Order' },
+      header: { searchAria: 'Search', accountAria: 'Account', cartAria: 'Open cart', menuOpenAria: 'Open menu', menuCloseAria: 'Close menu', homeAria: 'Olympos Leather home', langAria: 'Language selection' },
+      cart: {
+        title: 'Your Cart', closeAria: 'Close cart', emptyMsg: 'Your cart is empty right now.', browseShop: 'Browse the Shop',
+        subtotal: 'Subtotal', myCart: 'My Cart', checkout: 'Checkout', shippingNote: 'Shipping and taxes are calculated at checkout.',
+        removeAria: 'Remove', decreaseAria: 'Decrease', increaseAria: 'Increase', addedToast: '{name} added to cart'
+      },
+      footer: {
+        tagline: 'Cardholders and wallets, handmade in İzmir from a single hide.',
+        explore: 'Explore', categories: 'Categories', cardholders: 'Cardholders', wallets: 'Wallets',
+        contactUs: 'Get in Touch', location: 'İzmir, Turkey', rights: 'All rights reserved.',
+        privacy: 'Privacy Policy', handmade: 'Handmade'
+      },
+      breadcrumbAria: 'Breadcrumb',
+      product: {
+        addToCart: 'Add to Cart', viewProductAria: 'View {name}', imageAria: 'Image {n}',
+        material: 'Material', size: 'Size', slots: 'Slots', decreaseAria: 'Decrease', increaseAria: 'Increase',
+        stockNote: 'In stock — ships within 2-4 business days.',
+        detailTitle: 'Product Details', detailText: 'The pattern is hand-cut, edges hand-painted and burnished. Seams are hand-stitched with waxed thread using the saddle-stitch technique. Because it’s natural leather, slight variations in grain and tone can occur — not a flaw, but a signature of the hide.',
+        careTitle: 'Care Instructions', careText: 'Keep away from water and direct sunlight. Wipe with a soft, dry cloth and apply a colorless leather conditioner every 3-6 months. The patina that develops over time is the leather naturally maturing.',
+        shippingTitle: 'Shipping & Returns', shippingText: 'Orders ship within 2-4 business days. Unused items can be returned within 14 days of delivery.',
+        relatedEyebrow: 'Pairs Well With', relatedTitle: 'Similar Pieces'
+      },
+      home: {
+        heroBadge: 'A Handcraft Leather Workshop', heroTitleHtml: 'THE FINEST<br>SIDE OF<br>LEATHER',
+        heroSubtitle: 'Hand-stitched cardholders and wallets cut from a single piece of cowhide — cuts inspired by the summit of Olympos.',
+        cta1: 'Explore the Collection', cta2: 'Our Story', videoBadge: 'Handmade — Showcase',
+        trustHandstitch: 'Hand-Stitched & Cut', trustMadeIn: 'Made in Turkey', trustGift: 'Thoughtful Gift Wrapping',
+        featuredEyebrow: 'Collection', featuredTitle: 'Featured Pieces', allProducts: 'All Products',
+        craftEyebrow: 'From the Workshop', craftTitleHtml: 'Every stitch,<br>by hand.',
+        craftText: 'From cutting the pattern to painting the edges, every step — down to the waxed-thread saddle stitch — passes through our İzmir workshop, one piece at a time.',
+        craftCta: 'Read Our Story', moodHandle: '@olymposleather', moodContact: 'Get in Touch',
+        newsletterEyebrow: 'Join Our Newsletter', newsletterTitle: 'Be the first to hear about new collections',
+        newsletterPlaceholder: 'Your email address', newsletterSubmit: 'Subscribe', newsletterToast: "You're subscribed — thank you.",
+        taglineQuote: '"Every piece is born of a single hide — no two are alike."', taglineCta: 'Get to Know the Workshop'
+      },
+      shop: {
+        eyebrow: 'All Products', title: 'Shop',
+        subtitle: 'Every piece is cut from a single hide, hand-stitched, and hand-painted at the edges. Because it’s natural leather, slight color variation can occur across the grain.',
+        filterAll: 'All', filterKartlik: 'Cardholders', filterCuzdan: 'Wallets', filterGroupAria: 'Filter by category',
+        sortAria: 'Sort', sortFeatured: 'Featured', sortPriceAsc: 'Price: Low to High', sortPriceDesc: 'Price: High to Low', sortName: 'Name: A–Z',
+        resultCount: '{n} products'
+      },
+      about: {
+        heroTitleHtml: 'A Craft Born<br>from a Summit',
+        heroText: 'Olympos carries the name of the ancient city on the shores of Antalya — for leatherwork that, like weathered stone, resists time.',
+        originEyebrow: 'Beginning', originTitle: 'One name, two meanings.',
+        originP1: 'Olympos is an ancient city on the Lycian coast, stretching from the foot of the mountain down to the sea. Its cut stones still stand today — every masterfully worked surface enduring despite the passage of time.',
+        originP2: 'We apply the same patience to leather: from cutting the pattern to stitching, to painting the edges — every step passes through human hands. We make pieces that carry the mark of a craftsman’s hand, not the speed of mass production.',
+        valuesEyebrow: 'Our Values', valuesTitle: 'What We Value',
+        craftTitle: 'Handcraft', craftText: 'Every pattern is hand-cut, every seam hand-stitched with waxed thread. We don’t use machine stitching.',
+        leatherTitle: 'Selected Leather', leatherText: 'We use only full-grain 100% cowhide — durable, breathable, and it only gets better with age.',
+        designTitle: 'Timeless Design', designText: 'Not trend, but simplicity. Our negative-space cuts exist for the form itself, not for decoration.',
+        processQuote: '“A cardholder doesn’t leave our hands based on how many minutes it took, but on how many years it will be carried.”',
+        cutTitle: 'Cutting', cutText: 'Every pattern is hand-selected and cut from the finest region of the hide.',
+        stitchTitle: 'Stitching', stitchText: 'Waxed-thread stitching with the saddle-stitch technique, sewn back and forth with two needles.',
+        edgeTitle: 'Edges', edgeText: 'Edges are sanded, hand-painted, and burnished smooth.',
+        checkTitle: 'Inspection', checkText: 'Every piece is individually inspected by hand before it ships.',
+        ctaEyebrow: 'Collection', ctaTitle: 'Get to know it by holding it', ctaButton: 'Go to the Shop'
+      },
+      contact: {
+        eyebrow: 'Contact', title: 'Get in Touch', subtitle: 'We’re here for your questions, custom order requests, or wholesale partnerships.',
+        emailLabel: 'Email', workshopLabel: 'Workshop', hoursLabel: 'Working Hours', hoursValue: 'Monday – Saturday, 09:00 – 18:00',
+        socialLabel: 'Social Media', mapTitle: 'Olympos Leather — Google Map',
+        formName: 'Full Name', formEmail: 'Email', formSubject: 'Subject',
+        subjGeneral: 'General Question', subjOrder: 'Order Status', subjCustom: 'Custom Order', subjWholesale: 'Wholesale Partnership',
+        formMessage: 'Your Message', formSubmit: 'Send Message', formSending: 'Sending…',
+        formSuccessToast: 'Your message has been received. We’ll get back to you shortly.'
+      },
+      faq: {
+        eyebrow: 'Help', title: 'Frequently Asked Questions', subtitle: 'The most common questions about materials, shipping, returns, and care.',
+        q1: 'What materials are your products made from, and how?',
+        a1: 'Every piece is hand-cut from a single hide of 100% cowhide. The pattern is hand-cut, edges hand-painted and burnished; seams are hand-stitched with waxed thread using the saddle-stitch technique. Because it’s natural leather, slight variations in grain and tone can occur — not a flaw, but a signature of the hide.',
+        q2: 'How long does shipping take?', a2: 'Orders ship within 2-4 business days. Shipping cost is calculated and shown at checkout.',
+        q3: 'Do I have a right to return?', a3: 'Unused items can be returned within 14 days of delivery.',
+        q4: 'How should I care for my leather goods?', a4: 'Keep away from water and direct sunlight. Wipe with a soft, dry cloth and apply a colorless leather conditioner every 3-6 months. The patina that develops over time is the leather naturally maturing.',
+        q5: 'How can I track my order?',
+        a5Html: 'You can see the current status any time on the <a href="siparis-takip.html" class="underline hover:text-umber-800">Track Order</a> page using your order number and the email address you used to order. If you’re signed in, you can also find your past orders on the <a href="hesabim.html" class="underline hover:text-umber-800">Account</a> page.'
+      },
+      notFound: { eyebrow: '404', title: 'Page Not Found', text: 'The page you’re looking for may have moved, been removed, or never existed. But our collection is right where you left it.', home: 'Back to Home', shop: 'Browse the Shop' },
+      privacy: {
+        eyebrow: 'Legal', title: 'Privacy Policy', updated: 'Last updated: August 27, 2026',
+        s1Title: '1. Data Controller',
+        s1Html: 'This website is operated by <strong>OLYMPOS Leather</strong> ("we", "Olympos Leather"), which trades under a Turkish craftsman’s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license. For questions about your personal data, you can reach us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s2Title: '2. What Data We Collect',
+        s2Text: 'When you place an order or contact us, we collect information such as your full name, email address, phone number, delivery address, and order contents. Card details entered at payment are not stored by us; payment is processed securely through our site’s payment infrastructure.',
+        s3Title: '3. Why We Collect Your Data',
+        s3Text: 'We use the data we collect to prepare and ship your order, to communicate with you about order status, to let you manage your account and order history, and to fulfil legal obligations (such as issuing invoices). We do not sell or rent your data to third parties for marketing purposes.',
+        s4Title: '4. Sharing Your Data',
+        s4Text: 'To deliver your order, your name, address, and phone number are shared with our contracted courier company. Beyond that, your data is not shared with third parties unless legally required.',
+        s5Title: '5. Cookies & Local Storage',
+        s5Text: 'We use your browser’s local storage (localStorage) to remember the items in your cart and your session. This data is kept only on your own device and can be cleared at any time from your browser settings.',
+        s6Title: '6. Data Security',
+        s6Text: 'We take reasonable technical and administrative measures to protect your personal data. That said, no data transmission over the internet can be guaranteed 100% secure.',
+        s7Title: '7. Your Rights',
+        s7Html: 'Under Turkey’s Personal Data Protection Law No. 6698 (KVKK), you have the right to request information about your processed data, to request its correction or deletion, and to object to its processing. You can exercise these rights by writing to us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s8Title: '8. Changes',
+        s8Text: 'This privacy policy may be updated from time to time. The current version is always published on this page.'
+      },
+      account: {
+        eyebrow: 'Account', title: 'My Account', linkInfo: 'My Info', linkCart: 'My Cart', linkTrack: 'Track Order',
+        welcome: 'Welcome', editProfile: 'Edit My Info', logout: 'Log Out',
+        ordersTitle: 'My Orders', ordersEmpty: 'You don’t have any orders yet.', browseShop: 'Browse the Shop',
+        statusReceived: 'Received', statusPreparing: 'Preparing', statusShipped: 'Shipped', statusDelivered: 'Delivered',
+        itemsUnit: 'items'
+      },
+      profile: {
+        backToAccount: 'Back to My Account', eyebrow: 'Account', title: 'My Info',
+        subtitle: 'Update your name, email, password, and delivery address here.',
+        personalTitle: 'Personal Information', nameLabel: 'Full Name', emailLabel: 'Email', phoneLabel: 'Phone',
+        passwordTitle: 'Password', passwordHint: 'Leave this blank if you don’t want to change your password.',
+        newPasswordLabel: 'New Password', newPasswordPlaceholder: 'At least 6 characters',
+        addressTitle: 'Delivery Address', addressLabel: 'Address', cityLabel: 'City', zipLabel: 'Postal Code',
+        saveButton: 'Save Changes', saving: 'Saving…', successMsg: 'Your info has been updated.'
+      },
+      cartPage: {
+        backToAccount: 'Back to My Account', eyebrow: 'Cart', title: 'My Cart', emptyMsg: 'Your cart is empty right now.', browseShop: 'Browse the Shop',
+        summaryTitle: 'Order Summary', subtotal: 'Subtotal', shippingNote: 'Shipping and taxes are calculated at checkout.',
+        checkout: 'Checkout', continueShopping: 'Continue Shopping'
+      },
+      checkout: {
+        eyebrow: 'Checkout', title: 'Complete Your Order', emptyMsg: 'Your cart is empty, so you can’t proceed to checkout.', browseShop: 'Browse the Shop',
+        deliveryTitle: 'Delivery Information', nameLabel: 'Full Name', emailLabel: 'Email', phoneLabel: 'Phone',
+        addressLabel: 'Address', cityLabel: 'City', zipLabel: 'Postal Code',
+        cardTitle: 'Card Information', cardDisclaimer: 'This is a showcase environment — no real card is charged. You can use any card number for testing.',
+        cardNameLabel: 'Name on Card', cardNumberLabel: 'Card Number', cardExpLabel: 'Expiry (MM/YY)', cardCvcLabel: 'CVC',
+        submit: 'Confirm Order', processing: 'Processing…',
+        summaryTitle: 'Order Summary', editCart: 'Edit Cart', subtotal: 'Subtotal',
+        successTitle: 'Your Order Was Received', successOrderNumber: 'Your order number:', successNote: 'You can use this number on the order tracking page.',
+        trackOrder: 'Track My Order', continueShopping: 'Continue Shopping',
+        genericError: 'Payment could not be processed. Please try again.'
+      },
+      track: {
+        backToAccount: 'Back to My Account', eyebrow: 'Track Order', title: 'Track Your Order',
+        subtitle: 'Enter your order number and the email address you used to order.',
+        numberLabel: 'Order Number', numberPlaceholder: 'OLY-XXXXXXXX', emailLabel: 'Email', submit: 'Find Order',
+        notFound: 'No order was found with this information.', itemsUnit: 'items',
+        stepReceived: 'Order Received', stepPreparing: 'Preparing', stepShipped: 'Shipped', stepDelivered: 'Delivered'
+      },
+      login: {
+        eyebrow: 'Account', title: 'Sign In', noAccount: 'Don’t have an account?', createAccount: 'Create one',
+        emailLabel: 'Email', passwordLabel: 'Password', submit: 'Sign In', loggingIn: 'Signing in…',
+        guestTrack: 'Ordered without an account?', trackLink: 'Track your order'
+      },
+      register: {
+        eyebrow: 'Account', title: 'Create Account', haveAccount: 'Already have an account?', loginLink: 'Sign in',
+        nameLabel: 'Full Name', emailLabel: 'Email', passwordLabel: 'Password', password2Label: 'Confirm Password',
+        submit: 'Create Account', creating: 'Creating…', passwordMismatch: 'Passwords don’t match.'
+      },
+      backend: {
+        missingFields: 'Please fill in all fields.', weakPassword: 'Password must be at least 6 characters.', emailExists: 'An account with this email already exists.',
+        loginMissingFields: 'Email and password are required.', invalidCredentials: 'Incorrect email or password.', notConfigured: 'Firebase auth is not configured yet.',
+        notAuthenticated: 'No active session found.', profileMissingFields: 'Full name and email are required.', userNotFound: 'User not found.',
+        invalidCard: 'Invalid card number.', cardDeclined: 'The card was declined.', paymentFailed: 'Payment failed. Please try again.',
+        genericError: 'Something went wrong.'
+      }
+    },
+
+    de: {
+      announce: { handmade: 'Handgefertigt', material: '100% Rindsleder', tagline: 'Zeitlose Schnitte' },
+      nav: { home: 'Startseite', shop: 'Shop', about: 'Über uns', contact: 'Kontakt', faq: 'FAQ', account: 'Konto', cart: 'Warenkorb', track: 'Bestellung verfolgen' },
+      header: { searchAria: 'Suchen', accountAria: 'Konto', cartAria: 'Warenkorb öffnen', menuOpenAria: 'Menü öffnen', menuCloseAria: 'Menü schließen', homeAria: 'Olympos Leather Startseite', langAria: 'Sprachauswahl' },
+      cart: {
+        title: 'Ihr Warenkorb', closeAria: 'Warenkorb schließen', emptyMsg: 'Ihr Warenkorb ist derzeit leer.', browseShop: 'Shop durchsuchen',
+        subtotal: 'Zwischensumme', myCart: 'Warenkorb', checkout: 'Zur Kasse', shippingNote: 'Versand und Steuern werden an der Kasse berechnet.',
+        removeAria: 'Entfernen', decreaseAria: 'Verringern', increaseAria: 'Erhöhen', addedToast: '{name} in den Warenkorb gelegt'
+      },
+      footer: {
+        tagline: 'Kartenetuis und Geldbörsen, handgefertigt in İzmir aus einem einzigen Stück Leder.',
+        explore: 'Entdecken', categories: 'Kategorien', cardholders: 'Kartenetuis', wallets: 'Geldbörsen',
+        contactUs: 'Kontakt', location: 'İzmir, Türkei', rights: 'Alle Rechte vorbehalten.',
+        privacy: 'Datenschutzerklärung', handmade: 'Handgefertigt'
+      },
+      breadcrumbAria: 'Breadcrumb',
+      product: {
+        addToCart: 'In den Warenkorb', viewProductAria: '{name} ansehen', imageAria: 'Bild {n}',
+        material: 'Material', size: 'Größe', slots: 'Fächer', decreaseAria: 'Verringern', increaseAria: 'Erhöhen',
+        stockNote: 'Auf Lager — Versand innerhalb von 2-4 Werktagen.',
+        detailTitle: 'Produktdetails', detailText: 'Das Schnittmuster wird von Hand geschnitten, die Kanten von Hand gefärbt und poliert. Die Nähte werden mit gewachstem Faden in Sattlernaht-Technik von Hand genäht. Da es sich um Naturleder handelt, können leichte Unterschiede in Maserung und Farbton auftreten — kein Makel, sondern die Signatur des Leders.',
+        careTitle: 'Pflegehinweise', careText: 'Vor Wasser und direkter Sonneneinstrahlung schützen. Mit einem weichen, trockenen Tuch abwischen und alle 3-6 Monate eine farblose Lederpflegecreme auftragen. Die mit der Zeit entstehende Patina ist die natürliche Reifung des Leders.',
+        shippingTitle: 'Versand & Rückgabe', shippingText: 'Bestellungen werden innerhalb von 2-4 Werktagen versandt. Unbenutzte Artikel können innerhalb von 14 Tagen nach Lieferung zurückgegeben werden.',
+        relatedEyebrow: 'Passt gut dazu', relatedTitle: 'Ähnliche Stücke'
+      },
+      home: {
+        heroBadge: 'Handwerkliche Lederwerkstatt', heroTitleHtml: 'DIE FEINSTE<br>SEITE DES<br>LEDERS',
+        heroSubtitle: 'Handgenähte Kartenetuis und Geldbörsen aus einem einzigen Stück Rindsleder — Schnitte, inspiriert vom Gipfel des Olympos.',
+        cta1: 'Kollektion entdecken', cta2: 'Unsere Geschichte', videoBadge: 'Handgefertigt — Vorstellung',
+        trustHandstitch: 'Handgenäht & Geschnitten', trustMadeIn: 'Hergestellt in der Türkei', trustGift: 'Sorgfältige Geschenkverpackung',
+        featuredEyebrow: 'Kollektion', featuredTitle: 'Ausgewählte Stücke', allProducts: 'Alle Produkte',
+        craftEyebrow: 'Aus der Werkstatt', craftTitleHtml: 'Jede Naht,<br>von Hand gesetzt.',
+        craftText: 'Vom Zuschnitt des Musters bis zur Kantenfärbung — jeder Schritt, bis hin zur Sattlernaht mit gewachstem Faden, durchläuft unsere Werkstatt in İzmir, Stück für Stück.',
+        craftCta: 'Unsere Geschichte lesen', moodHandle: '@olymposleather', moodContact: 'Kontakt',
+        newsletterEyebrow: 'Newsletter abonnieren', newsletterTitle: 'Erfahren Sie als Erste von neuen Kollektionen',
+        newsletterPlaceholder: 'Ihre E-Mail-Adresse', newsletterSubmit: 'Abonnieren', newsletterToast: 'Sie sind angemeldet — vielen Dank.',
+        taglineQuote: '„Jedes Stück entsteht aus einer einzigen Haut — keine zwei sind gleich.“', taglineCta: 'Lernen Sie die Werkstatt kennen'
+      },
+      shop: {
+        eyebrow: 'Alle Produkte', title: 'Shop',
+        subtitle: 'Jedes Stück wird aus einer einzigen Haut geschnitten, von Hand genäht und an den Kanten von Hand gefärbt. Da es sich um Naturleder handelt, können leichte Farbunterschiede in der Maserung auftreten.',
+        filterAll: 'Alle', filterKartlik: 'Kartenetuis', filterCuzdan: 'Geldbörsen', filterGroupAria: 'Nach Kategorie filtern',
+        sortAria: 'Sortieren', sortFeatured: 'Empfohlen', sortPriceAsc: 'Preis: Aufsteigend', sortPriceDesc: 'Preis: Absteigend', sortName: 'Name: A–Z',
+        resultCount: '{n} Produkte'
+      },
+      about: {
+        heroTitleHtml: 'Ein Handwerk,<br>geboren aus einem Gipfel',
+        heroText: 'Olympos trägt den Namen der antiken Stadt an der Küste von Antalya — für eine Lederverarbeitung, die wie verwitterter Stein der Zeit trotzt.',
+        originEyebrow: 'Anfang', originTitle: 'Ein Name, zwei Bedeutungen.',
+        originP1: 'Olympos ist eine antike Stadt an der lykischen Küste, die sich vom Fuß des Berges bis zum Meer erstreckt. Ihre behauenen Steine stehen noch heute — jede meisterhaft bearbeitete Oberfläche besteht trotz der Zeit fort.',
+        originP2: 'Dieselbe Geduld wenden wir beim Leder an: vom Zuschnitt des Musters über die Naht bis zur Kantenfärbung geht jeder Schritt durch Menschenhand. Wir fertigen Stücke, die die Spur einer Handwerkerhand tragen — nicht das Tempo der Massenproduktion.',
+        valuesEyebrow: 'Unsere Werte', valuesTitle: 'Worauf wir Wert legen',
+        craftTitle: 'Handarbeit', craftText: 'Jedes Schnittmuster wird von Hand geschnitten, jede Naht von Hand mit gewachstem Faden genäht. Wir verwenden keine Maschinennähte.',
+        leatherTitle: 'Ausgewähltes Leder', leatherText: 'Wir verwenden ausschließlich Full-Grain 100% Rindsleder — strapazierfähig, atmungsaktiv und mit der Zeit immer schöner.',
+        designTitle: 'Zeitloses Design', designText: 'Kein Trend, sondern Schlichtheit. Unsere Negativschnitte existieren für die Form selbst, nicht als Verzierung.',
+        processQuote: '„Ein Kartenetui verlässt unsere Hände nicht danach, wie viele Minuten es gedauert hat, sondern danach, wie viele Jahre es getragen werden wird.“',
+        cutTitle: 'Zuschnitt', cutText: 'Jedes Schnittmuster wird von Hand aus dem hochwertigsten Bereich der Haut ausgewählt und geschnitten.',
+        stitchTitle: 'Naht', stitchText: 'Sattlernaht-Technik mit gewachstem Faden, mit zwei Nadeln gegeneinander genäht.',
+        edgeTitle: 'Kante', edgeText: 'Kanten werden geschliffen, von Hand gefärbt und glatt poliert.',
+        checkTitle: 'Kontrolle', checkText: 'Jedes Stück wird vor dem Versand einzeln von Hand geprüft.',
+        ctaEyebrow: 'Kollektion', ctaTitle: 'Lernen Sie es kennen, indem Sie es tragen', ctaButton: 'Zum Shop'
+      },
+      contact: {
+        eyebrow: 'Kontakt', title: 'Kontaktieren Sie uns', subtitle: 'Wir sind für Ihre Fragen, individuellen Bestellwünsche oder Großhandelspartnerschaften da.',
+        emailLabel: 'E-Mail', workshopLabel: 'Werkstatt', hoursLabel: 'Öffnungszeiten', hoursValue: 'Montag – Samstag, 09:00 – 18:00',
+        socialLabel: 'Soziale Medien', mapTitle: 'Olympos Leather — Google Maps',
+        formName: 'Vor- und Nachname', formEmail: 'E-Mail', formSubject: 'Betreff',
+        subjGeneral: 'Allgemeine Frage', subjOrder: 'Bestellstatus', subjCustom: 'Sonderanfertigung', subjWholesale: 'Großhandelspartnerschaft',
+        formMessage: 'Ihre Nachricht', formSubmit: 'Nachricht senden', formSending: 'Wird gesendet…',
+        formSuccessToast: 'Ihre Nachricht ist eingegangen. Wir melden uns in Kürze bei Ihnen.'
+      },
+      faq: {
+        eyebrow: 'Hilfe', title: 'Häufig gestellte Fragen', subtitle: 'Die häufigsten Fragen zu Material, Versand, Rückgabe und Pflege.',
+        q1: 'Aus welchem Material werden Ihre Produkte hergestellt, und wie?',
+        a1: 'Jedes Stück wird von Hand aus einer einzigen Haut aus 100% Rindsleder geschnitten. Das Schnittmuster wird von Hand geschnitten, die Kanten von Hand gefärbt und poliert; die Nähte werden mit gewachstem Faden in Sattlernaht-Technik genäht. Da es sich um Naturleder handelt, können leichte Unterschiede in Maserung und Farbton auftreten — kein Makel, sondern die Signatur des Leders.',
+        q2: 'Wie lange dauert der Versand?', a2: 'Bestellungen werden innerhalb von 2-4 Werktagen versandt. Die Versandkosten werden an der Kasse berechnet und angezeigt.',
+        q3: 'Habe ich ein Rückgaberecht?', a3: 'Unbenutzte Artikel können innerhalb von 14 Tagen nach Lieferung zurückgegeben werden.',
+        q4: 'Wie sollte ich meine Lederprodukte pflegen?', a4: 'Vor Wasser und direkter Sonneneinstrahlung schützen. Mit einem weichen, trockenen Tuch abwischen und alle 3-6 Monate eine farblose Lederpflegecreme auftragen. Die mit der Zeit entstehende Patina ist die natürliche Reifung des Leders.',
+        q5: 'Wie kann ich meine Bestellung verfolgen?',
+        a5Html: 'Mit Ihrer Bestellnummer und der bei der Bestellung verwendeten E-Mail-Adresse können Sie den aktuellen Status jederzeit auf der Seite <a href="siparis-takip.html" class="underline hover:text-umber-800">Bestellung verfolgen</a> einsehen. Wenn Sie angemeldet sind, finden Sie Ihre früheren Bestellungen auch auf der Seite <a href="hesabim.html" class="underline hover:text-umber-800">Konto</a>.'
+      },
+      notFound: { eyebrow: '404', title: 'Seite nicht gefunden', text: 'Die gesuchte Seite wurde möglicherweise verschoben, entfernt oder hat nie existiert. Aber unsere Kollektion ist noch genau dort, wo Sie sie verlassen haben.', home: 'Zur Startseite', shop: 'Shop durchsuchen' },
+      privacy: {
+        eyebrow: 'Rechtliches', title: 'Datenschutzerklärung', updated: 'Zuletzt aktualisiert: 27. August 2026',
+        s1Title: '1. Verantwortlicher',
+        s1Html: 'Diese Website wird von <strong>OLYMPOS Leather</strong> ("wir", "Olympos Leather") betrieben, das unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel tätig ist. Bei Fragen zu Ihren personenbezogenen Daten erreichen Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s2Title: '2. Welche Daten wir erheben',
+        s2Text: 'Wenn Sie eine Bestellung aufgeben oder uns kontaktieren, erheben wir Daten wie Ihren vollständigen Namen, Ihre E-Mail-Adresse, Telefonnummer, Lieferadresse und den Bestellinhalt. Bei der Zahlung eingegebene Kartendaten werden von uns nicht gespeichert; die Zahlung wird sicher über die Zahlungsinfrastruktur unserer Website abgewickelt.',
+        s3Title: '3. Warum wir Ihre Daten erheben',
+        s3Text: 'Wir verwenden die erhobenen Daten, um Ihre Bestellung vorzubereiten und zu versenden, mit Ihnen über den Bestellstatus zu kommunizieren, Ihnen die Verwaltung Ihres Kontos und Ihrer Bestellhistorie zu ermöglichen und gesetzlichen Verpflichtungen (z. B. Rechnungsstellung) nachzukommen. Wir verkaufen oder vermieten Ihre Daten nicht zu Marketingzwecken an Dritte.',
+        s4Title: '4. Weitergabe Ihrer Daten',
+        s4Text: 'Um Ihre Bestellung zuzustellen, werden Ihr Name, Ihre Adresse und Telefonnummer an unser beauftragtes Kurierunternehmen weitergegeben. Darüber hinaus werden Ihre Daten nicht an Dritte weitergegeben, es sei denn, dies ist gesetzlich vorgeschrieben.',
+        s5Title: '5. Cookies & lokaler Speicher',
+        s5Text: 'Wir nutzen den lokalen Speicher (localStorage) Ihres Browsers, um die Artikel in Ihrem Warenkorb und Ihre Sitzung zu merken. Diese Daten werden ausschließlich auf Ihrem eigenen Gerät gespeichert und können jederzeit über Ihre Browsereinstellungen gelöscht werden.',
+        s6Title: '6. Datensicherheit',
+        s6Text: 'Wir treffen angemessene technische und organisatorische Maßnahmen zum Schutz Ihrer personenbezogenen Daten. Dennoch kann keine Datenübertragung über das Internet als 100% sicher garantiert werden.',
+        s7Title: '7. Ihre Rechte',
+        s7Html: 'Gemäß dem türkischen Gesetz Nr. 6698 zum Schutz personenbezogener Daten (KVKK) haben Sie das Recht, Auskunft über Ihre verarbeiteten Daten zu verlangen, deren Berichtigung oder Löschung zu beantragen und der Verarbeitung zu widersprechen. Sie können diese Rechte ausüben, indem Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> schreiben.',
+        s8Title: '8. Änderungen',
+        s8Text: 'Diese Datenschutzerklärung kann von Zeit zu Zeit aktualisiert werden. Die aktuelle Fassung wird stets auf dieser Seite veröffentlicht.'
+      },
+      account: {
+        eyebrow: 'Konto', title: 'Mein Konto', linkInfo: 'Meine Daten', linkCart: 'Warenkorb', linkTrack: 'Bestellung verfolgen',
+        welcome: 'Willkommen', editProfile: 'Daten bearbeiten', logout: 'Abmelden',
+        ordersTitle: 'Meine Bestellungen', ordersEmpty: 'Sie haben noch keine Bestellungen.', browseShop: 'Shop durchsuchen',
+        statusReceived: 'Eingegangen', statusPreparing: 'Wird vorbereitet', statusShipped: 'Versandt', statusDelivered: 'Zugestellt',
+        itemsUnit: 'Artikel'
+      },
+      profile: {
+        backToAccount: 'Zurück zu meinem Konto', eyebrow: 'Konto', title: 'Meine Daten',
+        subtitle: 'Aktualisieren Sie hier Ihren Namen, Ihre E-Mail-Adresse, Ihr Passwort und Ihre Lieferadresse.',
+        personalTitle: 'Persönliche Daten', nameLabel: 'Vor- und Nachname', emailLabel: 'E-Mail', phoneLabel: 'Telefon',
+        passwordTitle: 'Passwort', passwordHint: 'Lassen Sie dieses Feld leer, wenn Sie Ihr Passwort nicht ändern möchten.',
+        newPasswordLabel: 'Neues Passwort', newPasswordPlaceholder: 'Mindestens 6 Zeichen',
+        addressTitle: 'Lieferadresse', addressLabel: 'Adresse', cityLabel: 'Stadt', zipLabel: 'Postleitzahl',
+        saveButton: 'Änderungen speichern', saving: 'Wird gespeichert…', successMsg: 'Ihre Daten wurden aktualisiert.'
+      },
+      cartPage: {
+        backToAccount: 'Zurück zu meinem Konto', eyebrow: 'Warenkorb', title: 'Mein Warenkorb', emptyMsg: 'Ihr Warenkorb ist derzeit leer.', browseShop: 'Shop durchsuchen',
+        summaryTitle: 'Bestellübersicht', subtotal: 'Zwischensumme', shippingNote: 'Versand und Steuern werden an der Kasse berechnet.',
+        checkout: 'Zur Kasse', continueShopping: 'Weiter einkaufen'
+      },
+      checkout: {
+        eyebrow: 'Kasse', title: 'Bestellung abschließen', emptyMsg: 'Ihr Warenkorb ist leer, Sie können nicht zur Kasse gehen.', browseShop: 'Shop durchsuchen',
+        deliveryTitle: 'Lieferinformationen', nameLabel: 'Vor- und Nachname', emailLabel: 'E-Mail', phoneLabel: 'Telefon',
+        addressLabel: 'Adresse', cityLabel: 'Stadt', zipLabel: 'Postleitzahl',
+        cardTitle: 'Kartendaten', cardDisclaimer: 'Dies ist eine Vorführumgebung — es wird keine echte Karte belastet. Sie können zum Testen eine beliebige Kartennummer verwenden.',
+        cardNameLabel: 'Name auf der Karte', cardNumberLabel: 'Kartennummer', cardExpLabel: 'Gültig bis (MM/JJ)', cardCvcLabel: 'CVC',
+        submit: 'Bestellung bestätigen', processing: 'Wird verarbeitet…',
+        summaryTitle: 'Bestellübersicht', editCart: 'Warenkorb bearbeiten', subtotal: 'Zwischensumme',
+        successTitle: 'Ihre Bestellung ist eingegangen', successOrderNumber: 'Ihre Bestellnummer:', successNote: 'Sie können diese Nummer auf der Seite zur Sendungsverfolgung verwenden.',
+        trackOrder: 'Meine Bestellung verfolgen', continueShopping: 'Weiter einkaufen',
+        genericError: 'Die Zahlung konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.'
+      },
+      track: {
+        backToAccount: 'Zurück zu meinem Konto', eyebrow: 'Bestellung verfolgen', title: 'Verfolgen Sie Ihre Bestellung',
+        subtitle: 'Geben Sie Ihre Bestellnummer und die bei der Bestellung verwendete E-Mail-Adresse ein.',
+        numberLabel: 'Bestellnummer', numberPlaceholder: 'OLY-XXXXXXXX', emailLabel: 'E-Mail', submit: 'Bestellung suchen',
+        notFound: 'Mit diesen Angaben wurde keine Bestellung gefunden.', itemsUnit: 'Artikel',
+        stepReceived: 'Bestellung eingegangen', stepPreparing: 'Wird vorbereitet', stepShipped: 'Versandt', stepDelivered: 'Zugestellt'
+      },
+      login: {
+        eyebrow: 'Konto', title: 'Anmelden', noAccount: 'Noch kein Konto?', createAccount: 'Konto erstellen',
+        emailLabel: 'E-Mail', passwordLabel: 'Passwort', submit: 'Anmelden', loggingIn: 'Wird angemeldet…',
+        guestTrack: 'Ohne Konto bestellt?', trackLink: 'Bestellung verfolgen'
+      },
+      register: {
+        eyebrow: 'Konto', title: 'Konto erstellen', haveAccount: 'Bereits ein Konto?', loginLink: 'Anmelden',
+        nameLabel: 'Vor- und Nachname', emailLabel: 'E-Mail', passwordLabel: 'Passwort', password2Label: 'Passwort (Wiederholen)',
+        submit: 'Konto erstellen', creating: 'Wird erstellt…', passwordMismatch: 'Die Passwörter stimmen nicht überein.'
+      },
+      backend: {
+        missingFields: 'Bitte füllen Sie alle Felder aus.', weakPassword: 'Das Passwort muss mindestens 6 Zeichen lang sein.', emailExists: 'Für diese E-Mail-Adresse existiert bereits ein Konto.',
+        loginMissingFields: 'E-Mail und Passwort sind erforderlich.', invalidCredentials: 'E-Mail oder Passwort ist falsch.', notConfigured: 'Firebase Auth ist noch nicht konfiguriert.',
+        notAuthenticated: 'Keine aktive Sitzung gefunden.', profileMissingFields: 'Vor- und Nachname sowie E-Mail sind erforderlich.', userNotFound: 'Benutzer nicht gefunden.',
+        invalidCard: 'Ungültige Kartennummer.', cardDeclined: 'Die Karte wurde abgelehnt.', paymentFailed: 'Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut.',
+        genericError: 'Etwas ist schiefgelaufen.'
+      }
+    }
+  };
+
+  function getLang() {
+    try { return localStorage.getItem(LANG_KEY) || DEFAULT_LANG; } catch { return DEFAULT_LANG; }
+  }
+  function setLang(lang) {
+    try { localStorage.setItem(LANG_KEY, lang); } catch {}
+  }
+  function getLocale(lang) { return LOCALES[lang || getLang()] || LOCALES[DEFAULT_LANG]; }
+
+  function resolve(dict, key) {
+    const parts = key.split('.');
+    let cur = dict;
+    for (const p of parts) { if (cur == null) return undefined; cur = cur[p]; }
+    return cur;
+  }
+
+  function t(key, vars, lang) {
+    if (typeof vars === 'string') { lang = vars; vars = undefined; }
+    lang = lang || getLang();
+    let val = resolve(T[lang], key);
+    if (val == null) val = resolve(T[DEFAULT_LANG], key);
+    if (val == null) return key;
+    if (vars) {
+      Object.keys(vars).forEach(k => { val = val.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]); });
+    }
+    return val;
+  }
+
+  // returns the product's translated field, falling back to the
+  // language-neutral base object (Turkish source of truth) for 'tr'
+  // or any field/id the override table doesn't cover.
+  function tProduct(product, lang) {
+    lang = lang || getLang();
+    if (!product) return product;
+    const override = PRODUCT_I18N[product.id] && PRODUCT_I18N[product.id][lang];
+    if (!override) return product;
+    return { ...product, ...override };
+  }
+
+  function injectAttr(root, attr, apply) {
+    root.querySelectorAll(`[${attr}]`).forEach(el => apply(el, el.getAttribute(attr)));
+  }
+
+  function applyToDOM(root) {
+    root = root || document;
+    const lang = getLang();
+    if (root === document) document.documentElement.lang = lang;
+    injectAttr(root, 'data-i18n', (el, key) => { el.textContent = t(key, lang); });
+    injectAttr(root, 'data-i18n-html', (el, key) => { el.innerHTML = t(key, lang); });
+    injectAttr(root, 'data-i18n-placeholder', (el, key) => { el.setAttribute('placeholder', t(key, lang)); });
+    injectAttr(root, 'data-i18n-aria-label', (el, key) => { el.setAttribute('aria-label', t(key, lang)); });
+    injectAttr(root, 'data-i18n-title', (el, key) => { el.setAttribute('title', t(key, lang)); });
+  }
+
+  function initSwitcher() {
+    document.querySelectorAll('[data-lang-switch]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.langSwitch === getLang());
+      btn.addEventListener('click', () => changeLang(btn.dataset.langSwitch));
+    });
+  }
+
+  function changeLang(lang) {
+    if (!T[lang] || lang === getLang()) { syncSwitcherUI(); return; }
+    setLang(lang);
+    applyToDOM();
+    syncSwitcherUI();
+    window.dispatchEvent(new CustomEvent('olympos:langchange', { detail: { lang } }));
+  }
+
+  function syncSwitcherUI() {
+    const lang = getLang();
+    document.querySelectorAll('[data-lang-switch]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.langSwitch === lang);
+    });
+  }
+
+  function init() {
+    applyToDOM();
+    initSwitcher();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  return { t, tProduct, getLang, setLang, getLocale, changeLang, applyToDOM, PRODUCT_I18N };
+})();
