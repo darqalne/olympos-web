@@ -81,6 +81,7 @@ window.OLYMPOS_I18N = (() => {
       announce: { handmade: 'El Yapımı', material: '%100 Dana Derisi', tagline: 'Zamansız Kesimler' },
       nav: { home: 'Ana Sayfa', shop: 'Mağaza', about: 'Hakkımızda', contact: 'İletişim', faq: 'SSS', account: 'Hesabım', cart: 'Sepetim', track: 'Sipariş Takip' },
       header: { searchAria: 'Ara', accountAria: 'Hesabım', cartAria: 'Sepeti aç', menuOpenAria: 'Menüyü aç', menuCloseAria: 'Menüyü kapat', homeAria: 'Olympos Leather anasayfa', langAria: 'Dil seçimi' },
+      search: { dialogAria: 'Ürün Ara', placeholder: 'Ürün ara…', closeAria: 'Aramayı kapat', emptyState: 'Sonuç bulunamadı.', hint: 'Yazmaya başlayın…' },
       cart: {
         title: 'Sepetiniz', closeAria: 'Sepeti kapat', emptyMsg: 'Sepetiniz şu an boş.', browseShop: 'Mağazaya Göz At',
         subtotal: 'Ara Toplam', myCart: 'Sepetim', checkout: 'Ödemeye Geç', shippingNote: 'Kargo ve vergiler ödeme sırasında hesaplanır.',
@@ -241,6 +242,7 @@ window.OLYMPOS_I18N = (() => {
       announce: { handmade: 'Handmade', material: '100% Cowhide', tagline: 'Timeless Cuts' },
       nav: { home: 'Home', shop: 'Shop', about: 'About', contact: 'Contact', faq: 'FAQ', account: 'Account', cart: 'Cart', track: 'Track Order' },
       header: { searchAria: 'Search', accountAria: 'Account', cartAria: 'Open cart', menuOpenAria: 'Open menu', menuCloseAria: 'Close menu', homeAria: 'Olympos Leather home', langAria: 'Language selection' },
+      search: { dialogAria: 'Search Products', placeholder: 'Search products…', closeAria: 'Close search', emptyState: 'No results found.', hint: 'Start typing…' },
       cart: {
         title: 'Your Cart', closeAria: 'Close cart', emptyMsg: 'Your cart is empty right now.', browseShop: 'Browse the Shop',
         subtotal: 'Subtotal', myCart: 'My Cart', checkout: 'Checkout', shippingNote: 'Shipping and taxes are calculated at checkout.',
@@ -401,6 +403,7 @@ window.OLYMPOS_I18N = (() => {
       announce: { handmade: 'Handgefertigt', material: '100% Rindsleder', tagline: 'Zeitlose Schnitte' },
       nav: { home: 'Startseite', shop: 'Shop', about: 'Über uns', contact: 'Kontakt', faq: 'FAQ', account: 'Konto', cart: 'Warenkorb', track: 'Bestellung verfolgen' },
       header: { searchAria: 'Suchen', accountAria: 'Konto', cartAria: 'Warenkorb öffnen', menuOpenAria: 'Menü öffnen', menuCloseAria: 'Menü schließen', homeAria: 'Olympos Leather Startseite', langAria: 'Sprachauswahl' },
+      search: { dialogAria: 'Produkte suchen', placeholder: 'Produkte suchen…', closeAria: 'Suche schließen', emptyState: 'Keine Ergebnisse gefunden.', hint: 'Beginnen Sie zu tippen…' },
       cart: {
         title: 'Ihr Warenkorb', closeAria: 'Warenkorb schließen', emptyMsg: 'Ihr Warenkorb ist derzeit leer.', browseShop: 'Shop durchsuchen',
         subtotal: 'Zwischensumme', myCart: 'Warenkorb', checkout: 'Zur Kasse', shippingNote: 'Versand und Steuern werden an der Kasse berechnet.',

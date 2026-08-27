@@ -265,6 +265,71 @@ const OLYMPOS = (() => {
     });
   }
 
+  /* ---------------- product search ---------------- */
+  let searchRender = null;
+  function initSearch() {
+    const overlay = document.getElementById('search-overlay');
+    const backdrop = document.getElementById('search-backdrop');
+    const input = document.getElementById('search-input');
+    const resultsEl = document.getElementById('search-results');
+    const emptyEl = document.getElementById('search-empty');
+    const hintEl = document.getElementById('search-hint');
+    if (!overlay || !input) return;
+
+    function openSearch() {
+      document.getElementById('mobile-menu')?.classList.remove('open');
+      overlay.classList.add('open');
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => input.focus(), 50);
+    }
+    function closeSearch() {
+      overlay.classList.remove('open');
+      backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function render() {
+      const q = input.value.trim().toLowerCase();
+      if (!q) {
+        resultsEl.innerHTML = '';
+        emptyEl.style.display = 'none';
+        hintEl.style.display = 'block';
+        return;
+      }
+      hintEl.style.display = 'none';
+      const matches = getProducts().filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.categoryLabel.toLowerCase().includes(q) ||
+        p.tagline.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.color.toLowerCase().includes(q)
+      );
+      if (matches.length === 0) {
+        resultsEl.innerHTML = '';
+        emptyEl.style.display = 'block';
+        return;
+      }
+      emptyEl.style.display = 'none';
+      resultsEl.innerHTML = matches.map(p => `
+        <a href="urun.html?id=${p.id}" class="search-result">
+          <img src="${p.images[0]}" alt="">
+          <div>
+            <p class="search-result-name">${p.name}</p>
+            <p class="search-result-meta">${p.categoryLabel} · ${formatPrice(p.price)}</p>
+          </div>
+        </a>
+      `).join('');
+    }
+    searchRender = render;
+
+    document.querySelectorAll('[data-open-search]').forEach(el => el.addEventListener('click', (e) => { e.preventDefault(); openSearch(); }));
+    document.querySelectorAll('[data-close-search]').forEach(el => el.addEventListener('click', closeSearch));
+    backdrop?.addEventListener('click', closeSearch);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeSearch(); });
+    input.addEventListener('input', render);
+  }
+
   /* ---------------- header / mobile menu ---------------- */
   function initHeader() {
     const header = document.querySelector('.site-header');
@@ -644,6 +709,7 @@ const OLYMPOS = (() => {
   function init() {
     initHeader();
     initCartUI();
+    initSearch();
     bindQuickAdd(document);
     initReveal();
     initShopGrid();
@@ -661,6 +727,7 @@ const OLYMPOS = (() => {
       renderCartDrawer();
       if (shopGridRender) shopGridRender();
       if (productDetailId) paintProductDetail();
+      if (searchRender) searchRender();
     });
   }
 
