@@ -260,12 +260,13 @@
     `).join('');
   }
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorEl.style.display = 'none';
     resultEl.style.display = 'none';
 
-    const order = OLYMPOS_BACKEND.findOrder({ number: form.number.value, email: form.email.value });
+    await OLYMPOS_BACKEND.ready();
+    const order = await OLYMPOS_BACKEND.findOrder({ number: form.number.value, email: form.email.value });
     if (!order) {
       errorEl.textContent = OLYMPOS_I18N.t('track.notFound');
       errorEl.style.display = 'block';

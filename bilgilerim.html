@@ -260,6 +260,8 @@
 <script src="assets/js/backend.js"></script>
 <script src="assets/js/site.js"></script>
 <script>
+(async () => {
+  await OLYMPOS_BACKEND.ready();
   const user = OLYMPOS_BACKEND.requireAuth();
   if (user) {
     const form = document.getElementById('profile-form');
@@ -301,6 +303,7 @@
       }
     });
   }
+})();
 </script>
 </body>
 </html>

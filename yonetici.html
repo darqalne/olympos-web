@@ -315,13 +315,23 @@
 <script src="assets/js/backend.js"></script>
 <script src="assets/js/site.js"></script>
 <script>
-(() => {
+(async () => {
+  await OLYMPOS.ready(); // backend auth + products both loaded before anything below runs
   const admin = OLYMPOS_BACKEND.requireAdmin();
   if (!admin) return; // requireAdmin already redirected
 
   document.getElementById('admin-body').style.visibility = 'visible';
   document.getElementById('side-who').textContent = admin.name;
   document.getElementById('side-email').textContent = admin.email;
+
+  // users/orders are fetched once into these and re-rendered from here
+  // synchronously (same "load once, read sync" pattern as site.js's
+  // product cache) — refreshUsers()/refreshOrders() re-fetch after a
+  // write; search/filter inputs just re-render off what's already here.
+  let usersCache = [];
+  let ordersCache = [];
+  async function refreshUsers() { usersCache = await OLYMPOS_BACKEND.getAllUsers(); }
+  async function refreshOrders() { ordersCache = await OLYMPOS_BACKEND.getAllOrders(); }
 
   const STATUS_LABEL = { received: 'Alındı', preparing: 'Hazırlanıyor', shipped: 'Kargoya Verildi', delivered: 'Teslim Edildi' };
   const PANEL_META = {
@@ -355,7 +365,7 @@
   sidebarBackdrop.addEventListener('click', closeSidebar);
 
   document.querySelectorAll('.admin-nav-link').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       document.querySelectorAll('.admin-nav-link').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const key = btn.dataset.panel;
@@ -363,9 +373,9 @@
       document.getElementById('topbar-title').textContent = PANEL_META[key].title;
       document.getElementById('topbar-sub').textContent = PANEL_META[key].sub;
       closeSidebar();
-      if (key === 'dashboard') renderDashboard();
-      if (key === 'users') renderUsers();
-      if (key === 'orders') renderOrders();
+      if (key === 'dashboard') { await Promise.all([refreshUsers(), refreshOrders()]); renderDashboard(); }
+      if (key === 'users') { await refreshUsers(); renderUsers(); }
+      if (key === 'orders') { await refreshOrders(); renderOrders(); }
       if (key === 'products') renderProducts();
     });
   });
@@ -390,9 +400,9 @@
 
   /* ---------------- dashboard ---------------- */
   function renderDashboard() {
-    const users = OLYMPOS_BACKEND.getAllUsers();
-    const orders = OLYMPOS_BACKEND.getAllOrders();
-    const products = OLYMPOS.adminListProducts().filter(p => !p._hidden);
+    const users = usersCache;
+    const orders = ordersCache;
+    const products = OLYMPOS.adminListProducts().filter(p => !p.hidden);
     const revenue = orders.reduce((s, o) => s + o.subtotal, 0);
 
     document.getElementById('stat-users').textContent = users.length;
@@ -419,7 +429,7 @@
   /* ---------------- users ---------------- */
   function renderUsers() {
     const q = document.getElementById('users-search').value.trim().toLowerCase();
-    const users = OLYMPOS_BACKEND.getAllUsers().filter(u =>
+    const users = usersCache.filter(u =>
       !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
     );
     const body = document.getElementById('users-table-body');
@@ -451,9 +461,9 @@
   }
 
   function openUserDetail(id) {
-    const user = OLYMPOS_BACKEND.getAllUsers().find(u => u.id === id);
+    const user = usersCache.find(u => u.id === id);
     if (!user) return;
-    const orders = OLYMPOS_BACKEND.getOrdersForUser(id);
+    const orders = ordersCache.filter(o => o.userId === id).sort((a, b) => b.createdAt - a.createdAt);
     const ordersHTML = orders.length ? orders.map(o => `
       <div class="order-item-row">
         <span>${esc(o.number)} · ${formatDate(o.createdAt)}</span>
@@ -480,7 +490,7 @@
   function renderOrders() {
     const q = document.getElementById('orders-search').value.trim().toLowerCase();
     const statusFilter = document.getElementById('orders-status-filter').value;
-    const orders = OLYMPOS_BACKEND.getAllOrders().filter(o => {
+    const orders = ordersCache.filter(o => {
       if (statusFilter && o.status !== statusFilter) return false;
       if (!q) return true;
       const hay = `${o.number} ${o.email} ${o.shipping?.name || ''}`.toLowerCase();
@@ -511,9 +521,11 @@
     `).join('');
 
     body.querySelectorAll('[data-order-status]').forEach(sel => {
-      sel.addEventListener('change', () => {
-        OLYMPOS_BACKEND.updateOrderStatus(sel.dataset.orderStatus, sel.value);
+      sel.addEventListener('change', async () => {
+        await OLYMPOS_BACKEND.updateOrderStatus(sel.dataset.orderStatus, sel.value);
+        await refreshOrders();
         OLYMPOS.toast('Sipariş durumu güncellendi.');
+        renderOrders();
         renderDashboard();
       });
     });
@@ -523,7 +535,7 @@
   }
 
   function openOrderDetail(id) {
-    const order = OLYMPOS_BACKEND.getAllOrders().find(o => o.id === id);
+    const order = ordersCache.find(o => o.id === id);
     if (!order) return;
     const itemsHTML = order.items.map(i => `
       <div class="order-item-row">
@@ -559,9 +571,9 @@
       return;
     }
     grid.innerHTML = products.map(p => `
-      <div class="admin-product-card ${p._hidden ? 'is-hidden' : ''}">
+      <div class="admin-product-card ${p.hidden ? 'is-hidden' : ''}">
         <div class="admin-product-thumb">
-          ${p._hidden ? '<span class="chip chip-hidden">Gizli</span>' : p._source === 'custom' ? '<span class="chip chip-custom">Yeni</span>' : ''}
+          ${p.hidden ? '<span class="chip chip-hidden">Gizli</span>' : ''}
           <img src="${esc(p.images && p.images[0] || 'https://placehold.co/400x500?text=Görsel+Yok')}" alt="">
         </div>
         <div class="admin-product-body">
@@ -570,10 +582,8 @@
           <p class="price">${OLYMPOS.formatPrice(p.price)}${p.compareAt ? ` <span class="price-strike">${OLYMPOS.formatPrice(p.compareAt)}</span>` : ''}</p>
           <div class="admin-product-actions">
             <button type="button" class="btn btn-outline btn-sm" data-edit-product="${esc(p.id)}">Düzenle</button>
-            <button type="button" class="btn btn-outline btn-sm" data-toggle-hidden="${esc(p.id)}" data-hidden="${p._hidden ? '1' : '0'}">${p._hidden ? 'Yayınla' : 'Gizle'}</button>
-            ${p._source === 'custom'
-              ? `<button type="button" class="btn btn-outline btn-sm" data-delete-product="${esc(p.id)}">Sil</button>`
-              : (p._overrideKeys && p._overrideKeys.length ? `<button type="button" class="btn btn-outline btn-sm" data-reset-product="${esc(p.id)}">Sıfırla</button>` : '')}
+            <button type="button" class="btn btn-outline btn-sm" data-toggle-hidden="${esc(p.id)}" data-hidden="${p.hidden ? '1' : '0'}">${p.hidden ? 'Yayınla' : 'Gizle'}</button>
+            <button type="button" class="btn btn-outline btn-sm" data-delete-product="${esc(p.id)}">Sil</button>
           </div>
         </div>
       </div>
@@ -583,25 +593,17 @@
       btn.addEventListener('click', () => openProductModal(btn.dataset.editProduct));
     });
     grid.querySelectorAll('[data-toggle-hidden]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        OLYMPOS.adminSetHidden(btn.dataset.toggleHidden, btn.dataset.hidden !== '1');
+      btn.addEventListener('click', async () => {
+        await OLYMPOS.adminSetHidden(btn.dataset.toggleHidden, btn.dataset.hidden !== '1');
         OLYMPOS.toast(btn.dataset.hidden === '1' ? 'Ürün yayına alındı.' : 'Ürün gizlendi.');
         renderProducts();
         renderDashboard();
       });
     });
-    grid.querySelectorAll('[data-reset-product]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (!confirm('Bu üründeki tüm düzenlemeler silinip orijinal haline döndürülsün mü?')) return;
-        OLYMPOS.adminResetProduct(btn.dataset.resetProduct);
-        OLYMPOS.toast('Ürün orijinal haline döndürüldü.');
-        renderProducts();
-      });
-    });
     grid.querySelectorAll('[data-delete-product]').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         if (!confirm('Bu ürünü kalıcı olarak silmek istediğinize emin misiniz?')) return;
-        OLYMPOS.adminDeleteCustomProduct(btn.dataset.deleteProduct);
+        await OLYMPOS.adminDeleteProduct(btn.dataset.deleteProduct);
         OLYMPOS.toast('Ürün silindi.');
         renderProducts();
         renderDashboard();
@@ -632,7 +634,10 @@
     pfImages.appendChild(row);
   }
 
-  function fileToResizedDataURL(file, maxDim = 1400, quality = 0.85) {
+  // no Firebase Storage in this setup — uploaded images are resized and
+  // stored as data-URLs directly inside the product's Firestore document,
+  // which caps out at 1MB total, hence the conservative size/quality here.
+  function fileToResizedDataURL(file, maxDim = 1000, quality = 0.72) {
     return new Promise((resolve, reject) => {
       const img = new Image();
       const reader = new FileReader();
@@ -707,7 +712,7 @@
   document.querySelectorAll('[data-close-product]').forEach(el => el.addEventListener('click', closeProductModal));
   productBackdrop.addEventListener('click', (e) => { if (e.target === productBackdrop) closeProductModal(); });
 
-  productForm.addEventListener('submit', (e) => {
+  productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const category = document.getElementById('pf-category').value;
     const categoryLabel = category === 'cuzdan' ? 'Cüzdan' : 'Kartlık';
@@ -729,13 +734,20 @@
     };
     if (!fields.name) { OLYMPOS.toast('Ürün başlığı gerekli.'); return; }
 
-    if (editingProductId) OLYMPOS.adminUpdateProduct(editingProductId, fields);
-    else OLYMPOS.adminAddProduct(fields);
-
-    OLYMPOS.toast(editingProductId ? 'Ürün güncellendi.' : 'Ürün eklendi.');
-    closeProductModal();
-    renderProducts();
-    renderDashboard();
+    const saveBtn = productForm.querySelector('button[type="submit"]');
+    saveBtn.disabled = true;
+    try {
+      if (editingProductId) await OLYMPOS.adminUpdateProduct(editingProductId, fields);
+      else await OLYMPOS.adminAddProduct(fields);
+      OLYMPOS.toast(editingProductId ? 'Ürün güncellendi.' : 'Ürün eklendi.');
+      closeProductModal();
+      renderProducts();
+      renderDashboard();
+    } catch (err) {
+      OLYMPOS.toast(err.message && err.message.includes('longer than') ? 'Görseller çok büyük, birkaçını kaldırıp tekrar deneyin.' : 'Kaydedilemedi: ' + (err.message || 'bilinmeyen hata'));
+    } finally {
+      saveBtn.disabled = false;
+    }
   });
 
   /* ---------------- search bindings ---------------- */
@@ -745,6 +757,7 @@
   document.getElementById('products-search').addEventListener('input', renderProducts);
 
   /* ---------------- boot ---------------- */
+  await Promise.all([refreshUsers(), refreshOrders()]);
   renderDashboard();
   renderUsers();
   renderOrders();

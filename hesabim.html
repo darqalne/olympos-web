@@ -227,13 +227,15 @@
 <script src="assets/js/backend.js"></script>
 <script src="assets/js/site.js"></script>
 <script>
+(async () => {
+  await OLYMPOS_BACKEND.ready();
   const user = OLYMPOS_BACKEND.requireAuth();
   if (user) {
     document.getElementById('acc-name').textContent = user.name;
     document.getElementById('acc-email').textContent = user.email;
     if (user.isAdmin) document.getElementById('admin-link').style.display = 'inline-flex';
 
-    const orders = OLYMPOS_BACKEND.getOrdersForUser(user.id);
+    const orders = await OLYMPOS_BACKEND.getOrdersForUser(user.id);
     const listEl = document.getElementById('orders-list');
     const emptyEl = document.getElementById('orders-empty');
 
@@ -265,6 +267,7 @@
       window.location.href = 'index.html';
     });
   }
+})();
 </script>
 </body>
 </html>

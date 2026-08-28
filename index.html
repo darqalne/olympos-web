@@ -317,15 +317,19 @@
 <script src="assets/js/backend.js"></script>
 <script src="assets/js/site.js"></script>
 <script>
-  const featuredGrid = document.getElementById('featured-grid');
-  function renderFeatured() {
-    featuredGrid.innerHTML = ['original','eclipse','flare']
-      .map(id => OLYMPOS.productCardHTML(OLYMPOS.getProduct(id))).join('');
-    OLYMPOS.attachStitchFX(featuredGrid);
-    OLYMPOS.bindQuickAdd(featuredGrid);
-  }
-  renderFeatured();
-  window.addEventListener('olympos:langchange', renderFeatured);
+  (async () => {
+    await OLYMPOS.ready();
+    const featuredGrid = document.getElementById('featured-grid');
+    function renderFeatured() {
+      featuredGrid.innerHTML = ['original','eclipse','flare']
+        .map(id => OLYMPOS.getProduct(id)).filter(Boolean)
+        .map(p => OLYMPOS.productCardHTML(p)).join('');
+      OLYMPOS.attachStitchFX(featuredGrid);
+      OLYMPOS.bindQuickAdd(featuredGrid);
+    }
+    renderFeatured();
+    window.addEventListener('olympos:langchange', renderFeatured);
+  })();
 </script>
 </body>
 </html>

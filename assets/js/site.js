@@ -1,11 +1,16 @@
 /* =========================================================
    OLYMPOS LEATHER — shared site logic
-   Product data, cart (localStorage), header/menu, reveals,
-   toasts, and page-specific renderers (shop grid / product detail).
+   Product data (Firestore-backed, see below), cart (localStorage),
+   header/menu, reveals, toasts, and page-specific renderers (shop
+   grid / product detail).
    ========================================================= */
 
 const OLYMPOS = (() => {
 
+  // seed data only — copied into Firestore's `products` collection the
+  // first time the app runs against an empty database (see
+  // ensureProductsLoaded below). After that, Firestore is the live
+  // source of truth; editing this array does nothing once seeded.
   const PRODUCTS = [
     {
       id: 'original',
@@ -99,120 +104,87 @@ const OLYMPOS = (() => {
 
   const CART_KEY = 'olympos_cart_v1';
 
-  /* ---------------- product overrides (admin panel) ----------------
-     yonetici.html edits products through the functions below rather
-     than touching PRODUCTS directly, so the hand-authored catalog
-     above stays the fallback/reset target. Two localStorage tables:
-       - OVERRIDES: { [baseProductId]: { field: value, ..., hidden? } }
-         patched onto the matching PRODUCTS entry.
-       - CUSTOM: [ {..full product, hidden?} ] products admin added
-         from scratch, no PRODUCTS entry to patch.
-     An override field always wins over the PRODUCT_I18N table in
-     i18n.js — an admin edit should show in every language, not get
-     clobbered by the hardcoded EN/DE copy — see mergeTranslation(). */
-  const OVERRIDES_KEY = 'olympos_product_overrides_v1';
-  const CUSTOM_KEY = 'olympos_custom_products_v1';
+  /* ---------------- products (Firestore-backed) ----------------
+     "load once, read sync" pattern: ensureProductsLoaded() does the
+     one async Firestore round-trip (called from init(), before any
+     rendering happens); everything else (getProducts/getProduct, the
+     shop grid, product detail, cart, search) reads the already-loaded
+     in-memory array synchronously, so no other call site in the app
+     needs to change for products to be real, shared, database-backed
+     data instead of a hardcoded array. */
+  let _productsCache = null;
+  let _productsLoadPromise = null;
 
-  function readLS(key, fallback) {
-    try { const v = JSON.parse(localStorage.getItem(key)); return v == null ? fallback : v; }
-    catch { return fallback; }
+  function db() { return window.OLYMPOS_BACKEND.getDb(); }
+
+  async function ensureProductsLoaded() {
+    if (_productsCache) return _productsCache;
+    if (_productsLoadPromise) return _productsLoadPromise;
+    _productsLoadPromise = (async () => {
+      const database = db();
+      if (!database) { _productsCache = PRODUCTS.map(p => ({ ...p, hidden: false })); return _productsCache; }
+      let snap = await database.collection('products').get();
+      if (snap.empty) {
+        // first run against a fresh database — seed it once from the
+        // hand-authored catalog above so nobody has to retype it.
+        const batch = database.batch();
+        PRODUCTS.forEach(p => batch.set(database.collection('products').doc(p.id), { ...p, hidden: false }));
+        await batch.commit();
+        snap = await database.collection('products').get();
+      }
+      _productsCache = snap.docs.map(d => d.data());
+      return _productsCache;
+    })();
+    return _productsLoadPromise;
   }
-  function writeLS(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
-  function readOverrides() { return readLS(OVERRIDES_KEY, {}); }
-  function writeOverrides(v) { writeLS(OVERRIDES_KEY, v); }
-  function readCustom() { return readLS(CUSTOM_KEY, []); }
-  function writeCustom(v) { writeLS(CUSTOM_KEY, v); }
 
-  // maps Turkish letters to plain ASCII, then anything else non-alphanumeric
-  // (accents included) is stripped by the final replace — no Unicode
-  // normalization needed for the handful of characters this site uses.
+  async function refreshProducts() {
+    _productsCache = null;
+    _productsLoadPromise = null;
+    return ensureProductsLoaded();
+  }
+
+  function getProducts() { return (_productsCache || []).filter(p => !p.hidden); }
+  function getProduct(id) { return (_productsCache || []).find(p => p.id === id && !p.hidden) || null; }
+
   const SLUG_MAP = { 'ç': 'c', 'Ç': 'c', 'ğ': 'g', 'Ğ': 'g', 'ı': 'i', 'İ': 'i', 'ö': 'o', 'Ö': 'o', 'ş': 's', 'Ş': 's', 'ü': 'u', 'Ü': 'u' };
   function slugify(str) {
     const swapped = (str || '').split('').map(ch => SLUG_MAP[ch] || ch).join('');
     return swapped.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-+|-+$)/g, '') || 'urun';
   }
 
-  // every product this store knows about — Turkish base + admin
-  // overrides layered on, hidden ones included — for the admin panel.
-  function allProductsRaw() {
-    const overrides = readOverrides();
-    const based = PRODUCTS.map(p => {
-      const ov = overrides[p.id] || {};
-      return { ...p, ...ov, _overrideKeys: Object.keys(ov).filter(k => k !== 'hidden'), _source: 'base', _hidden: !!ov.hidden };
-    });
-    const custom = readCustom().map(p => ({ ...p, _overrideKeys: Object.keys(p), _source: 'custom', _hidden: !!p.hidden }));
-    return [...based, ...custom];
-  }
-
-  // i18n's tProduct() would otherwise let a hardcoded EN/DE translation
-  // clobber a field the admin just edited — re-apply those fields after.
-  function mergeTranslation(p) {
-    const translated = window.OLYMPOS_I18N.tProduct(p);
-    (p._overrideKeys || []).forEach(k => { translated[k] = p[k]; });
-    const { _overrideKeys, _source, _hidden, ...clean } = translated;
-    return clean;
-  }
-
-  // PRODUCTS above carries the Turkish source text; getProducts/getProduct
-  // always hand back the copy localized for whatever language is active,
-  // with any admin-panel edits layered on top.
-  function getProducts() { return allProductsRaw().filter(p => !p._hidden).map(mergeTranslation); }
-  function getProduct(id) {
-    const p = allProductsRaw().find(p => p.id === id && !p._hidden) || null;
-    return p ? mergeTranslation(p) : null;
-  }
-
   /* ---------------- admin: product CRUD ---------------- */
-  function adminListProducts() { return allProductsRaw(); }
-  function adminGetProduct(id) { return allProductsRaw().find(p => p.id === id) || null; }
+  function adminListProducts() { return _productsCache || []; }
+  function adminGetProduct(id) { return (_productsCache || []).find(p => p.id === id) || null; }
 
-  function adminUpdateProduct(id, fields) {
-    const customList = readCustom();
-    const idx = customList.findIndex(p => p.id === id);
-    if (idx !== -1) {
-      customList[idx] = { ...customList[idx], ...fields };
-      writeCustom(customList);
-      return customList[idx];
-    }
-    const overrides = readOverrides();
-    overrides[id] = { ...(overrides[id] || {}), ...fields };
-    writeOverrides(overrides);
-    return { ...PRODUCTS.find(p => p.id === id), ...overrides[id] };
+  async function adminUpdateProduct(id, fields) {
+    await db().collection('products').doc(id).set(fields, { merge: true });
+    return refreshProducts();
   }
 
-  function adminAddProduct(fields) {
+  async function adminAddProduct(fields) {
     const base = {
       category: 'kartlik', categoryLabel: 'Kartlık', price: 0, compareAt: null,
       color: '', swatch: '#241811', size: '', material: '%100 dana derisi', slots: '',
       tagline: '', description: '', badge: null, images: [], hidden: false
     };
-    const existingIds = new Set([...PRODUCTS.map(p => p.id), ...readCustom().map(p => p.id)]);
+    const existingIds = new Set((_productsCache || []).map(p => p.id));
     let id = slugify(fields.name);
     while (existingIds.has(id)) id = slugify(fields.name) + '-' + Math.random().toString(36).slice(2, 5);
     const product = { ...base, ...fields, id };
-    const customList = readCustom();
-    customList.push(product);
-    writeCustom(customList);
+    await db().collection('products').doc(id).set(product);
+    await refreshProducts();
     return product;
   }
 
-  function adminSetHidden(id, hidden) {
-    const customList = readCustom();
-    const idx = customList.findIndex(p => p.id === id);
-    if (idx !== -1) { customList[idx].hidden = hidden; writeCustom(customList); return; }
-    const overrides = readOverrides();
-    overrides[id] = { ...(overrides[id] || {}), hidden };
-    writeOverrides(overrides);
+  async function adminSetHidden(id, hidden) {
+    await db().collection('products').doc(id).update({ hidden });
+    return refreshProducts();
   }
 
-  function adminResetProduct(id) {
-    const overrides = readOverrides();
-    delete overrides[id];
-    writeOverrides(overrides);
-  }
-
-  function adminDeleteCustomProduct(id) {
-    writeCustom(readCustom().filter(p => p.id !== id));
+  async function adminDeleteProduct(id) {
+    await db().collection('products').doc(id).delete();
+    return refreshProducts();
   }
 
   function formatPrice(n) {
@@ -619,6 +591,7 @@ const OLYMPOS = (() => {
     const root = document.getElementById('product-detail');
     if (!root || !productDetailId) return;
     const p = getProduct(productDetailId) || getProducts()[0];
+    if (!p) return;
 
     document.title = `${p.name} — Olympos Leather`;
     const metaDesc = `${p.name} — ${p.tagline} ${p.description}`.slice(0, 160);
@@ -704,7 +677,7 @@ const OLYMPOS = (() => {
     const root = document.getElementById('product-detail');
     if (!root) return;
     const params = new URLSearchParams(window.location.search);
-    productDetailId = params.get('id') || getProducts()[0].id;
+    productDetailId = params.get('id') || (getProducts()[0] && getProducts()[0].id);
 
     paintProductDetail();
 
@@ -814,7 +787,18 @@ const OLYMPOS = (() => {
     });
   }
 
-  function init() {
+  // pages with their own inline script that reads products/cart at
+  // load time (index.html, sepet.html, odeme.html) must await this
+  // before calling getProduct/getProducts/cartLines — otherwise they'd
+  // run before the one-time Firestore fetch below has landed.
+  async function ready() {
+    await window.OLYMPOS_BACKEND.ready();
+    return ensureProductsLoaded();
+  }
+
+  async function init() {
+    await ready();
+
     initHeader();
     initCartUI();
     initSearch();
@@ -843,8 +827,9 @@ const OLYMPOS = (() => {
   else init();
 
   return {
+    ready,
     getProducts, getProduct, formatPrice, addToCart, toast, productCardHTML, bindQuickAdd, attachStitchFX,
     cartLines, cartSubtotal, cartCount, clearCart, setQty, removeFromCart,
-    adminListProducts, adminGetProduct, adminUpdateProduct, adminAddProduct, adminSetHidden, adminResetProduct, adminDeleteCustomProduct
+    adminListProducts, adminGetProduct, adminUpdateProduct, adminAddProduct, adminSetHidden, adminDeleteProduct
   };
 })();

@@ -229,6 +229,8 @@
 <script src="assets/js/backend.js"></script>
 <script src="assets/js/site.js"></script>
 <script>
+(async () => {
+  await OLYMPOS.ready();
   function renderPageCart() {
     const lines = OLYMPOS.cartLines();
     const emptyEl = document.getElementById('page-cart-empty');
@@ -287,6 +289,7 @@
 
   renderPageCart();
   window.addEventListener('olympos:langchange', renderPageCart);
+})();
 </script>
 </body>
 </html>
