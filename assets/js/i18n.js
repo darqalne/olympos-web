@@ -341,12 +341,14 @@ window.OLYMPOS_I18N = (() => {
         eyebrow: 'Ödeme', title: 'Siparişi Tamamla', emptyMsg: 'Sepetiniz boş, ödeme adımına geçemezsiniz.', browseShop: 'Mağazaya Göz At',
         step1Label: 'Teslimat', step2Label: 'Ödeme',
         deliveryTitle: 'Teslimat Bilgileri', nameLabel: 'Ad Soyad', emailLabel: 'E-posta', phoneLabel: 'Telefon',
+        identityLabel: 'T.C. Kimlik No', identityHint: "Ödeme altyapımız iyzico'nun yasal zorunluluğu gereği istenmektedir; kart bilgilerinizle birlikte saklanmaz.",
         addressLabel: 'Adres', cityLabel: 'Şehir', zipLabel: 'Posta Kodu',
         agreeTermsHtml: '<a href="on-bilgilendirme-formu" target="_blank" rel="noopener">Ön Bilgilendirme Formu</a>\'nu ve <a href="mesafeli-satis-sozlesmesi" target="_blank" rel="noopener">Mesafeli Satış Sözleşmesi</a>\'ni okudum, onaylıyorum.',
         agreeMarketing: 'Olympos Leather e-posta ve SMS gönderimleri aracılığıyla yeni koleksiyonlardan ve kampanyalardan haberdar olmak istiyorum.',
         agreeError: 'Devam etmek için Ön Bilgilendirme Formu\'nu ve Mesafeli Satış Sözleşmesi\'ni onaylamanız gerekiyor.',
         toPayment: 'Ödemeye Geç', backToDelivery: 'Teslimat bilgilerine dön',
         cardTitle: 'Kart Bilgileri', cardDisclaimer: 'Bu bir vitrin ortamıdır — gerçek bir kart ile ödeme alınmaz. Test için herhangi bir kart numarası kullanabilirsiniz.',
+        securePopupNote: "Ödemeniz, iyzico'nun güvenli altyapısı üzerinden açılan pencerede tamamlanır. Kart bilgileriniz sitemize hiçbir zaman ulaşmaz.",
         secureNote: 'iyzico güvenli ödeme altyapısı ile 256-bit SSL şifrelemesi altında korunur.',
         wordmarkSrc: 'assets/img/brand/payment/iyzico-ile-ode-colored-horizontal.svg',
         badgeOneClick: 'Tek Tıkla Hızlı Ödeme', badgeInstallment: 'Taksit Avantajı', badgePoints: 'Kart Puan Kullanımı', badgeProtected: 'Korumalı Alışveriş',
@@ -357,7 +359,8 @@ window.OLYMPOS_I18N = (() => {
         summaryTitle: 'Sipariş Özeti', editCart: 'Sepeti Düzenle', subtotal: 'Ara Toplam',
         successTitle: 'Siparişiniz Alındı', successOrderNumber: 'Sipariş numaranız:', successNote: 'Bu numarayı sipariş takip sayfasında kullanabilirsiniz.',
         trackOrder: 'Siparişimi Takip Et', continueShopping: 'Alışverişe Devam Et',
-        genericError: 'Ödeme işlenemedi. Lütfen tekrar deneyin.'
+        genericError: 'Ödeme işlenemedi. Lütfen tekrar deneyin.',
+        paymentFailed: 'Ödeme tamamlanamadı veya iptal edildi. Lütfen tekrar deneyin.'
       },
       track: {
         backToAccount: "Hesabım'a Dön", eyebrow: 'Sipariş Takip', title: 'Siparişinizi Takip Edin',
@@ -589,12 +592,14 @@ window.OLYMPOS_I18N = (() => {
         eyebrow: 'Checkout', title: 'Complete Your Order', emptyMsg: 'Your cart is empty, so you can’t proceed to checkout.', browseShop: 'Browse the Shop',
         step1Label: 'Delivery', step2Label: 'Payment',
         deliveryTitle: 'Delivery Information', nameLabel: 'Full Name', emailLabel: 'Email', phoneLabel: 'Phone',
+        identityLabel: 'Turkish National ID (T.C. Kimlik No)', identityHint: "Required by iyzico, our payment provider, under Turkish law; it is never stored alongside your card details.",
         addressLabel: 'Address', cityLabel: 'City', zipLabel: 'Postal Code',
         agreeTermsHtml: 'I have read and agree to the <a href="on-bilgilendirme-formu" target="_blank" rel="noopener">Pre-Contract Information Form</a> and the <a href="mesafeli-satis-sozlesmesi" target="_blank" rel="noopener">Distance Sales Agreement</a>.',
         agreeMarketing: 'I want to hear about new collections and campaigns from Olympos Leather by email and SMS.',
         agreeError: 'You need to agree to the Pre-Contract Information Form and the Distance Sales Agreement to continue.',
         toPayment: 'Proceed to Payment', backToDelivery: 'Back to delivery details',
         cardTitle: 'Card Information', cardDisclaimer: 'This is a showcase environment — no real card is charged. You can use any card number for testing.',
+        securePopupNote: "Your payment is completed in a secure window hosted by iyzico. Your card details never reach our site.",
         secureNote: "Protected with 256-bit SSL encryption via iyzico's secure payment infrastructure.",
         wordmarkSrc: 'assets/img/brand/payment/pay-with-iyzico-colored-horizontal.svg',
         badgeOneClick: 'One-Click Fast Checkout', badgeInstallment: 'Installment Options', badgePoints: 'Use Card Points', badgeProtected: 'Protected Shopping',
@@ -605,7 +610,8 @@ window.OLYMPOS_I18N = (() => {
         summaryTitle: 'Order Summary', editCart: 'Edit Cart', subtotal: 'Subtotal',
         successTitle: 'Your Order Was Received', successOrderNumber: 'Your order number:', successNote: 'You can use this number on the order tracking page.',
         trackOrder: 'Track My Order', continueShopping: 'Continue Shopping',
-        genericError: 'Payment could not be processed. Please try again.'
+        genericError: 'Payment could not be processed. Please try again.',
+        paymentFailed: 'Payment could not be completed or was cancelled. Please try again.'
       },
       track: {
         backToAccount: 'Back to My Account', eyebrow: 'Track Order', title: 'Track Your Order',
@@ -837,12 +843,14 @@ window.OLYMPOS_I18N = (() => {
         eyebrow: 'Kasse', title: 'Bestellung abschließen', emptyMsg: 'Ihr Warenkorb ist leer, Sie können nicht zur Kasse gehen.', browseShop: 'Shop durchsuchen',
         step1Label: 'Lieferung', step2Label: 'Zahlung',
         deliveryTitle: 'Lieferinformationen', nameLabel: 'Vor- und Nachname', emailLabel: 'E-Mail', phoneLabel: 'Telefon',
+        identityLabel: 'Türkische Personalausweisnummer (T.C. Kimlik No)', identityHint: 'Von unserem Zahlungsanbieter iyzico gesetzlich vorgeschrieben; wird nie zusammen mit Ihren Kartendaten gespeichert.',
         addressLabel: 'Adresse', cityLabel: 'Stadt', zipLabel: 'Postleitzahl',
         agreeTermsHtml: 'Ich habe das <a href="on-bilgilendirme-formu" target="_blank" rel="noopener">Vorabinformationsformular</a> und den <a href="mesafeli-satis-sozlesmesi" target="_blank" rel="noopener">Fernabsatzvertrag</a> gelesen und stimme zu.',
         agreeMarketing: 'Ich möchte per E-Mail und SMS über neue Kollektionen und Kampagnen von Olympos Leather informiert werden.',
         agreeError: 'Um fortzufahren, müssen Sie dem Vorabinformationsformular und dem Fernabsatzvertrag zustimmen.',
         toPayment: 'Weiter zur Zahlung', backToDelivery: 'Zurück zu den Lieferdaten',
         cardTitle: 'Kartendaten', cardDisclaimer: 'Dies ist eine Vorführumgebung — es wird keine echte Karte belastet. Sie können zum Testen eine beliebige Kartennummer verwenden.',
+        securePopupNote: 'Ihre Zahlung wird in einem sicheren, von iyzico gehosteten Fenster abgeschlossen. Ihre Kartendaten erreichen unsere Website nie.',
         secureNote: 'Geschützt durch 256-Bit-SSL-Verschlüsselung über die sichere Zahlungsinfrastruktur von iyzico.',
         wordmarkSrc: 'assets/img/brand/payment/pay-with-iyzico-colored-horizontal.svg',
         badgeOneClick: 'Schnelle 1-Klick-Zahlung', badgeInstallment: 'Ratenzahlungsvorteil', badgePoints: 'Kartenpunkte nutzen', badgeProtected: 'Geschütztes Einkaufen',
@@ -853,7 +861,8 @@ window.OLYMPOS_I18N = (() => {
         summaryTitle: 'Bestellübersicht', editCart: 'Warenkorb bearbeiten', subtotal: 'Zwischensumme',
         successTitle: 'Ihre Bestellung ist eingegangen', successOrderNumber: 'Ihre Bestellnummer:', successNote: 'Sie können diese Nummer auf der Seite zur Sendungsverfolgung verwenden.',
         trackOrder: 'Meine Bestellung verfolgen', continueShopping: 'Weiter einkaufen',
-        genericError: 'Die Zahlung konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.'
+        genericError: 'Die Zahlung konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.',
+        paymentFailed: 'Die Zahlung konnte nicht abgeschlossen werden oder wurde abgebrochen. Bitte versuchen Sie es erneut.'
       },
       track: {
         backToAccount: 'Zurück zu meinem Konto', eyebrow: 'Bestellung verfolgen', title: 'Verfolgen Sie Ihre Bestellung',

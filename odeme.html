@@ -183,10 +183,17 @@
                     <input id="ck-email" name="email" type="email" required autocomplete="email">
                   </div>
                 </div>
-                <div class="field">
-                  <label for="ck-phone" data-i18n="checkout.phoneLabel">Telefon</label>
-                  <input id="ck-phone" name="phone" type="tel" required autocomplete="tel">
+                <div class="grid sm:grid-cols-2 gap-6">
+                  <div class="field">
+                    <label for="ck-phone" data-i18n="checkout.phoneLabel">Telefon</label>
+                    <input id="ck-phone" name="phone" type="tel" required autocomplete="tel">
+                  </div>
+                  <div class="field">
+                    <label for="ck-identity" data-i18n="checkout.identityLabel">T.C. Kimlik No</label>
+                    <input id="ck-identity" name="identityNumber" type="text" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" required autocomplete="off">
+                  </div>
                 </div>
+                <p class="text-umber-500 text-xs" data-i18n="checkout.identityHint" style="margin-top:-1rem;">Ödeme altyapımız iyzico&#39;nun yasal zorunluluğu gereği istenmektedir; kart bilgilerinizle birlikte saklanmaz.</p>
                 <div class="field">
                   <label for="ck-address" data-i18n="checkout.addressLabel">Adres</label>
                   <textarea id="ck-address" name="address" required></textarea>
@@ -259,26 +266,7 @@
                   <p data-i18n="checkout.whatIsText">iyzico ile Öde, kart bilgilerinizi iyzico'nun güvenli altyapısında saklayarak sonraki alışverişlerinizde tek tıkla, hızlı ve güvenli ödeme yapmanızı sağlar. Kart bilgileriniz Olympos Leather ile paylaşılmaz.</p>
                 </details>
 
-                <div class="space-y-6">
-                  <div class="field">
-                    <label for="ck-card-name" data-i18n="checkout.cardNameLabel">Kart Üzerindeki İsim</label>
-                    <input id="ck-card-name" name="cardName" type="text" required autocomplete="cc-name">
-                  </div>
-                  <div class="field">
-                    <label for="ck-card-number" data-i18n="checkout.cardNumberLabel">Kart Numarası</label>
-                    <input id="ck-card-number" name="cardNumber" type="text" inputmode="numeric" placeholder="4242 4242 4242 4242" required autocomplete="cc-number">
-                  </div>
-                  <div class="grid sm:grid-cols-2 gap-6">
-                    <div class="field">
-                      <label for="ck-card-exp" data-i18n="checkout.cardExpLabel">Son Kullanma (AA/YY)</label>
-                      <input id="ck-card-exp" name="cardExp" type="text" placeholder="12/28" required autocomplete="cc-exp">
-                    </div>
-                    <div class="field">
-                      <label for="ck-card-cvc" data-i18n="checkout.cardCvcLabel">CVC</label>
-                      <input id="ck-card-cvc" name="cardCvc" type="text" inputmode="numeric" placeholder="123" required autocomplete="cc-csc">
-                    </div>
-                  </div>
-                </div>
+                <div id="iyzico-checkout-container"></div>
 
                 <p id="checkout-error" class="text-sm mt-5" style="color:#B4432E; display:none;"></p>
 
@@ -287,11 +275,11 @@
                     <span class="text-sm text-umber-600" data-i18n="checkout.subtotal">Ara Toplam</span>
                     <span id="checkout-pay-amount" class="font-display text-lg text-umber-800">0,00 ₺</span>
                   </div>
-                  <button type="submit" id="checkout-submit" class="iyzico-pay-btn" data-i18n="checkout.submit">Öde</button>
+                  <button type="button" id="checkout-submit" class="iyzico-pay-btn" data-i18n="checkout.submit">Öde</button>
                 </div>
               </div>
 
-              <p class="text-umber-500 text-xs mt-4" data-i18n="checkout.cardDisclaimer">Bu bir vitrin ortamıdır — gerçek bir kart ile ödeme alınmaz. Test için herhangi bir kart numarası kullanabilirsiniz.</p>
+              <p class="text-umber-500 text-xs mt-4" data-i18n="checkout.securePopupNote">Ödemeniz, iyzico'nun güvenli altyapısı üzerinden açılan pencerede tamamlanır. Kart bilgileriniz sitemize hiçbir zaman ulaşmaz.</p>
             </div>
 
           </form>
@@ -424,6 +412,54 @@
 
     const form = document.getElementById('checkout-form');
     const errorEl = document.getElementById('checkout-error');
+    const PENDING_ORDER_KEY = 'olympos_pending_order';
+
+    // no field submits natively anymore (payment is a fetch + injected
+    // iyzico popup) — stop a stray Enter keypress from reloading the page.
+    form.addEventListener('submit', (e) => e.preventDefault());
+
+    // returning from iyzico's hosted checkout: /api/iyzico-callback redirects
+    // back here with ?iyzico=success|failed once the popup has finished.
+    const returnParams = new URLSearchParams(location.search);
+    const iyzicoStatus = returnParams.get('iyzico');
+    let pendingPaymentFailed = false;
+    if (iyzicoStatus) {
+      history.replaceState(null, '', location.pathname);
+    }
+    if (iyzicoStatus === 'success') {
+      const pendingRaw = sessionStorage.getItem(PENDING_ORDER_KEY);
+      if (pendingRaw) {
+        try {
+          const pending = JSON.parse(pendingRaw);
+          const order = await OLYMPOS_BACKEND.createOrder(pending);
+          sessionStorage.removeItem(PENDING_ORDER_KEY);
+          OLYMPOS.clearCart();
+          contentEl.style.display = 'none';
+          document.getElementById('success-order-number').textContent = order.number;
+          document.getElementById('checkout-success').style.display = 'block';
+          return;
+        } catch (err) {
+          sessionStorage.removeItem(PENDING_ORDER_KEY);
+          pendingPaymentFailed = true;
+        }
+      }
+    } else if (iyzicoStatus === 'failed') {
+      const pendingRaw = sessionStorage.getItem(PENDING_ORDER_KEY);
+      sessionStorage.removeItem(PENDING_ORDER_KEY);
+      if (pendingRaw) {
+        try {
+          const s = (JSON.parse(pendingRaw).shipping) || {};
+          if (s.name) form.name.value = s.name;
+          if (s.email) form.email.value = s.email;
+          if (s.phone) form.phone.value = s.phone;
+          if (s.address) form.address.value = s.address;
+          if (s.city) form.city.value = s.city;
+          if (s.zip) form.zip.value = s.zip;
+          if (s.identityNumber) document.getElementById('ck-identity').value = s.identityNumber;
+        } catch {}
+      }
+      pendingPaymentFailed = true;
+    }
 
     // step navigation: delivery + consent -> iyzico-styled payment step
     const stepDeliveryEl = document.getElementById('step-delivery');
@@ -432,6 +468,15 @@
     const agreeTermsInput = document.getElementById('ck-agree-terms');
     const stepIndicator1 = document.querySelector('.checkout-step[data-step="1"]');
     const stepIndicator2 = document.querySelector('.checkout-step[data-step="2"]');
+
+    if (pendingPaymentFailed) {
+      stepDeliveryEl.style.display = 'none';
+      stepPaymentEl.style.display = 'block';
+      stepIndicator1.classList.remove('active'); stepIndicator1.classList.add('done');
+      stepIndicator2.classList.add('active');
+      errorEl.textContent = OLYMPOS_I18N.t('checkout.paymentFailed');
+      errorEl.style.display = 'block';
+    }
 
     document.getElementById('to-payment-btn').addEventListener('click', () => {
       const deliveryValid = ['name', 'email', 'phone', 'address', 'city'].every(f => form[f].checkValidity());
@@ -461,9 +506,34 @@
       stepDeliveryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // injects iyzico's checkoutFormContent (an HTML/script snippet) so its
+    // own script actually runs — assigning via innerHTML alone would not
+    // execute the <script> tags inside it.
+    function injectCheckoutForm(html) {
+      const container = document.getElementById('iyzico-checkout-container');
+      container.innerHTML = '';
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      Array.from(temp.childNodes).forEach((node) => {
+        if (node.nodeType === 1 && node.tagName === 'SCRIPT') {
+          const script = document.createElement('script');
+          Array.from(node.attributes).forEach((attr) => script.setAttribute(attr.name, attr.value));
+          script.textContent = node.textContent;
+          container.appendChild(script);
+        } else {
+          container.appendChild(node.cloneNode(true));
+        }
+      });
+    }
+
+    document.getElementById('checkout-submit').addEventListener('click', async () => {
       errorEl.style.display = 'none';
+      const identityInput = document.getElementById('ck-identity');
+      if (!identityInput.checkValidity()) {
+        identityInput.reportValidity();
+        return;
+      }
+
       const btn = document.getElementById('checkout-submit');
       const original = btn.textContent;
       btn.disabled = true; btn.textContent = OLYMPOS_I18N.t('checkout.processing');
@@ -474,32 +544,32 @@
           name: form.name.value.trim(),
           email: form.email.value.trim(),
           phone: form.phone.value.trim(),
+          identityNumber: identityInput.value.trim(),
           address: form.address.value.trim(),
           city: form.city.value.trim(),
           zip: form.zip.value.trim()
         };
-        const card = {
-          name: form.cardName.value.trim(),
-          number: form.cardNumber.value.trim(),
-          exp: form.cardExp.value.trim(),
-          cvc: form.cardCvc.value.trim()
-        };
+        const items = lines.map(l => ({ id: l.id, name: l.product.name, qty: l.qty, price: l.product.price }));
 
-        await OLYMPOS_BACKEND.processPayment({ amount: subtotal, card });
-        const order = await OLYMPOS_BACKEND.createOrder({
-          items: lines.map(l => ({ id: l.id, name: l.product.name, qty: l.qty, price: l.product.price })),
-          subtotal,
-          shipping
+        sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify({ items, subtotal, shipping }));
+
+        const res = await fetch('/api/create-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderDraft: { items, shipping } })
         });
+        const data = await res.json();
+        if (!res.ok || !data.checkoutFormContent) {
+          throw new Error(data.message || OLYMPOS_I18N.t('checkout.genericError'));
+        }
 
-        OLYMPOS.clearCart();
-        contentEl.style.display = 'none';
-        document.getElementById('success-order-number').textContent = order.number;
-        document.getElementById('checkout-success').style.display = 'block';
+        injectCheckoutForm(data.checkoutFormContent);
+        btn.style.display = 'none';
       } catch (err) {
+        sessionStorage.removeItem(PENDING_ORDER_KEY);
         errorEl.textContent = err.message || OLYMPOS_I18N.t('checkout.genericError');
         errorEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = original;
+        btn.disabled = false; btn.textContent = original; btn.style.display = '';
       }
     });
   }
