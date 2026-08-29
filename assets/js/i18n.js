@@ -225,7 +225,7 @@ window.OLYMPOS_I18N = (() => {
       privacy: {
         eyebrow: 'Yasal', title: 'Gizlilik Politikası', updated: 'Son güncelleme: 27 Ağustos 2026',
         s1Title: '1. Veri Sorumlusu',
-        s1Html: 'Bu internet sitesi, esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("biz", "Olympos Leather") tarafından işletilmektedir. Kişisel verilerinizle ilgili sorularınız için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden bize ulaşabilirsiniz.',
+        s1Html: 'Bu internet sitesi, Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("biz", "Olympos Leather") tarafından işletilmektedir. Kişisel verilerinizle ilgili sorularınız için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden bize ulaşabilirsiniz.',
         s2Title: '2. Hangi Verileri Topluyoruz',
         s2Text: 'Sipariş verdiğinizde veya bizimle iletişime geçtiğinizde ad-soyad, e-posta adresi, telefon numarası, teslimat adresi ve sipariş içeriği gibi bilgileri topluyoruz. Ödeme sırasında girilen kart bilgileri tarafımızca saklanmaz; ödeme, sitemizin ödeme altyapısı üzerinden güvenli şekilde işlenir.',
         s3Title: '3. Verilerinizi Neden Topluyoruz',
@@ -263,7 +263,7 @@ window.OLYMPOS_I18N = (() => {
       terms: {
         eyebrow: 'Yasal', title: 'Mesafeli Satış Sözleşmesi', updated: 'Son güncelleme: 29 Ağustos 2026',
         s1Title: '1. Taraflar',
-        s1Html: 'İşbu Mesafeli Satış Sözleşmesi ("Sözleşme"), bir tarafta İzmir\'de esnaf faaliyet belgesi ve ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("Satıcı") ile diğer tarafta olymposleather.com üzerinden sipariş veren müşteri ("Alıcı") arasında, aşağıdaki şartlarla akdedilmiştir.',
+        s1Html: 'İşbu Mesafeli Satış Sözleşmesi ("Sözleşme"), bir tarafta Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("Satıcı" — <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">0537 787 68 57</a>) ile diğer tarafta olymposleather.com üzerinden sipariş veren müşteri ("Alıcı") arasında, aşağıdaki şartlarla akdedilmiştir.',
         s2Title: '2. Sözleşmenin Konusu',
         s2Text: 'İşbu Sözleşme\'nin konusu, Alıcı\'nın Satıcı\'ya ait internet sitesinden elektronik ortamda sipariş verdiği ürünün satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri gereğince tarafların hak ve yükümlülüklerinin belirlenmesidir.',
         s3Title: '3. Sözleşme Konusu Ürün ve Ödeme Bilgileri',
@@ -284,7 +284,7 @@ window.OLYMPOS_I18N = (() => {
       preinfo: {
         eyebrow: 'Yasal', title: 'Ön Bilgilendirme Formu', updated: 'Son güncelleme: 29 Ağustos 2026',
         s1Title: '1. Satıcı Bilgileri',
-        s1Html: '<strong>OLYMPOS Leather</strong>, İzmir\'de esnaf faaliyet belgesi ve ticari satış izniyle faaliyet göstermektedir. Sorularınız için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden bize ulaşabilirsiniz.',
+        s1Html: '<strong>OLYMPOS Leather</strong>, Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet göstermektedir. Sorularınız için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden veya <a href="tel:+905377876857" class="underline hover:text-umber-800">0537 787 68 57</a> numaralı telefondan bize ulaşabilirsiniz.',
         s2Title: '2. Ürün ve Fiyat Bilgisi',
         s2Text: 'Sipariş edeceğiniz ürünün temel özellikleri, adedi ve KDV dahil satış fiyatı, siparişi onaylamadan önce sipariş özeti ekranında gösterilir. Gösterilen fiyata kargo ücreti dahil değildir; kargo ücreti ödeme adımında ayrıca hesaplanır ve toplam tutara eklenir.',
         s3Title: '3. Ödeme Şekli',
@@ -457,7 +457,7 @@ window.OLYMPOS_I18N = (() => {
       privacy: {
         eyebrow: 'Legal', title: 'Privacy Policy', updated: 'Last updated: August 27, 2026',
         s1Title: '1. Data Controller',
-        s1Html: 'This website is operated by <strong>OLYMPOS Leather</strong> ("we", "Olympos Leather"), which trades under a Turkish craftsman’s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license. For questions about your personal data, you can reach us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s1Html: 'This website is operated by <strong>OLYMPOS Leather</strong> ("we", "Olympos Leather"), which trades under a Turkish craftsman’s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license, in Buca, İzmir. For questions about your personal data, you can reach us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
         s2Title: '2. What Data We Collect',
         s2Text: 'When you place an order or contact us, we collect information such as your full name, email address, phone number, delivery address, and order contents. Card details entered at payment are not stored by us; payment is processed securely through our site’s payment infrastructure.',
         s3Title: '3. Why We Collect Your Data',
@@ -495,7 +495,7 @@ window.OLYMPOS_I18N = (() => {
       terms: {
         eyebrow: 'Legal', title: 'Distance Sales Agreement', updated: 'Last updated: August 29, 2026',
         s1Title: '1. Parties',
-        s1Html: 'This Distance Sales Agreement ("Agreement") is entered into between <strong>OLYMPOS Leather</strong> ("Seller"), which trades under a Turkish craftsman\'s (esnaf) trade registration and commercial sales license in İzmir, and the customer placing an order through olymposleather.com ("Buyer"), under the terms set out below.',
+        s1Html: 'This Distance Sales Agreement ("Agreement") is entered into between <strong>OLYMPOS Leather</strong> ("Seller" — <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>), which trades under a Turkish craftsman\'s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license, in Buca, İzmir, and the customer placing an order through olymposleather.com ("Buyer"), under the terms set out below.',
         s2Title: '2. Subject of the Agreement',
         s2Text: "This Agreement sets out the rights and obligations of the parties regarding the sale and delivery of the product ordered electronically by the Buyer through the Seller's website, in accordance with Turkey's Law on the Protection of Consumers No. 6502 and the Distance Contracts Regulation.",
         s3Title: '3. Product and Payment Information',
@@ -516,7 +516,7 @@ window.OLYMPOS_I18N = (() => {
       preinfo: {
         eyebrow: 'Legal', title: 'Pre-Contract Information Form', updated: 'Last updated: August 29, 2026',
         s1Title: '1. Seller Information',
-        s1Html: '<strong>OLYMPOS Leather</strong> operates in İzmir under a Turkish craftsman\'s (esnaf) trade registration and commercial sales license. For questions, reach us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s1Html: '<strong>OLYMPOS Leather</strong> operates in Buca, İzmir under a Turkish craftsman\'s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license. For questions, reach us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> or by phone at <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>.',
         s2Title: '2. Product and Price Information',
         s2Text: 'The essential characteristics, quantity, and VAT-inclusive price of the product you order are shown on the order summary screen before you confirm your order. The price shown does not include shipping; shipping cost is calculated separately at checkout and added to the total.',
         s3Title: '3. Payment Method',
@@ -689,7 +689,7 @@ window.OLYMPOS_I18N = (() => {
       privacy: {
         eyebrow: 'Rechtliches', title: 'Datenschutzerklärung', updated: 'Zuletzt aktualisiert: 27. August 2026',
         s1Title: '1. Verantwortlicher',
-        s1Html: 'Diese Website wird von <strong>OLYMPOS Leather</strong> ("wir", "Olympos Leather") betrieben, das unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel tätig ist. Bei Fragen zu Ihren personenbezogenen Daten erreichen Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s1Html: 'Diese Website wird von <strong>OLYMPOS Leather</strong> ("wir", "Olympos Leather") betrieben, das unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel in Buca, İzmir tätig ist. Bei Fragen zu Ihren personenbezogenen Daten erreichen Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
         s2Title: '2. Welche Daten wir erheben',
         s2Text: 'Wenn Sie eine Bestellung aufgeben oder uns kontaktieren, erheben wir Daten wie Ihren vollständigen Namen, Ihre E-Mail-Adresse, Telefonnummer, Lieferadresse und den Bestellinhalt. Bei der Zahlung eingegebene Kartendaten werden von uns nicht gespeichert; die Zahlung wird sicher über die Zahlungsinfrastruktur unserer Website abgewickelt.',
         s3Title: '3. Warum wir Ihre Daten erheben',
@@ -727,7 +727,7 @@ window.OLYMPOS_I18N = (() => {
       terms: {
         eyebrow: 'Rechtliches', title: 'Fernabsatzvertrag', updated: 'Zuletzt aktualisiert: 29. August 2026',
         s1Title: '1. Vertragsparteien',
-        s1Html: 'Dieser Fernabsatzvertrag ("Vertrag") wird zwischen <strong>OLYMPOS Leather</strong> ("Verkäufer"), das unter einer türkischen Gewerbeanmeldung (esnaf) mit gültiger Gewerbeerlaubnis für den Handel in İzmir tätig ist, und dem Kunden, der über olymposleather.com eine Bestellung aufgibt ("Käufer"), zu den nachstehenden Bedingungen geschlossen.',
+        s1Html: 'Dieser Fernabsatzvertrag ("Vertrag") wird zwischen <strong>OLYMPOS Leather</strong> ("Verkäufer" — <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>), das unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel in Buca, İzmir tätig ist, und dem Kunden, der über olymposleather.com eine Bestellung aufgibt ("Käufer"), zu den nachstehenden Bedingungen geschlossen.',
         s2Title: '2. Vertragsgegenstand',
         s2Text: 'Dieser Vertrag regelt die Rechte und Pflichten der Parteien in Bezug auf den Verkauf und die Lieferung des vom Käufer elektronisch über die Website des Verkäufers bestellten Produkts, gemäß dem türkischen Verbraucherschutzgesetz Nr. 6502 und der Fernabsatzverordnung.',
         s3Title: '3. Produkt- und Zahlungsinformationen',
@@ -748,7 +748,7 @@ window.OLYMPOS_I18N = (() => {
       preinfo: {
         eyebrow: 'Rechtliches', title: 'Vorabinformationsformular', updated: 'Zuletzt aktualisiert: 29. August 2026',
         s1Title: '1. Verkäuferinformationen',
-        s1Html: '<strong>OLYMPOS Leather</strong> ist in İzmir unter einer türkischen Gewerbeanmeldung (esnaf) mit gültiger Gewerbeerlaubnis für den Handel tätig. Bei Fragen erreichen Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s1Html: '<strong>OLYMPOS Leather</strong> ist in Buca, İzmir unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel tätig. Bei Fragen erreichen Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> oder telefonisch unter <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>.',
         s2Title: '2. Produkt- und Preisinformationen',
         s2Text: 'Die wesentlichen Eigenschaften, die Menge und der Preis inklusive MwSt. des von Ihnen bestellten Produkts werden vor Bestätigung Ihrer Bestellung auf dem Bestellübersichtsbildschirm angezeigt. Der angezeigte Preis enthält keine Versandkosten; diese werden separat an der Kasse berechnet und dem Gesamtbetrag hinzugefügt.',
         s3Title: '3. Zahlungsart',
