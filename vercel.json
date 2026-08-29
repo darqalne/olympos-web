@@ -1,4 +1,22 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/shop", "destination": "/magaza.html" },
+    { "source": "/about", "destination": "/hakkimizda.html" },
+    { "source": "/contact", "destination": "/iletisim.html" },
+    { "source": "/faq", "destination": "/sss.html" },
+    { "source": "/privacy-policy", "destination": "/gizlilik-politikasi.html" },
+    { "source": "/shipping-returns", "destination": "/teslimat-ve-iade.html" },
+    { "source": "/distance-sales-agreement", "destination": "/mesafeli-satis-sozlesmesi.html" },
+    { "source": "/pre-contract-information", "destination": "/on-bilgilendirme-formu.html" },
+    { "source": "/login", "destination": "/giris.html" },
+    { "source": "/register", "destination": "/kayit.html" },
+    { "source": "/cart", "destination": "/sepet.html" },
+    { "source": "/checkout", "destination": "/odeme.html" },
+    { "source": "/account", "destination": "/hesabim.html" },
+    { "source": "/my-info", "destination": "/bilgilerim.html" },
+    { "source": "/track-order", "destination": "/siparis-takip.html" },
+    { "source": "/product", "destination": "/urun.html" }
+  ]
 }

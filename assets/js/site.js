@@ -341,7 +341,7 @@ const OLYMPOS = (() => {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
     document.getElementById('checkout-btn')?.addEventListener('click', () => {
       if (readCart().length === 0) return;
-      window.location.href = 'odeme';
+      window.location.href = window.OLYMPOS_I18N.href('odeme');
     });
   }
 
@@ -392,7 +392,7 @@ const OLYMPOS = (() => {
       }
       emptyEl.style.display = 'none';
       resultsEl.innerHTML = matches.map(p => `
-        <a href="urun?id=${p.id}" class="search-result">
+        <a href="${OLYMPOS_I18N.href('urun')}?id=${p.id}" class="search-result">
           <img src="${p.images[0]}" alt="">
           <div>
             <p class="search-result-name">${p.name}</p>
@@ -454,7 +454,7 @@ const OLYMPOS = (() => {
     const cmp = p.compareAt ? `<span class="price-strike">${formatPrice(p.compareAt)}</span> ` : '';
     return `
     <article class="product-card">
-      <a href="urun?id=${p.id}" aria-label="${T.t('product.viewProductAria', { name: p.name })}">
+      <a href="${T.href('urun')}?id=${p.id}" aria-label="${T.t('product.viewProductAria', { name: p.name })}">
         <div class="product-frame">
           ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
           <img src="${p.images[0]}" alt="${p.name} — ${p.tagline}" loading="lazy" width="800" height="1000" style="object-position:${p.imagePosition || 'center'};">
@@ -466,7 +466,7 @@ const OLYMPOS = (() => {
       </a>
       <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:1rem; gap:.75rem;">
         <div>
-          <a href="urun?id=${p.id}" style="display:block;">
+          <a href="${T.href('urun')}?id=${p.id}" style="display:block;">
             <h3 style="font-family:var(--font-display); font-size:1.05rem; color:var(--umber-800);">${p.name}</h3>
           </a>
           <p style="font-size:.78rem; color:var(--umber-500); margin-top:2px;">${p.categoryLabel}</p>

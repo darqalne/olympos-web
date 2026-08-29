@@ -13,6 +13,66 @@ window.OLYMPOS_I18N = (() => {
   const DEFAULT_LANG = 'tr';
   const LOCALES = { tr: 'tr-TR', en: 'en-US', de: 'de-DE' };
 
+  /* ---------------- localized URL slugs ----------------
+     Page URLs are Turkish by default (e.g. /magaza). When the site
+     is switched to English, the address bar (and every internal
+     link) swaps to the matching English slug (e.g. /shop) via
+     vercel.json rewrites — no page reload, no separate /en/ tree.
+     German keeps the Turkish slugs; only English was asked for. */
+  const EN_ALIAS_OF = {
+    magaza: 'shop', hakkimizda: 'about', iletisim: 'contact', sss: 'faq',
+    'gizlilik-politikasi': 'privacy-policy', 'teslimat-ve-iade': 'shipping-returns',
+    'mesafeli-satis-sozlesmesi': 'distance-sales-agreement', 'on-bilgilendirme-formu': 'pre-contract-information',
+    giris: 'login', kayit: 'register', sepet: 'cart', odeme: 'checkout',
+    hesabim: 'account', bilgilerim: 'my-info', 'siparis-takip': 'track-order', urun: 'product'
+  };
+  const TR_OF_EN_ALIAS = Object.fromEntries(Object.entries(EN_ALIAS_OF).map(([tr, en]) => [en, tr]));
+
+  function canonicalSlug(path) { return TR_OF_EN_ALIAS[path] || path; }
+  function localizedSlug(trSlug, lang) {
+    lang = lang || getLang();
+    return (lang === 'en' && EN_ALIAS_OF[trSlug]) ? EN_ALIAS_OF[trSlug] : trSlug;
+  }
+  // for JS-built markup (product cards, search results, redirects)
+  function href(trSlug) { return localizedSlug(trSlug, getLang()); }
+
+  // rewrites every internal <a href> in root whose path is a known
+  // canonical page slug to match the current language, in place.
+  function localizeStaticLinks(root) {
+    const lang = getLang();
+    root.querySelectorAll('a[href]').forEach(a => {
+      const raw = a.getAttribute('href');
+      if (!raw || raw === '/' || /^(https?:|mailto:|tel:|#)/i.test(raw)) return;
+      const qIdx = raw.indexOf('?');
+      const path = qIdx === -1 ? raw : raw.slice(0, qIdx);
+      const query = qIdx === -1 ? '' : raw.slice(qIdx);
+      const trSlug = canonicalSlug(path);
+      if (!EN_ALIAS_OF[trSlug]) return;
+      const newHref = localizedSlug(trSlug, lang) + query;
+      if (newHref !== raw) a.setAttribute('href', newHref);
+    });
+  }
+
+  // keeps the current page's own address bar in sync when the
+  // language is switched in place (no reload).
+  function syncCurrentUrl(lang) {
+    const path = window.location.pathname.replace(/^\//, '');
+    if (path === '') return; // home stays at "/" regardless of language
+    const trSlug = canonicalSlug(path);
+    if (!EN_ALIAS_OF[trSlug]) return; // not a localizable page (e.g. admin panel)
+    const newPath = '/' + localizedSlug(trSlug, lang);
+    if (newPath !== window.location.pathname) {
+      history.replaceState(null, '', newPath + window.location.search);
+    }
+  }
+
+  // if a page is reached directly via its English URL (a shared
+  // link, a search result), show it in English from the start.
+  function detectLangFromUrl() {
+    const path = window.location.pathname.replace(/^\//, '');
+    if (TR_OF_EN_ALIAS[path]) setLang('en');
+  }
+
   /* ---------------- product field translations ----------------
      PRODUCTS in site.js carries the Turkish text as the base/
      source of truth. This only needs the EN/DE overrides — 'tr'
@@ -92,7 +152,8 @@ window.OLYMPOS_I18N = (() => {
         explore: 'Keşfet', categories: 'Kategoriler', cardholders: 'Kartlık', wallets: 'Cüzdan',
         contactUs: 'Bize Ulaşın', location: 'İzmir, Türkiye', rights: 'Tüm hakları saklıdır.',
         privacy: 'Gizlilik Politikası', delivery: 'Teslimat ve İade', terms: 'Mesafeli Satış Sözleşmesi', preinfo: 'Ön Bilgilendirme Formu',
-        handmade: 'Elde imal edildi', securePayment: 'Güvenli Ödeme'
+        handmade: 'Elde imal edildi', securePayment: 'Güvenli Ödeme',
+        wordmarkSrc: 'assets/img/brand/payment/iyzico-ile-ode-white-horizontal.svg'
       },
       breadcrumbAria: 'Sayfa izi',
       product: {
@@ -271,6 +332,7 @@ window.OLYMPOS_I18N = (() => {
         toPayment: 'Ödemeye Geç', backToDelivery: 'Teslimat bilgilerine dön',
         cardTitle: 'Kart Bilgileri', cardDisclaimer: 'Bu bir vitrin ortamıdır — gerçek bir kart ile ödeme alınmaz. Test için herhangi bir kart numarası kullanabilirsiniz.',
         secureNote: 'iyzico güvenli ödeme altyapısı ile 256-bit SSL şifrelemesi altında korunur.',
+        wordmarkSrc: 'assets/img/brand/payment/iyzico-ile-ode-colored-horizontal.svg', acceptedNetworks: 'Mastercard · Visa · American Express · Troy',
         badgeOneClick: 'Tek Tıkla Hızlı Ödeme', badgeInstallment: 'Taksit Avantajı', badgePoints: 'Kart Puan Kullanımı', badgeProtected: 'Korumalı Alışveriş',
         whatIsTitle: 'iyzico ile Öde nedir?',
         whatIsText: 'iyzico ile Öde, kart bilgilerinizi iyzico\'nun güvenli altyapısında saklayarak sonraki alışverişlerinizde tek tıkla, hızlı ve güvenli ödeme yapmanızı sağlar. Kart bilgileriniz Olympos Leather ile paylaşılmaz.',
@@ -322,7 +384,8 @@ window.OLYMPOS_I18N = (() => {
         explore: 'Explore', categories: 'Categories', cardholders: 'Cardholders', wallets: 'Wallets',
         contactUs: 'Get in Touch', location: 'İzmir, Turkey', rights: 'All rights reserved.',
         privacy: 'Privacy Policy', delivery: 'Shipping & Returns', terms: 'Distance Sales Agreement', preinfo: 'Pre-Contract Information Form',
-        handmade: 'Handmade', securePayment: 'Secure Payment'
+        handmade: 'Handmade', securePayment: 'Secure Payment',
+        wordmarkSrc: 'assets/img/brand/payment/pay-with-iyzico-white-horizontal.svg'
       },
       breadcrumbAria: 'Breadcrumb',
       product: {
@@ -501,6 +564,7 @@ window.OLYMPOS_I18N = (() => {
         toPayment: 'Proceed to Payment', backToDelivery: 'Back to delivery details',
         cardTitle: 'Card Information', cardDisclaimer: 'This is a showcase environment — no real card is charged. You can use any card number for testing.',
         secureNote: "Protected with 256-bit SSL encryption via iyzico's secure payment infrastructure.",
+        wordmarkSrc: 'assets/img/brand/payment/pay-with-iyzico-colored-horizontal.svg', acceptedNetworks: 'Mastercard · Visa · American Express · Troy',
         badgeOneClick: 'One-Click Fast Checkout', badgeInstallment: 'Installment Options', badgePoints: 'Use Card Points', badgeProtected: 'Protected Shopping',
         whatIsTitle: 'What is Pay with iyzico?',
         whatIsText: "Pay with iyzico stores your card details on iyzico's secure infrastructure so future purchases are fast, one-click, and secure. Your card details are never shared with Olympos Leather.",
@@ -552,7 +616,8 @@ window.OLYMPOS_I18N = (() => {
         explore: 'Entdecken', categories: 'Kategorien', cardholders: 'Kartenetuis', wallets: 'Geldbörsen',
         contactUs: 'Kontakt', location: 'İzmir, Türkei', rights: 'Alle Rechte vorbehalten.',
         privacy: 'Datenschutzerklärung', delivery: 'Versand & Rückgabe', terms: 'Fernabsatzvertrag', preinfo: 'Vorabinformationsformular',
-        handmade: 'Handgefertigt', securePayment: 'Sichere Zahlung'
+        handmade: 'Handgefertigt', securePayment: 'Sichere Zahlung',
+        wordmarkSrc: 'assets/img/brand/payment/pay-with-iyzico-white-horizontal.svg'
       },
       breadcrumbAria: 'Breadcrumb',
       product: {
@@ -731,6 +796,7 @@ window.OLYMPOS_I18N = (() => {
         toPayment: 'Weiter zur Zahlung', backToDelivery: 'Zurück zu den Lieferdaten',
         cardTitle: 'Kartendaten', cardDisclaimer: 'Dies ist eine Vorführumgebung — es wird keine echte Karte belastet. Sie können zum Testen eine beliebige Kartennummer verwenden.',
         secureNote: 'Geschützt durch 256-Bit-SSL-Verschlüsselung über die sichere Zahlungsinfrastruktur von iyzico.',
+        wordmarkSrc: 'assets/img/brand/payment/pay-with-iyzico-colored-horizontal.svg', acceptedNetworks: 'Mastercard · Visa · American Express · Troy',
         badgeOneClick: 'Schnelle 1-Klick-Zahlung', badgeInstallment: 'Ratenzahlungsvorteil', badgePoints: 'Kartenpunkte nutzen', badgeProtected: 'Geschütztes Einkaufen',
         whatIsTitle: 'Was ist "Bezahlen mit iyzico"?',
         whatIsText: 'Bezahlen mit iyzico speichert Ihre Kartendaten auf der sicheren Infrastruktur von iyzico, damit künftige Einkäufe schnell, mit einem Klick und sicher ablaufen. Ihre Kartendaten werden nicht an Olympos Leather weitergegeben.',
@@ -819,6 +885,8 @@ window.OLYMPOS_I18N = (() => {
     injectAttr(root, 'data-i18n-placeholder', (el, key) => { el.setAttribute('placeholder', t(key, lang)); });
     injectAttr(root, 'data-i18n-aria-label', (el, key) => { el.setAttribute('aria-label', t(key, lang)); });
     injectAttr(root, 'data-i18n-title', (el, key) => { el.setAttribute('title', t(key, lang)); });
+    injectAttr(root, 'data-i18n-src', (el, key) => { el.setAttribute('src', t(key, lang)); });
+    localizeStaticLinks(root);
   }
 
   function initSwitcher() {
@@ -831,6 +899,7 @@ window.OLYMPOS_I18N = (() => {
   function changeLang(lang) {
     if (!T[lang] || lang === getLang()) { syncSwitcherUI(); return; }
     setLang(lang);
+    syncCurrentUrl(lang);
     applyToDOM();
     syncSwitcherUI();
     window.dispatchEvent(new CustomEvent('olympos:langchange', { detail: { lang } }));
@@ -844,6 +913,7 @@ window.OLYMPOS_I18N = (() => {
   }
 
   function init() {
+    detectLangFromUrl();
     applyToDOM();
     initSwitcher();
   }
@@ -851,5 +921,5 @@ window.OLYMPOS_I18N = (() => {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 
-  return { t, tProduct, getLang, setLang, getLocale, changeLang, applyToDOM, PRODUCT_I18N };
+  return { t, tProduct, getLang, setLang, getLocale, changeLang, applyToDOM, PRODUCT_I18N, href };
 })();

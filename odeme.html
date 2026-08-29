@@ -133,7 +133,7 @@
   <nav class="max-w-7xl mx-auto px-5 md:px-8 pt-6 text-xs text-umber-500 flex items-center gap-2" aria-label="Breadcrumb" data-i18n-aria-label="breadcrumbAria">
     <a href="/" class="hover:text-umber-800" data-i18n="nav.home">Ana Sayfa</a>
     <span>/</span>
-    <a href="sepet" class="hover:text-umber-800">Sepetim</a>
+    <a href="sepet" class="hover:text-umber-800" data-i18n="nav.cart">Sepetim</a>
     <span>/</span>
     <span class="text-umber-700" data-i18n="checkout.title">Ödeme</span>
   </nav>
@@ -226,7 +226,8 @@
 
               <div class="iyzico-panel">
                 <div class="iyzico-panel-head">
-                  <img src="assets/img/brand/payment/iyzico-footer-band-colored.svg" alt="iyzico ile Öde · Mastercard · Visa · American Express · Troy" style="height:24px; width:auto; max-width:100%;" loading="lazy">
+                  <img src="assets/img/brand/payment/iyzico-ile-ode-colored-horizontal.svg" data-i18n-src="checkout.wordmarkSrc" alt="iyzico ile Öde" style="height:22px; width:auto; max-width:60%;" loading="lazy">
+                  <span class="text-[0.68rem] tracking-wide text-umber-500" data-i18n="checkout.acceptedNetworks">Mastercard · Visa · American Express · Troy</span>
                 </div>
 
                 <div class="iyzico-banner">
@@ -368,9 +369,12 @@
         </ul>
       </div>
     </div>
-    <div class="pt-8 pb-8 border-b border-cream-2/10 flex flex-col sm:flex-row items-center justify-between gap-5">
+    <div class="pt-8 pb-8 border-b border-cream-2/10 flex flex-col sm:flex-row items-center gap-4">
       <p class="text-[0.72rem] tracking-[0.14em] uppercase text-cream-2/50" data-i18n="footer.securePayment">Güvenli Ödeme</p>
-      <img src="assets/img/brand/payment/iyzico-footer-band-white.svg" alt="iyzico ile Öde · Mastercard · Visa · American Express · Troy" class="h-5 sm:h-7 w-auto max-w-full" loading="lazy">
+      <div class="flex items-center gap-3 flex-wrap">
+        <img src="assets/img/brand/payment/iyzico-ile-ode-white-horizontal.svg" data-i18n-src="footer.wordmarkSrc" alt="iyzico ile Öde" class="h-5 w-auto" loading="lazy">
+        <span class="text-[0.68rem] tracking-wide text-cream-2/50" data-i18n="checkout.acceptedNetworks">Mastercard · Visa · American Express · Troy</span>
+      </div>
     </div>
     <div class="pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream-2/50">
       <p>© <span data-year></span> Olympos Leather. <span data-i18n="footer.rights">Tüm hakları saklıdır.</span> &nbsp;·&nbsp; <a href="gizlilik-politikasi" class="hover:text-cream-2" data-i18n="footer.privacy">Gizlilik Politikası</a> &nbsp;·&nbsp; <a href="teslimat-ve-iade" class="hover:text-cream-2" data-i18n="footer.delivery">Teslimat ve İade</a> &nbsp;·&nbsp; <a href="mesafeli-satis-sozlesmesi" class="hover:text-cream-2" data-i18n="footer.terms">Mesafeli Satış Sözleşmesi</a> &nbsp;·&nbsp; <a href="on-bilgilendirme-formu" class="hover:text-cream-2" data-i18n="footer.preinfo">Ön Bilgilendirme Formu</a></p>

@@ -788,6 +788,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* ---------- checkout: step indicator ---------- */
+#step-delivery, #step-payment { scroll-margin-top: 96px; }
 .checkout-steps { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 2.5rem; }
 .checkout-step { display: flex; align-items: center; gap: 0.6rem; font-size: 0.78rem; color: var(--umber-400, var(--umber-500)); }
 .checkout-step-num {

@@ -6,6 +6,15 @@ import { fileURLToPath } from 'node:url';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const port = 6666;
 
+// English URL aliases, mirroring the rewrites in vercel.json
+const enAliases = {
+  '/shop': '/magaza.html', '/about': '/hakkimizda.html', '/contact': '/iletisim.html', '/faq': '/sss.html',
+  '/privacy-policy': '/gizlilik-politikasi.html', '/shipping-returns': '/teslimat-ve-iade.html',
+  '/distance-sales-agreement': '/mesafeli-satis-sozlesmesi.html', '/pre-contract-information': '/on-bilgilendirme-formu.html',
+  '/login': '/giris.html', '/register': '/kayit.html', '/cart': '/sepet.html', '/checkout': '/odeme.html',
+  '/account': '/hesabim.html', '/my-info': '/bilgilerim.html', '/track-order': '/siparis-takip.html', '/product': '/urun.html'
+};
+
 const mime = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -31,6 +40,7 @@ function send(res, filePath) {
 http.createServer((req, res) => {
   let urlPath = decodeURIComponent(req.url.split('?')[0]);
   if (urlPath === '/') urlPath = '/index.html';
+  else if (enAliases[urlPath]) urlPath = enAliases[urlPath];
   const filePath = path.join(root, urlPath);
   if (!filePath.startsWith(root)) { res.writeHead(403); res.end(); return; }
   fs.readFile(filePath, (err, data) => {

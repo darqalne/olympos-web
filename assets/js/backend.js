@@ -225,7 +225,7 @@ window.OLYMPOS_BACKEND = (() => {
     const user = currentUser();
     if (!user) {
       const back = encodeURIComponent(window.location.pathname + window.location.search);
-      window.location.href = `giris?sonra=${back}`;
+      window.location.href = `${window.OLYMPOS_I18N.href('giris')}?sonra=${back}`;
     }
     return user;
   }
@@ -237,7 +237,7 @@ window.OLYMPOS_BACKEND = (() => {
     const user = currentUser();
     if (!user) {
       const back = encodeURIComponent(window.location.pathname + window.location.search);
-      window.location.href = `giris?sonra=${back}`;
+      window.location.href = `${window.OLYMPOS_I18N.href('giris')}?sonra=${back}`;
       return null;
     }
     if (!user.isAdmin) {
