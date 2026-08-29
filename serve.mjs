@@ -35,8 +35,8 @@ http.createServer((req, res) => {
   if (!filePath.startsWith(root)) { res.writeHead(403); res.end(); return; }
   fs.readFile(filePath, (err, data) => {
     if (err) {
-      // clean-URL fallback: /yonetici -> yonetici.html, mirroring the
-      // vercel.json rewrite used in production
+      // clean-URL fallback: /magaza -> magaza.html, mirroring the
+      // vercel.json "cleanUrls" behavior used in production
       if (!path.extname(filePath)) { send(res, filePath + '.html'); return; }
       res.writeHead(404); res.end('Not found: ' + urlPath); return;
     }

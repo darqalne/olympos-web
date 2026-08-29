@@ -45,7 +45,7 @@
       <p class="who" id="side-who">—</p>
       <p class="email" id="side-email">—</p>
       <div class="links">
-        <a href="index.html">Siteye Dön</a>
+        <a href="/">Siteye Dön</a>
         <button type="button" id="logout-btn">Çıkış Yap</button>
       </div>
     </div>
@@ -382,7 +382,7 @@
 
   document.getElementById('logout-btn').addEventListener('click', () => {
     OLYMPOS_BACKEND.logout();
-    window.location.href = 'index.html';
+    window.location.href = '/';
   });
 
   /* ---------------- view modal (users / orders) ---------------- */

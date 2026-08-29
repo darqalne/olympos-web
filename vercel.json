@@ -1,5 +1,4 @@
 {
-  "rewrites": [
-    { "source": "/yonetici", "destination": "/yonetici.html" }
-  ]
+  "cleanUrls": true,
+  "trailingSlash": false
 }

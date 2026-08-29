@@ -27,14 +27,14 @@
 
 <header class="site-header">
   <div class="max-w-7xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
-    <a href="index.html" class="shrink-0" aria-label="Olympos Leather anasayfa" data-i18n-aria-label="header.homeAria">
+    <a href="/" class="shrink-0" aria-label="Olympos Leather anasayfa" data-i18n-aria-label="header.homeAria">
       <img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 md:h-11 w-auto">
     </a>
     <nav class="hidden lg:flex items-center gap-10" aria-label="Ana menü">
-      <a href="index.html" class="nav-link" data-i18n="nav.home">Ana Sayfa</a>
-      <a href="magaza.html" class="nav-link" data-i18n="nav.shop">Mağaza</a>
-      <a href="hakkimizda.html" class="nav-link" data-i18n="nav.about">Hakkımızda</a>
-      <a href="iletisim.html" class="nav-link" data-i18n="nav.contact">İletişim</a>
+      <a href="/" class="nav-link" data-i18n="nav.home">Ana Sayfa</a>
+      <a href="magaza" class="nav-link" data-i18n="nav.shop">Mağaza</a>
+      <a href="hakkimizda" class="nav-link" data-i18n="nav.about">Hakkımızda</a>
+      <a href="iletisim" class="nav-link" data-i18n="nav.contact">İletişim</a>
 
     </nav>
     <div class="flex items-center gap-1">
@@ -46,7 +46,7 @@
         <button type="button" data-lang-switch="en" class="lang-btn">EN</button>
         <button type="button" data-lang-switch="de" class="lang-btn">DE</button>
       </div>
-      <a href="hesabim.html" class="icon-btn" aria-label="Hesabım" data-i18n-aria-label="header.accountAria">
+      <a href="hesabim" class="icon-btn" aria-label="Hesabım" data-i18n-aria-label="header.accountAria">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
       </a>
       <button class="icon-btn" data-open-cart aria-label="Sepeti aç" data-i18n-aria-label="header.cartAria">
@@ -62,7 +62,7 @@
 
 <div id="mobile-menu" class="mobile-menu">
   <div class="flex items-center justify-between px-5 h-20 border-b border-umber-700/10">
-    <a href="index.html" aria-label="Olympos Leather anasayfa" data-i18n-aria-label="header.homeAria"><img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 w-auto"></a>
+    <a href="/" aria-label="Olympos Leather anasayfa" data-i18n-aria-label="header.homeAria"><img src="assets/img/brand/logo.png" alt="Olympos Leather" class="h-9 w-auto"></a>
     <button data-menu-toggle aria-label="Menüyü kapat" class="icon-btn" data-i18n-aria-label="header.menuCloseAria">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
@@ -72,10 +72,10 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <span data-i18n="search.dialogAria">Ürün Ara</span>
     </button>
-    <a href="index.html" class="mobile-link" data-i18n="nav.home">Ana Sayfa</a>
-    <a href="magaza.html" class="mobile-link" data-i18n="nav.shop">Mağaza</a>
-    <a href="hakkimizda.html" class="mobile-link" data-i18n="nav.about">Hakkımızda</a>
-    <a href="iletisim.html" class="mobile-link" data-i18n="nav.contact">İletişim</a>
+    <a href="/" class="mobile-link" data-i18n="nav.home">Ana Sayfa</a>
+    <a href="magaza" class="mobile-link" data-i18n="nav.shop">Mağaza</a>
+    <a href="hakkimizda" class="mobile-link" data-i18n="nav.about">Hakkımızda</a>
+    <a href="iletisim" class="mobile-link" data-i18n="nav.contact">İletişim</a>
 
   <div class="lang-switch mobile-lang-switch flex sm:hidden justify-center gap-2 px-8 pb-10" data-i18n-aria-label="header.langAria" aria-label="Dil seçimi">
     <button type="button" data-lang-switch="tr" class="lang-btn">TR</button>
@@ -97,7 +97,7 @@
     <div id="cart-empty" class="h-full flex flex-col items-center justify-center text-center gap-4 py-16">
       <span class="glyph text-umber-300" style="--gsize:34px"></span>
       <p class="text-umber-500 text-sm" data-i18n="cart.emptyMsg">Sepetiniz şu an boş.</p>
-      <a href="magaza.html" class="btn btn-outline btn-sm" data-i18n="cart.browseShop">Mağazaya Göz At</a>
+      <a href="magaza" class="btn btn-outline btn-sm" data-i18n="cart.browseShop">Mağazaya Göz At</a>
     </div>
     <div id="cart-lines"></div>
   </div>
@@ -106,7 +106,7 @@
       <span class="text-sm text-umber-600" data-i18n="cart.subtotal">Ara Toplam</span>
       <span id="cart-subtotal" class="font-display text-lg text-umber-800">0,00 ₺</span>
     </div>
-    <a href="sepet.html" class="btn btn-outline btn-block mb-3" data-i18n="cart.myCart">Sepetim</a>
+    <a href="sepet" class="btn btn-outline btn-block mb-3" data-i18n="cart.myCart">Sepetim</a>
     <button id="checkout-btn" class="btn btn-primary btn-block" data-i18n="cart.checkout">Ödemeye Geç</button>
     <p class="text-[0.72rem] text-umber-500 text-center mt-3" data-i18n="cart.shippingNote">Kargo ve vergiler ödeme sırasında hesaplanır.</p>
   </div>
@@ -130,7 +130,7 @@
 
 <main id="main">
   <nav class="max-w-7xl mx-auto px-5 md:px-8 pt-6 text-xs text-umber-500 flex items-center gap-2" aria-label="Breadcrumb" data-i18n-aria-label="breadcrumbAria">
-    <a href="index.html" class="hover:text-umber-800" data-i18n="nav.home">Ana Sayfa</a>
+    <a href="/" class="hover:text-umber-800" data-i18n="nav.home">Ana Sayfa</a>
     <span>/</span>
     <span class="text-umber-700" data-i18n="login.title">Giriş Yap</span>
   </nav>
@@ -139,7 +139,7 @@
       <div class="text-center reveal in-view">
         <p class="eyebrow justify-center"><span class="glyph" style="--gsize:14px"></span><span data-i18n="login.eyebrow">Hesap</span></p>
         <h1 class="font-display text-3xl md:text-4xl text-umber-800 mt-4" data-i18n="login.title">Giriş Yap</h1>
-        <p class="text-umber-600 mt-3 text-sm"><span data-i18n="login.noAccount">Hesabınız yok mu?</span> <a href="kayit.html" class="text-saffron-dim hover:underline" data-i18n="login.createAccount">Hesap oluşturun</a></p>
+        <p class="text-umber-600 mt-3 text-sm"><span data-i18n="login.noAccount">Hesabınız yok mu?</span> <a href="kayit" class="text-saffron-dim hover:underline" data-i18n="login.createAccount">Hesap oluşturun</a></p>
       </div>
 
       <form id="login-form" class="space-y-6 mt-10 reveal in-view" novalidate>
@@ -154,7 +154,7 @@
         <p id="login-error" class="text-sm" style="color:#B4432E; display:none;"></p>
         <button type="submit" class="btn btn-primary btn-block" data-i18n="login.submit">Giriş Yap</button>
       </form>
-      <p class="text-center text-umber-500 text-xs mt-8"><span data-i18n="login.guestTrack">Hesap açmadan mı sipariş verdiniz?</span> <a href="siparis-takip.html" class="text-saffron-dim hover:underline" data-i18n="login.trackLink">Sipariş takip edin</a></p>
+      <p class="text-center text-umber-500 text-xs mt-8"><span data-i18n="login.guestTrack">Hesap açmadan mı sipariş verdiniz?</span> <a href="siparis-takip" class="text-saffron-dim hover:underline" data-i18n="login.trackLink">Sipariş takip edin</a></p>
     </div>
   </section>
 </main>
@@ -171,22 +171,22 @@
       <div>
         <p class="font-display text-cream-2 text-sm tracking-wide mb-5" data-i18n="footer.explore">Keşfet</p>
         <ul class="space-y-3 text-sm">
-          <li><a href="index.html" class="footer-link" data-i18n="nav.home">Ana Sayfa</a></li>
-          <li><a href="magaza.html" class="footer-link" data-i18n="nav.shop">Mağaza</a></li>
-          <li><a href="hakkimizda.html" class="footer-link" data-i18n="nav.about">Hakkımızda</a></li>
-          <li><a href="iletisim.html" class="footer-link" data-i18n="nav.contact">İletişim</a></li>
+          <li><a href="/" class="footer-link" data-i18n="nav.home">Ana Sayfa</a></li>
+          <li><a href="magaza" class="footer-link" data-i18n="nav.shop">Mağaza</a></li>
+          <li><a href="hakkimizda" class="footer-link" data-i18n="nav.about">Hakkımızda</a></li>
+          <li><a href="iletisim" class="footer-link" data-i18n="nav.contact">İletişim</a></li>
 
-          <li><a href="sss.html" class="footer-link" data-i18n="nav.faq">SSS</a></li>
-          <li><a href="hesabim.html" class="footer-link" data-i18n="nav.account">Hesabım</a></li>
-          <li><a href="sepet.html" class="footer-link" data-i18n="nav.cart">Sepetim</a></li>
-          <li><a href="siparis-takip.html" class="footer-link" data-i18n="nav.track">Sipariş Takip</a></li>
+          <li><a href="sss" class="footer-link" data-i18n="nav.faq">SSS</a></li>
+          <li><a href="hesabim" class="footer-link" data-i18n="nav.account">Hesabım</a></li>
+          <li><a href="sepet" class="footer-link" data-i18n="nav.cart">Sepetim</a></li>
+          <li><a href="siparis-takip" class="footer-link" data-i18n="nav.track">Sipariş Takip</a></li>
         </ul>
       </div>
       <div>
         <p class="font-display text-cream-2 text-sm tracking-wide mb-5" data-i18n="footer.categories">Kategoriler</p>
         <ul class="space-y-3 text-sm">
-          <li><a href="magaza.html?kategori=kartlik" class="footer-link" data-i18n="footer.cardholders">Kartlık</a></li>
-          <li><a href="magaza.html?kategori=cuzdan" class="footer-link" data-i18n="footer.wallets">Cüzdan</a></li>
+          <li><a href="magaza?kategori=kartlik" class="footer-link" data-i18n="footer.cardholders">Kartlık</a></li>
+          <li><a href="magaza?kategori=cuzdan" class="footer-link" data-i18n="footer.wallets">Cüzdan</a></li>
         </ul>
       </div>
       <div>
@@ -206,7 +206,7 @@
       <img src="assets/img/brand/payment/iyzico-footer-band-white.svg" alt="iyzico ile Öde · Mastercard · Visa · American Express · Troy" class="h-5 sm:h-7 w-auto max-w-full" loading="lazy">
     </div>
     <div class="pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream-2/50">
-      <p>© <span data-year></span> Olympos Leather. <span data-i18n="footer.rights">Tüm hakları saklıdır.</span> &nbsp;·&nbsp; <a href="gizlilik-politikasi.html" class="hover:text-cream-2" data-i18n="footer.privacy">Gizlilik Politikası</a> &nbsp;·&nbsp; <a href="teslimat-ve-iade.html" class="hover:text-cream-2" data-i18n="footer.delivery">Teslimat ve İade</a> &nbsp;·&nbsp; <a href="mesafeli-satis-sozlesmesi.html" class="hover:text-cream-2" data-i18n="footer.terms">Mesafeli Satış Sözleşmesi</a></p>
+      <p>© <span data-year></span> Olympos Leather. <span data-i18n="footer.rights">Tüm hakları saklıdır.</span> &nbsp;·&nbsp; <a href="gizlilik-politikasi" class="hover:text-cream-2" data-i18n="footer.privacy">Gizlilik Politikası</a> &nbsp;·&nbsp; <a href="teslimat-ve-iade" class="hover:text-cream-2" data-i18n="footer.delivery">Teslimat ve İade</a> &nbsp;·&nbsp; <a href="mesafeli-satis-sozlesmesi" class="hover:text-cream-2" data-i18n="footer.terms">Mesafeli Satış Sözleşmesi</a></p>
       <p class="flex items-center gap-2"><span class="glyph" style="--gsize:12px"></span><span data-i18n="footer.handmade">Elde imal edildi</span></p>
     </div>
   </div>
@@ -226,9 +226,9 @@
     btn.disabled = true; btn.textContent = OLYMPOS_I18N.t('login.loggingIn');
     try {
       const user = await OLYMPOS_BACKEND.login({ email: form.email.value.trim(), password: form.password.value });
-      if (user.isAdmin) { window.location.href = 'yonetici.html'; return; }
+      if (user.isAdmin) { window.location.href = 'yonetici'; return; }
       const params = new URLSearchParams(window.location.search);
-      window.location.href = params.get('sonra') || 'hesabim.html';
+      window.location.href = params.get('sonra') || 'hesabim';
     } catch (err) {
       errorEl.textContent = err.message || OLYMPOS_I18N.t('backend.genericError');
       errorEl.style.display = 'block';

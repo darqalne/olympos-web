@@ -158,7 +158,7 @@ window.OLYMPOS_I18N = (() => {
         q3: 'İade hakkım var mı?', a3: 'Kullanılmamış ürünlerde teslimattan itibaren 14 gün içinde iade hakkınız vardır.',
         q4: 'Deri ürünlerimin bakımını nasıl yapmalıyım?', a4: 'Sudan ve doğrudan güneş ışığından koruyun. Yumuşak kuru bir bezle silin, 3-6 ayda bir renksiz deri bakım kremi uygulayın. Zamanla oluşan patina, derinin doğal olgunlaşmasıdır.',
         q5: 'Siparişimi nasıl takip edebilirim?',
-        a5Html: 'Sipariş numaranız ve siparişte kullandığınız e-posta adresiyle <a href="siparis-takip.html" class="underline hover:text-umber-800">Sipariş Takip</a> sayfasından anlık durumu görebilirsiniz. Hesabınıza giriş yaptıysanız geçmiş siparişlerinizi <a href="hesabim.html" class="underline hover:text-umber-800">Hesabım</a> sayfasında da bulabilirsiniz.'
+        a5Html: 'Sipariş numaranız ve siparişte kullandığınız e-posta adresiyle <a href="siparis-takip" class="underline hover:text-umber-800">Sipariş Takip</a> sayfasından anlık durumu görebilirsiniz. Hesabınıza giriş yaptıysanız geçmiş siparişlerinizi <a href="hesabim" class="underline hover:text-umber-800">Hesabım</a> sayfasında da bulabilirsiniz.'
       },
       notFound: { eyebrow: '404', title: 'Sayfa Bulunamadı', text: 'Aradığınız sayfa taşınmış, kaldırılmış olabilir ya da hiç var olmadı. Ama koleksiyonumuz yerinde duruyor.', home: 'Ana Sayfaya Dön', shop: 'Mağazaya Göz At' },
       privacy: {
@@ -189,7 +189,7 @@ window.OLYMPOS_I18N = (() => {
         s3Title: '3. Sipariş Takibi',
         s3Text: 'Kargoya verilen siparişler için tarafınıza takip numarası e-posta ile iletilir. Sipariş numaranız ve sipariş e-postanızla Sipariş Takip sayfasından güncel durumu görebilirsiniz.',
         s4Title: '4. Cayma Hakkı',
-        s4Html: '6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği uyarınca, ürünü teslim aldığınız tarihten itibaren 14 gün içinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkınız bulunmaktadır. Detaylı şartlar için <a href="mesafeli-satis-sozlesmesi.html" class="underline hover:text-umber-800">Mesafeli Satış Sözleşmesi</a> sayfamızı inceleyebilirsiniz.',
+        s4Html: '6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği uyarınca, ürünü teslim aldığınız tarihten itibaren 14 gün içinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkınız bulunmaktadır. Detaylı şartlar için <a href="mesafeli-satis-sozlesmesi" class="underline hover:text-umber-800">Mesafeli Satış Sözleşmesi</a> sayfamızı inceleyebilirsiniz.',
         s5Title: '5. İade Şartları',
         s5Text: 'İade edilecek ürünün kullanılmamış, orijinal ambalajında ve tüm etiketleriyle birlikte eksiksiz olması gerekir. Kişiye özel olarak üretilen veya siparişe göre kesilen ürünler cayma hakkı kapsamı dışındadır.',
         s6Title: '6. İade Süreci',
@@ -361,7 +361,7 @@ window.OLYMPOS_I18N = (() => {
         q3: 'Do I have a right to return?', a3: 'Unused items can be returned within 14 days of delivery.',
         q4: 'How should I care for my leather goods?', a4: 'Keep away from water and direct sunlight. Wipe with a soft, dry cloth and apply a colorless leather conditioner every 3-6 months. The patina that develops over time is the leather naturally maturing.',
         q5: 'How can I track my order?',
-        a5Html: 'You can see the current status any time on the <a href="siparis-takip.html" class="underline hover:text-umber-800">Track Order</a> page using your order number and the email address you used to order. If you’re signed in, you can also find your past orders on the <a href="hesabim.html" class="underline hover:text-umber-800">Account</a> page.'
+        a5Html: 'You can see the current status any time on the <a href="siparis-takip" class="underline hover:text-umber-800">Track Order</a> page using your order number and the email address you used to order. If you’re signed in, you can also find your past orders on the <a href="hesabim" class="underline hover:text-umber-800">Account</a> page.'
       },
       notFound: { eyebrow: '404', title: 'Page Not Found', text: 'The page you’re looking for may have moved, been removed, or never existed. But our collection is right where you left it.', home: 'Back to Home', shop: 'Browse the Shop' },
       privacy: {
@@ -392,7 +392,7 @@ window.OLYMPOS_I18N = (() => {
         s3Title: '3. Order Tracking',
         s3Text: 'Once your order ships, we email you a tracking number. You can also check the current status anytime on the Track Order page using your order number and email address.',
         s4Title: '4. Right of Withdrawal',
-        s4Html: "Under Turkey's Law on the Protection of Consumers No. 6502 and the Distance Contracts Regulation, you have the right to withdraw from the contract within 14 days of receiving your order, without giving any reason and without penalty. See our <a href=\"mesafeli-satis-sozlesmesi.html\" class=\"underline hover:text-umber-800\">Distance Sales Agreement</a> for the full terms.",
+        s4Html: "Under Turkey's Law on the Protection of Consumers No. 6502 and the Distance Contracts Regulation, you have the right to withdraw from the contract within 14 days of receiving your order, without giving any reason and without penalty. See our <a href=\"mesafeli-satis-sozlesmesi\" class=\"underline hover:text-umber-800\">Distance Sales Agreement</a> for the full terms.",
         s5Title: '5. Return Conditions',
         s5Text: 'Returned items must be unused, in their original packaging, and with all tags intact. Products custom-made or cut to a personal request are excluded from the right of withdrawal.',
         s6Title: '6. Return Process',
@@ -564,7 +564,7 @@ window.OLYMPOS_I18N = (() => {
         q3: 'Habe ich ein Rückgaberecht?', a3: 'Unbenutzte Artikel können innerhalb von 14 Tagen nach Lieferung zurückgegeben werden.',
         q4: 'Wie sollte ich meine Lederprodukte pflegen?', a4: 'Vor Wasser und direkter Sonneneinstrahlung schützen. Mit einem weichen, trockenen Tuch abwischen und alle 3-6 Monate eine farblose Lederpflegecreme auftragen. Die mit der Zeit entstehende Patina ist die natürliche Reifung des Leders.',
         q5: 'Wie kann ich meine Bestellung verfolgen?',
-        a5Html: 'Mit Ihrer Bestellnummer und der bei der Bestellung verwendeten E-Mail-Adresse können Sie den aktuellen Status jederzeit auf der Seite <a href="siparis-takip.html" class="underline hover:text-umber-800">Bestellung verfolgen</a> einsehen. Wenn Sie angemeldet sind, finden Sie Ihre früheren Bestellungen auch auf der Seite <a href="hesabim.html" class="underline hover:text-umber-800">Konto</a>.'
+        a5Html: 'Mit Ihrer Bestellnummer und der bei der Bestellung verwendeten E-Mail-Adresse können Sie den aktuellen Status jederzeit auf der Seite <a href="siparis-takip" class="underline hover:text-umber-800">Bestellung verfolgen</a> einsehen. Wenn Sie angemeldet sind, finden Sie Ihre früheren Bestellungen auch auf der Seite <a href="hesabim" class="underline hover:text-umber-800">Konto</a>.'
       },
       notFound: { eyebrow: '404', title: 'Seite nicht gefunden', text: 'Die gesuchte Seite wurde möglicherweise verschoben, entfernt oder hat nie existiert. Aber unsere Kollektion ist noch genau dort, wo Sie sie verlassen haben.', home: 'Zur Startseite', shop: 'Shop durchsuchen' },
       privacy: {
@@ -595,7 +595,7 @@ window.OLYMPOS_I18N = (() => {
         s3Title: '3. Sendungsverfolgung',
         s3Text: 'Sobald Ihre Bestellung versandt wurde, senden wir Ihnen die Sendungsnummer per E-Mail. Den aktuellen Status können Sie jederzeit auf der Seite zur Sendungsverfolgung mit Ihrer Bestellnummer und E-Mail-Adresse einsehen.',
         s4Title: '4. Widerrufsrecht',
-        s4Html: 'Gemäß dem türkischen Verbraucherschutzgesetz Nr. 6502 und der Fernabsatzverordnung haben Sie das Recht, den Vertrag innerhalb von 14 Tagen nach Erhalt der Ware ohne Angabe von Gründen und ohne Vertragsstrafe zu widerrufen. Die vollständigen Bedingungen finden Sie in unserem <a href="mesafeli-satis-sozlesmesi.html" class="underline hover:text-umber-800">Fernabsatzvertrag</a>.',
+        s4Html: 'Gemäß dem türkischen Verbraucherschutzgesetz Nr. 6502 und der Fernabsatzverordnung haben Sie das Recht, den Vertrag innerhalb von 14 Tagen nach Erhalt der Ware ohne Angabe von Gründen und ohne Vertragsstrafe zu widerrufen. Die vollständigen Bedingungen finden Sie in unserem <a href="mesafeli-satis-sozlesmesi" class="underline hover:text-umber-800">Fernabsatzvertrag</a>.',
         s5Title: '5. Rückgabebedingungen',
         s5Text: 'Zurückgegebene Artikel müssen unbenutzt, in der Originalverpackung und mit allen Etiketten vollständig sein. Speziell angefertigte oder nach persönlichem Wunsch zugeschnittene Produkte sind vom Widerrufsrecht ausgeschlossen.',
         s6Title: '6. Rückgabeprozess',

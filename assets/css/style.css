@@ -480,7 +480,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .product-card:hover .card-glyph { color: var(--saffron); }
 
-/* ---------- shop grid (magaza.html) — slimmer cards, popup badge, bottom-anchored quick add ---------- */
+/* ---------- shop grid (magaza) — slimmer cards, popup badge, bottom-anchored quick add ---------- */
 #shop-grid .product-frame { aspect-ratio: 3/4; }
 #shop-grid .badge { box-shadow: 0 8px 18px -6px rgba(24,16,10,0.5); }
 #shop-grid .quick-add { bottom: 14px; transform: translateY(120%); }
@@ -494,8 +494,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* ---------- punch-hole & wrap-around thread hover effect ----------
-   shared by the shop grid (magaza.html) and the homepage featured
-   grid (index.html) — anything specific to the shop grid's own card
+   shared by the shop grid (magaza) and the homepage featured
+   grid (index) — anything specific to the shop grid's own card
    sizing/badge/quick-add styling stays #shop-grid-only above; this
    part is the animation itself, used by both. */
 #shop-grid .product-frame, #featured-grid .product-frame { z-index: 2; }

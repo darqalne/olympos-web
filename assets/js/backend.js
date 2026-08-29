@@ -16,7 +16,7 @@
        address, city, zip, isAdmin) this app needs.
      - orders live in Firestore `orders/{orderNumber}` — the order's
        own human-readable number IS the document id, which lets guest
-       order-tracking (siparis-takip.html) do a plain by-id `get()`
+       order-tracking (siparis-takip) do a plain by-id `get()`
        instead of a `list` query Firestore security rules can't safely
        scope to "only the matching email" for an unauthenticated caller.
      - products live in Firestore `products/{id}` (see site.js).
@@ -43,7 +43,7 @@ window.OLYMPOS_BACKEND = (() => {
   };
 
   // Accounts whose email matches this list get isAdmin:true on
-  // registration and are routed straight to yonetici.html on login.
+  // registration and are routed straight to yonetici on login.
   // To promote someone else later, flip `isAdmin: true` by hand on
   // their users/{uid} document in the Firebase console instead —
   // this list only matters at the moment an account is first created.
@@ -225,23 +225,23 @@ window.OLYMPOS_BACKEND = (() => {
     const user = currentUser();
     if (!user) {
       const back = encodeURIComponent(window.location.pathname + window.location.search);
-      window.location.href = `giris.html?sonra=${back}`;
+      window.location.href = `giris?sonra=${back}`;
     }
     return user;
   }
 
-  // guards yonetici.html: sends signed-out visitors to login (returning
+  // guards yonetici: sends signed-out visitors to login (returning
   // here after), and signed-in non-admins back to the storefront —
   // never leaks that an admin panel exists to a regular shopper.
   function requireAdmin() {
     const user = currentUser();
     if (!user) {
       const back = encodeURIComponent(window.location.pathname + window.location.search);
-      window.location.href = `giris.html?sonra=${back}`;
+      window.location.href = `giris?sonra=${back}`;
       return null;
     }
     if (!user.isAdmin) {
-      window.location.href = 'index.html';
+      window.location.href = '/';
       return null;
     }
     return user;
@@ -359,7 +359,7 @@ window.OLYMPOS_BACKEND = (() => {
   }
 
   /* ---------------- admin ---------------- */
-  // every function below is admin-only data access (yonetici.html
+  // every function below is admin-only data access (yonetici
   // guards the page itself with requireAdmin() before ever calling
   // these, and Firestore security rules enforce the same on the
   // server side regardless of what the client does).

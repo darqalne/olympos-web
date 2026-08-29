@@ -341,7 +341,7 @@ const OLYMPOS = (() => {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
     document.getElementById('checkout-btn')?.addEventListener('click', () => {
       if (readCart().length === 0) return;
-      window.location.href = 'odeme.html';
+      window.location.href = 'odeme';
     });
   }
 
@@ -392,7 +392,7 @@ const OLYMPOS = (() => {
       }
       emptyEl.style.display = 'none';
       resultsEl.innerHTML = matches.map(p => `
-        <a href="urun.html?id=${p.id}" class="search-result">
+        <a href="urun?id=${p.id}" class="search-result">
           <img src="${p.images[0]}" alt="">
           <div>
             <p class="search-result-name">${p.name}</p>
@@ -454,7 +454,7 @@ const OLYMPOS = (() => {
     const cmp = p.compareAt ? `<span class="price-strike">${formatPrice(p.compareAt)}</span> ` : '';
     return `
     <article class="product-card">
-      <a href="urun.html?id=${p.id}" aria-label="${T.t('product.viewProductAria', { name: p.name })}">
+      <a href="urun?id=${p.id}" aria-label="${T.t('product.viewProductAria', { name: p.name })}">
         <div class="product-frame">
           ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
           <img src="${p.images[0]}" alt="${p.name} — ${p.tagline}" loading="lazy" width="800" height="1000" style="object-position:${p.imagePosition || 'center'};">
@@ -466,7 +466,7 @@ const OLYMPOS = (() => {
       </a>
       <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:1rem; gap:.75rem;">
         <div>
-          <a href="urun.html?id=${p.id}" style="display:block;">
+          <a href="urun?id=${p.id}" style="display:block;">
             <h3 style="font-family:var(--font-display); font-size:1.05rem; color:var(--umber-800);">${p.name}</h3>
           </a>
           <p style="font-size:.78rem; color:var(--umber-500); margin-top:2px;">${p.categoryLabel}</p>
@@ -547,7 +547,7 @@ const OLYMPOS = (() => {
     });
   }
 
-  /* ---------------- shop grid (magaza.html) ---------------- */
+  /* ---------------- shop grid (magaza) ---------------- */
   let shopGridRender = null;
   function initShopGrid() {
     const grid = document.getElementById('shop-grid');
@@ -585,7 +585,7 @@ const OLYMPOS = (() => {
     render();
   }
 
-  /* ---------------- product detail (urun.html) ---------------- */
+  /* ---------------- product detail (urun) ---------------- */
   let productDetailId = null;
   function paintProductDetail() {
     const root = document.getElementById('product-detail');
@@ -668,7 +668,7 @@ const OLYMPOS = (() => {
         priceCurrency: 'TRY',
         price: p.price,
         availability: 'https://schema.org/InStock',
-        url: origin + '/urun.html?id=' + p.id
+        url: origin + '/urun?id=' + p.id
       }
     }, 'product');
   }
@@ -753,7 +753,7 @@ const OLYMPOS = (() => {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: 'Olympos Leather',
-      url: origin + '/index.html',
+      url: origin + '/',
       logo: origin + '/assets/img/brand/logo.png',
       sameAs: ['https://www.instagram.com/olymposleathers/']
     }, 'organization');
@@ -772,7 +772,7 @@ const OLYMPOS = (() => {
   }
 
   /* ---------------- boot ---------------- */
-  /* ---------------- hero intro video (index.html) ---------------- */
+  /* ---------------- hero intro video (index) ---------------- */
   function initHeroVideo() {
     const video = document.getElementById('hero-video');
     if (!video) return;
@@ -788,7 +788,7 @@ const OLYMPOS = (() => {
   }
 
   // pages with their own inline script that reads products/cart at
-  // load time (index.html, sepet.html, odeme.html) must await this
+  // load time (index, sepet, odeme) must await this
   // before calling getProduct/getProducts/cartLines — otherwise they'd
   // run before the one-time Firestore fetch below has landed.
   async function ready() {
