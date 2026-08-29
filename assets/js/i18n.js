@@ -225,7 +225,7 @@ window.OLYMPOS_I18N = (() => {
       privacy: {
         eyebrow: 'Yasal', title: 'Gizlilik Politikası', updated: 'Son güncelleme: 27 Ağustos 2026',
         s1Title: '1. Veri Sorumlusu',
-        s1Html: 'Bu internet sitesi, Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("biz", "Olympos Leather") tarafından işletilmektedir. Kişisel verilerinizle ilgili sorularınız için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden bize ulaşabilirsiniz.',
+        s1Html: 'Bu internet sitesi, Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("biz", "Olympos Leather") tarafından işletilmektedir. Kişisel verilerinizle ilgili sorularınız için <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> adresinden bize ulaşabilirsiniz.',
         s2Title: '2. Hangi Verileri Topluyoruz',
         s2Text: 'Sipariş verdiğinizde veya bizimle iletişime geçtiğinizde ad-soyad, e-posta adresi, telefon numarası, teslimat adresi ve sipariş içeriği gibi bilgileri topluyoruz. Ödeme sırasında girilen kart bilgileri tarafımızca saklanmaz; ödeme, sitemizin ödeme altyapısı üzerinden güvenli şekilde işlenir.',
         s3Title: '3. Verilerinizi Neden Topluyoruz',
@@ -237,7 +237,7 @@ window.OLYMPOS_I18N = (() => {
         s6Title: '6. Veri Güvenliği',
         s6Text: 'Kişisel verilerinizi korumak için makul teknik ve idari önlemleri alırız. Buna rağmen internet üzerinden hiçbir veri iletiminin %100 güvenli olmadığını hatırlatmak isteriz.',
         s7Title: '7. Haklarınız',
-        s7Html: '6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında; işlenen verileriniz hakkında bilgi talep etme, verilerinizin düzeltilmesini veya silinmesini isteme ve verilerinizin işlenmesine itiraz etme hakkına sahipsiniz. Bu haklarınızı kullanmak için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden bize yazabilirsiniz.',
+        s7Html: '6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında; işlenen verileriniz hakkında bilgi talep etme, verilerinizin düzeltilmesini veya silinmesini isteme ve verilerinizin işlenmesine itiraz etme hakkına sahipsiniz. Bu haklarınızı kullanmak için <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> adresinden bize yazabilirsiniz.',
         s8Title: '8. Değişiklikler',
         s8Text: 'Bu gizlilik politikası zaman zaman güncellenebilir. Güncel sürüm her zaman bu sayfada yayınlanır.'
       },
@@ -254,16 +254,16 @@ window.OLYMPOS_I18N = (() => {
         s5Title: '5. İade Şartları',
         s5Text: 'İade edilecek ürünün kullanılmamış, orijinal ambalajında ve tüm etiketleriyle birlikte eksiksiz olması gerekir. Kişiye özel olarak üretilen veya siparişe göre kesilen ürünler cayma hakkı kapsamı dışındadır.',
         s6Title: '6. İade Süreci',
-        s6Text: 'İade talebinizi info@olymposleather.com adresine sipariş numaranızla birlikte iletmeniz yeterlidir. Talebiniz onaylandıktan sonra ürünü anlaşmalı kargo firmasına teslim edebilirsiniz; iade kargo bedeli ve ödeme iadesi süreci tarafınıza e-posta ile bildirilir. Onaylanan iadelerin bedeli, ürünün tarafımıza ulaşmasını takip eden 14 gün içinde ödemeyi yaptığınız yönteme iade edilir.',
+        s6Text: 'İade talebinizi info@olymposleather.com.tr adresine sipariş numaranızla birlikte iletmeniz yeterlidir. Talebiniz onaylandıktan sonra ürünü anlaşmalı kargo firmasına teslim edebilirsiniz; iade kargo bedeli ve ödeme iadesi süreci tarafınıza e-posta ile bildirilir. Onaylanan iadelerin bedeli, ürünün tarafımıza ulaşmasını takip eden 14 gün içinde ödemeyi yaptığınız yönteme iade edilir.',
         s7Title: '7. Değişim',
         s7Text: 'Farklı bir model veya renk talebiniz için önce ürünü iade sürecine dahil etmeniz, ardından tercih ettiğiniz parça için yeni bir sipariş oluşturmanız gerekir.',
         s8Title: '8. İletişim',
-        s8Text: 'Teslimat ve iade süreciyle ilgili tüm sorularınız için info@olymposleather.com adresinden bize ulaşabilirsiniz.'
+        s8Text: 'Teslimat ve iade süreciyle ilgili tüm sorularınız için info@olymposleather.com.tr adresinden bize ulaşabilirsiniz.'
       },
       terms: {
         eyebrow: 'Yasal', title: 'Mesafeli Satış Sözleşmesi', updated: 'Son güncelleme: 29 Ağustos 2026',
         s1Title: '1. Taraflar',
-        s1Html: 'İşbu Mesafeli Satış Sözleşmesi ("Sözleşme"), bir tarafta Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("Satıcı" — <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">0537 787 68 57</a>) ile diğer tarafta olymposleather.com üzerinden sipariş veren müşteri ("Alıcı") arasında, aşağıdaki şartlarla akdedilmiştir.',
+        s1Html: 'İşbu Mesafeli Satış Sözleşmesi ("Sözleşme"), bir tarafta Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet gösteren <strong>OLYMPOS Leather</strong> ("Satıcı" — <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">0537 787 68 57</a>) ile diğer tarafta olymposleather.com.tr üzerinden sipariş veren müşteri ("Alıcı") arasında, aşağıdaki şartlarla akdedilmiştir.',
         s2Title: '2. Sözleşmenin Konusu',
         s2Text: 'İşbu Sözleşme\'nin konusu, Alıcı\'nın Satıcı\'ya ait internet sitesinden elektronik ortamda sipariş verdiği ürünün satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri gereğince tarafların hak ve yükümlülüklerinin belirlenmesidir.',
         s3Title: '3. Sözleşme Konusu Ürün ve Ödeme Bilgileri',
@@ -271,7 +271,7 @@ window.OLYMPOS_I18N = (() => {
         s4Title: '4. Teslimat',
         s4Text: 'Ürün, Satıcı\'nın anlaşmalı olduğu kargo firması aracılığıyla, Alıcı\'nın sipariş sırasında belirttiği adrese, ödemenin onaylanmasından itibaren yasal 30 günlük süreyi aşmayacak şekilde teslim edilir. Teslimat süresince oluşabilecek gecikmeler Sipariş Takip sayfasından Alıcı\'ya bildirilir.',
         s5Title: '5. Cayma Hakkı',
-        s5Text: 'Alıcı, ürünün kendisine veya gösterdiği adresteki kişiye teslim edildiği tarihten itibaren 14 (on dört) gün içinde, herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkına sahiptir. Cayma hakkının kullanılması için bu süre içinde info@olymposleather.com adresine yazılı bildirimde bulunulması yeterlidir. Cayma hakkının kullanılması halinde ürün Satıcı\'ya iade edilir ve tahsil edilen bedel, yasal 14 günlük süre içinde Alıcı\'ya ödemeyi yaptığı yöntemle iade edilir.',
+        s5Text: 'Alıcı, ürünün kendisine veya gösterdiği adresteki kişiye teslim edildiği tarihten itibaren 14 (on dört) gün içinde, herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkına sahiptir. Cayma hakkının kullanılması için bu süre içinde info@olymposleather.com.tr adresine yazılı bildirimde bulunulması yeterlidir. Cayma hakkının kullanılması halinde ürün Satıcı\'ya iade edilir ve tahsil edilen bedel, yasal 14 günlük süre içinde Alıcı\'ya ödemeyi yaptığı yöntemle iade edilir.',
         s6Title: '6. Cayma Hakkının Kullanılamayacağı Haller',
         s6Text: 'Mesafeli Sözleşmeler Yönetmeliği\'nin 15. maddesi uyarınca, Alıcı\'nın istekleri veya kişisel ihtiyaçları doğrultusunda özel olarak üretilen veya kişiselleştirilen ürünlerde cayma hakkı kullanılamaz.',
         s7Title: '7. Temerrüt Hali ve Hukuki Sonuçları',
@@ -284,7 +284,7 @@ window.OLYMPOS_I18N = (() => {
       preinfo: {
         eyebrow: 'Yasal', title: 'Ön Bilgilendirme Formu', updated: 'Son güncelleme: 29 Ağustos 2026',
         s1Title: '1. Satıcı Bilgileri',
-        s1Html: '<strong>OLYMPOS Leather</strong>, Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet göstermektedir. Sorularınız için <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> adresinden veya <a href="tel:+905377876857" class="underline hover:text-umber-800">0537 787 68 57</a> numaralı telefondan bize ulaşabilirsiniz.',
+        s1Html: '<strong>OLYMPOS Leather</strong>, Buca, İzmir\'de esnaf faaliyet belgesi ve esnaf vergi muafiyeti kapsamında, ticari satış izniyle faaliyet göstermektedir. Sorularınız için <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> adresinden veya <a href="tel:+905377876857" class="underline hover:text-umber-800">0537 787 68 57</a> numaralı telefondan bize ulaşabilirsiniz.',
         s2Title: '2. Ürün ve Fiyat Bilgisi',
         s2Text: 'Sipariş edeceğiniz ürünün temel özellikleri, adedi ve KDV dahil satış fiyatı, siparişi onaylamadan önce sipariş özeti ekranında gösterilir. Gösterilen fiyata kargo ücreti dahil değildir; kargo ücreti ödeme adımında ayrıca hesaplanır ve toplam tutara eklenir.',
         s3Title: '3. Ödeme Şekli',
@@ -457,7 +457,7 @@ window.OLYMPOS_I18N = (() => {
       privacy: {
         eyebrow: 'Legal', title: 'Privacy Policy', updated: 'Last updated: August 27, 2026',
         s1Title: '1. Data Controller',
-        s1Html: 'This website is operated by <strong>OLYMPOS Leather</strong> ("we", "Olympos Leather"), which trades under a Turkish craftsman’s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license, in Buca, İzmir. For questions about your personal data, you can reach us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s1Html: 'This website is operated by <strong>OLYMPOS Leather</strong> ("we", "Olympos Leather"), which trades under a Turkish craftsman’s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license, in Buca, İzmir. For questions about your personal data, you can reach us at <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a>.',
         s2Title: '2. What Data We Collect',
         s2Text: 'When you place an order or contact us, we collect information such as your full name, email address, phone number, delivery address, and order contents. Card details entered at payment are not stored by us; payment is processed securely through our site’s payment infrastructure.',
         s3Title: '3. Why We Collect Your Data',
@@ -469,7 +469,7 @@ window.OLYMPOS_I18N = (() => {
         s6Title: '6. Data Security',
         s6Text: 'We take reasonable technical and administrative measures to protect your personal data. That said, no data transmission over the internet can be guaranteed 100% secure.',
         s7Title: '7. Your Rights',
-        s7Html: 'Under Turkey’s Personal Data Protection Law No. 6698 (KVKK), you have the right to request information about your processed data, to request its correction or deletion, and to object to its processing. You can exercise these rights by writing to us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s7Html: 'Under Turkey’s Personal Data Protection Law No. 6698 (KVKK), you have the right to request information about your processed data, to request its correction or deletion, and to object to its processing. You can exercise these rights by writing to us at <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a>.',
         s8Title: '8. Changes',
         s8Text: 'This privacy policy may be updated from time to time. The current version is always published on this page.'
       },
@@ -486,16 +486,16 @@ window.OLYMPOS_I18N = (() => {
         s5Title: '5. Return Conditions',
         s5Text: 'Returned items must be unused, in their original packaging, and with all tags intact. Products custom-made or cut to a personal request are excluded from the right of withdrawal.',
         s6Title: '6. Return Process',
-        s6Text: 'Simply email your return request and order number to info@olymposleather.com. Once approved, hand the item to our contracted courier; return shipping and refund details will be sent to you by email. Approved refunds are issued to your original payment method within 14 days of the item reaching us.',
+        s6Text: 'Simply email your return request and order number to info@olymposleather.com.tr. Once approved, hand the item to our contracted courier; return shipping and refund details will be sent to you by email. Approved refunds are issued to your original payment method within 14 days of the item reaching us.',
         s7Title: '7. Exchanges',
         s7Text: "For a different model or color, please complete the return process first, then place a new order for the item you'd prefer.",
         s8Title: '8. Contact',
-        s8Text: 'For any questions about shipping or returns, reach us at info@olymposleather.com.'
+        s8Text: 'For any questions about shipping or returns, reach us at info@olymposleather.com.tr.'
       },
       terms: {
         eyebrow: 'Legal', title: 'Distance Sales Agreement', updated: 'Last updated: August 29, 2026',
         s1Title: '1. Parties',
-        s1Html: 'This Distance Sales Agreement ("Agreement") is entered into between <strong>OLYMPOS Leather</strong> ("Seller" — <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>), which trades under a Turkish craftsman\'s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license, in Buca, İzmir, and the customer placing an order through olymposleather.com ("Buyer"), under the terms set out below.',
+        s1Html: 'This Distance Sales Agreement ("Agreement") is entered into between <strong>OLYMPOS Leather</strong> ("Seller" — <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>), which trades under a Turkish craftsman\'s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license, in Buca, İzmir, and the customer placing an order through olymposleather.com.tr ("Buyer"), under the terms set out below.',
         s2Title: '2. Subject of the Agreement',
         s2Text: "This Agreement sets out the rights and obligations of the parties regarding the sale and delivery of the product ordered electronically by the Buyer through the Seller's website, in accordance with Turkey's Law on the Protection of Consumers No. 6502 and the Distance Contracts Regulation.",
         s3Title: '3. Product and Payment Information',
@@ -503,7 +503,7 @@ window.OLYMPOS_I18N = (() => {
         s4Title: '4. Delivery',
         s4Text: "The product is delivered by the Seller's contracted courier to the address the Buyer provides at checkout, within the legal maximum of 30 days from payment confirmation. Any delays are communicated to the Buyer via the Track Order page.",
         s5Title: '5. Right of Withdrawal',
-        s5Text: 'The Buyer has the right to withdraw from this Agreement within 14 (fourteen) days of the product being delivered to them or to the person they designated, without giving any reason and without penalty. To exercise this right, a written notice to info@olymposleather.com within this period is sufficient. Upon withdrawal, the product is returned to the Seller and the amount collected is refunded to the Buyer, via the same payment method used, within the legal 14-day period.',
+        s5Text: 'The Buyer has the right to withdraw from this Agreement within 14 (fourteen) days of the product being delivered to them or to the person they designated, without giving any reason and without penalty. To exercise this right, a written notice to info@olymposleather.com.tr within this period is sufficient. Upon withdrawal, the product is returned to the Seller and the amount collected is refunded to the Buyer, via the same payment method used, within the legal 14-day period.',
         s6Title: '6. Exceptions to the Right of Withdrawal',
         s6Text: "Under Article 15 of the Distance Contracts Regulation, the right of withdrawal does not apply to products made to the Buyer's specifications or clearly personalized.",
         s7Title: '7. Default and Its Legal Consequences',
@@ -516,7 +516,7 @@ window.OLYMPOS_I18N = (() => {
       preinfo: {
         eyebrow: 'Legal', title: 'Pre-Contract Information Form', updated: 'Last updated: August 29, 2026',
         s1Title: '1. Seller Information',
-        s1Html: '<strong>OLYMPOS Leather</strong> operates in Buca, İzmir under a Turkish craftsman\'s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license. For questions, reach us at <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> or by phone at <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>.',
+        s1Html: '<strong>OLYMPOS Leather</strong> operates in Buca, İzmir under a Turkish craftsman\'s (esnaf) trade registration and tax-exemption status, with a valid commercial sales license. For questions, reach us at <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> or by phone at <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>.',
         s2Title: '2. Product and Price Information',
         s2Text: 'The essential characteristics, quantity, and VAT-inclusive price of the product you order are shown on the order summary screen before you confirm your order. The price shown does not include shipping; shipping cost is calculated separately at checkout and added to the total.',
         s3Title: '3. Payment Method',
@@ -689,7 +689,7 @@ window.OLYMPOS_I18N = (() => {
       privacy: {
         eyebrow: 'Rechtliches', title: 'Datenschutzerklärung', updated: 'Zuletzt aktualisiert: 27. August 2026',
         s1Title: '1. Verantwortlicher',
-        s1Html: 'Diese Website wird von <strong>OLYMPOS Leather</strong> ("wir", "Olympos Leather") betrieben, das unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel in Buca, İzmir tätig ist. Bei Fragen zu Ihren personenbezogenen Daten erreichen Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a>.',
+        s1Html: 'Diese Website wird von <strong>OLYMPOS Leather</strong> ("wir", "Olympos Leather") betrieben, das unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel in Buca, İzmir tätig ist. Bei Fragen zu Ihren personenbezogenen Daten erreichen Sie uns unter <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a>.',
         s2Title: '2. Welche Daten wir erheben',
         s2Text: 'Wenn Sie eine Bestellung aufgeben oder uns kontaktieren, erheben wir Daten wie Ihren vollständigen Namen, Ihre E-Mail-Adresse, Telefonnummer, Lieferadresse und den Bestellinhalt. Bei der Zahlung eingegebene Kartendaten werden von uns nicht gespeichert; die Zahlung wird sicher über die Zahlungsinfrastruktur unserer Website abgewickelt.',
         s3Title: '3. Warum wir Ihre Daten erheben',
@@ -701,7 +701,7 @@ window.OLYMPOS_I18N = (() => {
         s6Title: '6. Datensicherheit',
         s6Text: 'Wir treffen angemessene technische und organisatorische Maßnahmen zum Schutz Ihrer personenbezogenen Daten. Dennoch kann keine Datenübertragung über das Internet als 100% sicher garantiert werden.',
         s7Title: '7. Ihre Rechte',
-        s7Html: 'Gemäß dem türkischen Gesetz Nr. 6698 zum Schutz personenbezogener Daten (KVKK) haben Sie das Recht, Auskunft über Ihre verarbeiteten Daten zu verlangen, deren Berichtigung oder Löschung zu beantragen und der Verarbeitung zu widersprechen. Sie können diese Rechte ausüben, indem Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> schreiben.',
+        s7Html: 'Gemäß dem türkischen Gesetz Nr. 6698 zum Schutz personenbezogener Daten (KVKK) haben Sie das Recht, Auskunft über Ihre verarbeiteten Daten zu verlangen, deren Berichtigung oder Löschung zu beantragen und der Verarbeitung zu widersprechen. Sie können diese Rechte ausüben, indem Sie uns unter <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> schreiben.',
         s8Title: '8. Änderungen',
         s8Text: 'Diese Datenschutzerklärung kann von Zeit zu Zeit aktualisiert werden. Die aktuelle Fassung wird stets auf dieser Seite veröffentlicht.'
       },
@@ -718,16 +718,16 @@ window.OLYMPOS_I18N = (() => {
         s5Title: '5. Rückgabebedingungen',
         s5Text: 'Zurückgegebene Artikel müssen unbenutzt, in der Originalverpackung und mit allen Etiketten vollständig sein. Speziell angefertigte oder nach persönlichem Wunsch zugeschnittene Produkte sind vom Widerrufsrecht ausgeschlossen.',
         s6Title: '6. Rückgabeprozess',
-        s6Text: 'Senden Sie Ihre Rückgabeanfrage mit Ihrer Bestellnummer einfach an info@olymposleather.com. Nach Genehmigung übergeben Sie den Artikel unserem beauftragten Kurierunternehmen; Details zu Rücksendung und Rückerstattung erhalten Sie per E-Mail. Genehmigte Rückerstattungen erfolgen innerhalb von 14 Tagen nach Eingang des Artikels bei uns auf Ihre ursprüngliche Zahlungsmethode.',
+        s6Text: 'Senden Sie Ihre Rückgabeanfrage mit Ihrer Bestellnummer einfach an info@olymposleather.com.tr. Nach Genehmigung übergeben Sie den Artikel unserem beauftragten Kurierunternehmen; Details zu Rücksendung und Rückerstattung erhalten Sie per E-Mail. Genehmigte Rückerstattungen erfolgen innerhalb von 14 Tagen nach Eingang des Artikels bei uns auf Ihre ursprüngliche Zahlungsmethode.',
         s7Title: '7. Umtausch',
         s7Text: 'Für ein anderes Modell oder eine andere Farbe schließen Sie bitte zunächst den Rückgabeprozess ab und geben Sie anschließend eine neue Bestellung für den gewünschten Artikel auf.',
         s8Title: '8. Kontakt',
-        s8Text: 'Bei Fragen zu Versand oder Rückgabe erreichen Sie uns unter info@olymposleather.com.'
+        s8Text: 'Bei Fragen zu Versand oder Rückgabe erreichen Sie uns unter info@olymposleather.com.tr.'
       },
       terms: {
         eyebrow: 'Rechtliches', title: 'Fernabsatzvertrag', updated: 'Zuletzt aktualisiert: 29. August 2026',
         s1Title: '1. Vertragsparteien',
-        s1Html: 'Dieser Fernabsatzvertrag ("Vertrag") wird zwischen <strong>OLYMPOS Leather</strong> ("Verkäufer" — <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>), das unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel in Buca, İzmir tätig ist, und dem Kunden, der über olymposleather.com eine Bestellung aufgibt ("Käufer"), zu den nachstehenden Bedingungen geschlossen.',
+        s1Html: 'Dieser Fernabsatzvertrag ("Vertrag") wird zwischen <strong>OLYMPOS Leather</strong> ("Verkäufer" — <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> / <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>), das unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel in Buca, İzmir tätig ist, und dem Kunden, der über olymposleather.com.tr eine Bestellung aufgibt ("Käufer"), zu den nachstehenden Bedingungen geschlossen.',
         s2Title: '2. Vertragsgegenstand',
         s2Text: 'Dieser Vertrag regelt die Rechte und Pflichten der Parteien in Bezug auf den Verkauf und die Lieferung des vom Käufer elektronisch über die Website des Verkäufers bestellten Produkts, gemäß dem türkischen Verbraucherschutzgesetz Nr. 6502 und der Fernabsatzverordnung.',
         s3Title: '3. Produkt- und Zahlungsinformationen',
@@ -735,7 +735,7 @@ window.OLYMPOS_I18N = (() => {
         s4Title: '4. Lieferung',
         s4Text: 'Das Produkt wird vom beauftragten Kurierunternehmen des Verkäufers an die vom Käufer bei der Bestellung angegebene Adresse geliefert, innerhalb der gesetzlichen Höchstfrist von 30 Tagen ab Zahlungsbestätigung. Etwaige Verzögerungen werden dem Käufer über die Seite zur Sendungsverfolgung mitgeteilt.',
         s5Title: '5. Widerrufsrecht',
-        s5Text: 'Der Käufer hat das Recht, innerhalb von 14 (vierzehn) Tagen nach Lieferung des Produkts an ihn oder die von ihm benannte Person, ohne Angabe von Gründen und ohne Vertragsstrafe, von diesem Vertrag zurückzutreten. Zur Ausübung dieses Rechts genügt eine schriftliche Mitteilung an info@olymposleather.com innerhalb dieser Frist. Im Falle des Widerrufs wird das Produkt an den Verkäufer zurückgesandt, und der eingezogene Betrag wird dem Käufer innerhalb der gesetzlichen Frist von 14 Tagen über dieselbe Zahlungsmethode erstattet.',
+        s5Text: 'Der Käufer hat das Recht, innerhalb von 14 (vierzehn) Tagen nach Lieferung des Produkts an ihn oder die von ihm benannte Person, ohne Angabe von Gründen und ohne Vertragsstrafe, von diesem Vertrag zurückzutreten. Zur Ausübung dieses Rechts genügt eine schriftliche Mitteilung an info@olymposleather.com.tr innerhalb dieser Frist. Im Falle des Widerrufs wird das Produkt an den Verkäufer zurückgesandt, und der eingezogene Betrag wird dem Käufer innerhalb der gesetzlichen Frist von 14 Tagen über dieselbe Zahlungsmethode erstattet.',
         s6Title: '6. Ausnahmen vom Widerrufsrecht',
         s6Text: 'Gemäß Artikel 15 der Fernabsatzverordnung gilt das Widerrufsrecht nicht für Produkte, die nach den Vorgaben des Käufers angefertigt oder eindeutig personalisiert wurden.',
         s7Title: '7. Verzug und seine rechtlichen Folgen',
@@ -748,7 +748,7 @@ window.OLYMPOS_I18N = (() => {
       preinfo: {
         eyebrow: 'Rechtliches', title: 'Vorabinformationsformular', updated: 'Zuletzt aktualisiert: 29. August 2026',
         s1Title: '1. Verkäuferinformationen',
-        s1Html: '<strong>OLYMPOS Leather</strong> ist in Buca, İzmir unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel tätig. Bei Fragen erreichen Sie uns unter <a href="mailto:info@olymposleather.com" class="underline hover:text-umber-800">info@olymposleather.com</a> oder telefonisch unter <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>.',
+        s1Html: '<strong>OLYMPOS Leather</strong> ist in Buca, İzmir unter einer türkischen Gewerbeanmeldung (esnaf) mit entsprechender Steuerbefreiung und gültiger Gewerbeerlaubnis für den Handel tätig. Bei Fragen erreichen Sie uns unter <a href="mailto:info@olymposleather.com.tr" class="underline hover:text-umber-800">info@olymposleather.com.tr</a> oder telefonisch unter <a href="tel:+905377876857" class="underline hover:text-umber-800">+90 537 787 68 57</a>.',
         s2Title: '2. Produkt- und Preisinformationen',
         s2Text: 'Die wesentlichen Eigenschaften, die Menge und der Preis inklusive MwSt. des von Ihnen bestellten Produkts werden vor Bestätigung Ihrer Bestellung auf dem Bestellübersichtsbildschirm angezeigt. Der angezeigte Preis enthält keine Versandkosten; diese werden separat an der Kasse berechnet und dem Gesamtbetrag hinzugefügt.',
         s3Title: '3. Zahlungsart',
