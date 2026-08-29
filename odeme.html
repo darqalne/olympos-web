@@ -186,7 +186,7 @@
                 <div class="grid sm:grid-cols-2 gap-6">
                   <div class="field">
                     <label for="ck-phone" data-i18n="checkout.phoneLabel">Telefon</label>
-                    <input id="ck-phone" name="phone" type="tel" required autocomplete="tel">
+                    <input id="ck-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="05XX XXX XX XX" maxlength="11" pattern="0?5[0-9]{9}" required>
                   </div>
                   <div class="field">
                     <label for="ck-identity" data-i18n="checkout.identityLabel">T.C. Kimlik No</label>
@@ -201,7 +201,9 @@
                 <div class="grid sm:grid-cols-2 gap-6">
                   <div class="field">
                     <label for="ck-city" data-i18n="checkout.cityLabel">Şehir</label>
-                    <input id="ck-city" name="city" type="text" required autocomplete="address-level2">
+                    <select id="ck-city" name="city" required autocomplete="address-level2">
+                      <option value="" data-i18n="checkout.cityPlaceholder">Şehir seçin</option>
+                    </select>
                   </div>
                   <div class="field">
                     <label for="ck-zip" data-i18n="checkout.zipLabel">Posta Kodu</label>
@@ -417,6 +419,32 @@
     // no field submits natively anymore (payment is a fetch + injected
     // iyzico popup) — stop a stray Enter keypress from reloading the page.
     form.addEventListener('submit', (e) => e.preventDefault());
+
+    const TURKISH_CITIES = [
+      'Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Aksaray', 'Amasya', 'Ankara', 'Antalya', 'Ardahan',
+      'Artvin', 'Aydın', 'Balıkesir', 'Bartın', 'Batman', 'Bayburt', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu',
+      'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Düzce', 'Edirne', 'Elazığ',
+      'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Iğdır',
+      'Isparta', 'İstanbul', 'İzmir', 'Kahramanmaraş', 'Karabük', 'Karaman', 'Kars', 'Kastamonu', 'Kayseri',
+      'Kilis', 'Kırıkkale', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa',
+      'Mardin', 'Mersin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Osmaniye', 'Rize', 'Sakarya', 'Samsun',
+      'Siirt', 'Sinop', 'Sivas', 'Şanlıurfa', 'Şırnak', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Uşak',
+      'Van', 'Yalova', 'Yozgat', 'Zonguldak'
+    ];
+    const citySelect = document.getElementById('ck-city');
+    TURKISH_CITIES.forEach((city) => {
+      const opt = document.createElement('option');
+      opt.value = city;
+      opt.textContent = city;
+      citySelect.appendChild(opt);
+    });
+
+    // strip anything but digits as the shopper types — the pattern/maxlength
+    // attributes alone don't stop e.g. pasted formatting characters.
+    const phoneInput = document.getElementById('ck-phone');
+    phoneInput.addEventListener('input', () => {
+      phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 11);
+    });
 
     // returning from iyzico's hosted checkout: /api/iyzico-callback redirects
     // back here with ?iyzico=success|failed once the popup has finished.

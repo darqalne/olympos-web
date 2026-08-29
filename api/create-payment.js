@@ -52,6 +52,11 @@ async function fetchProductPrice(id) {
   return Number.isFinite(price) && price > 0 ? price : null;
 }
 
+function normalizeGsm(phone) {
+  const digits = String(phone || '').replace(/\D/g, '').replace(/^0/, '');
+  return digits ? `+90${digits}` : '';
+}
+
 function splitName(fullName) {
   const parts = String(fullName || '').trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return { name: 'Müşteri', surname: '-' };
@@ -80,6 +85,10 @@ export default async function handler(req, res) {
   }
   if (!/^\d{11}$/.test(String(shipping.identityNumber || ''))) {
     return res.status(400).json({ error: 'invalid-identity', message: 'Geçerli bir T.C. Kimlik Numarası giriniz.' });
+  }
+  const gsmNumber = normalizeGsm(shipping.phone);
+  if (!/^\+905\d{9}$/.test(gsmNumber)) {
+    return res.status(400).json({ error: 'invalid-phone', message: 'Geçerli bir telefon numarası giriniz.' });
   }
 
   let subtotal = 0;
@@ -132,7 +141,7 @@ export default async function handler(req, res) {
       surname,
       identityNumber: shipping.identityNumber,
       email: shipping.email,
-      gsmNumber: shipping.phone || '',
+      gsmNumber,
       registrationAddress: shipping.address || '-',
       city: shipping.city || 'İstanbul',
       country: 'Turkey',
