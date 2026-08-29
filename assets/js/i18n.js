@@ -209,7 +209,8 @@ window.OLYMPOS_I18N = (() => {
         formName: 'Ad Soyad', formEmail: 'E-posta', formSubject: 'Konu',
         subjGeneral: 'Genel Soru', subjOrder: 'Sipariş Durumu', subjCustom: 'Özel Sipariş', subjWholesale: 'Toptan İşbirliği',
         formMessage: 'Mesajınız', formSubmit: 'Mesaj Gönder', formSending: 'Gönderiliyor…',
-        formSuccessToast: 'Mesajınız alındı. En kısa sürede dönüş yapacağız.'
+        formSuccessToast: 'Mesajınız alındı. En kısa sürede dönüş yapacağız.',
+        formErrorToast: 'Mesajınız gönderilemedi. Lütfen tekrar deneyin ya da bize doğrudan e-posta gönderin.'
       },
       faq: {
         eyebrow: 'Yardım', title: 'Sıkça Sorulan Sorular', subtitle: 'Malzeme, kargo, iade ve bakım hakkında en çok sorulan sorular.',
@@ -441,7 +442,8 @@ window.OLYMPOS_I18N = (() => {
         formName: 'Full Name', formEmail: 'Email', formSubject: 'Subject',
         subjGeneral: 'General Question', subjOrder: 'Order Status', subjCustom: 'Custom Order', subjWholesale: 'Wholesale Partnership',
         formMessage: 'Your Message', formSubmit: 'Send Message', formSending: 'Sending…',
-        formSuccessToast: 'Your message has been received. We’ll get back to you shortly.'
+        formSuccessToast: 'Your message has been received. We’ll get back to you shortly.',
+        formErrorToast: 'Your message could not be sent. Please try again or email us directly.'
       },
       faq: {
         eyebrow: 'Help', title: 'Frequently Asked Questions', subtitle: 'The most common questions about materials, shipping, returns, and care.',
@@ -673,7 +675,8 @@ window.OLYMPOS_I18N = (() => {
         formName: 'Vor- und Nachname', formEmail: 'E-Mail', formSubject: 'Betreff',
         subjGeneral: 'Allgemeine Frage', subjOrder: 'Bestellstatus', subjCustom: 'Sonderanfertigung', subjWholesale: 'Großhandelspartnerschaft',
         formMessage: 'Ihre Nachricht', formSubmit: 'Nachricht senden', formSending: 'Wird gesendet…',
-        formSuccessToast: 'Ihre Nachricht ist eingegangen. Wir melden uns in Kürze bei Ihnen.'
+        formSuccessToast: 'Ihre Nachricht ist eingegangen. Wir melden uns in Kürze bei Ihnen.',
+        formErrorToast: 'Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut oder schreiben Sie uns direkt eine E-Mail.'
       },
       faq: {
         eyebrow: 'Hilfe', title: 'Häufig gestellte Fragen', subtitle: 'Die häufigsten Fragen zu Material, Versand, Rückgabe und Pflege.',

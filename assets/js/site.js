@@ -711,22 +711,34 @@ const OLYMPOS = (() => {
   }
 
   /* ---------------- contact form ---------------- */
+  const CONTACT_FORM_ENDPOINT = 'https://formspree.io/f/xljedbyd';
+
   function initContactForm() {
     const form = document.getElementById('contact-form');
     if (!form) return;
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const T = window.OLYMPOS_I18N;
+      if (!form.checkValidity()) { form.reportValidity(); return; }
       const btn = form.querySelector('button[type="submit"]');
       const original = btn.textContent;
       btn.textContent = T.t('contact.formSending');
       btn.disabled = true;
-      setTimeout(() => {
+      try {
+        const res = await fetch(CONTACT_FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form)
+        });
+        if (!res.ok) throw new Error('Formspree submit failed');
         toast(T.t('contact.formSuccessToast'), 'info');
         form.reset();
+      } catch (err) {
+        toast(T.t('contact.formErrorToast'), 'info');
+      } finally {
         btn.textContent = original;
         btn.disabled = false;
-      }, 900);
+      }
     });
   }
 
