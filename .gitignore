@@ -1,2 +1,4 @@
 node_modules/
 docs/olympos-yeni/kayıt-wordpress/
+__MACOSX/
+.DS_Store
