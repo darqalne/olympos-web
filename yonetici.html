@@ -68,11 +68,6 @@
 
       <!-- ============ DASHBOARD ============ -->
       <section class="admin-panel active" data-panel="dashboard">
-        <div class="storage-note">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-          <span>Bu panel şu an <strong>tarayıcı içi mock veritabanı</strong> ile çalışıyor — kullanıcılar, siparişler ve ürün düzenlemeleri bu tarayıcıda saklanıyor. Gerçek bir veritabanına bağlandığında, bu ekranlar aynı kalacak, sadece arkadaki veri kaynağı değişecek.</span>
-        </div>
-
         <div class="stat-grid">
           <div class="stat-card">
             <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></div>
@@ -621,21 +616,37 @@
         <td>${o.items.reduce((s, i) => s + i.qty, 0)} ürün</td>
         <td class="strong">${OLYMPOS.formatPrice(o.subtotal)}</td>
         <td>
-          <select class="status-select" data-order-status="${esc(o.id)}">
-            ${Object.keys(STATUS_LABEL).map(k => `<option value="${k}" ${k === o.status ? 'selected' : ''}>${STATUS_LABEL[k]}</option>`).join('')}
-          </select>
+          <div style="display:flex; align-items:center; gap:.5rem;">
+            <select class="status-select" data-order-status="${esc(o.id)}" data-current="${esc(o.status)}">
+              ${Object.keys(STATUS_LABEL).map(k => `<option value="${k}" ${k === o.status ? 'selected' : ''}>${STATUS_LABEL[k]}</option>`).join('')}
+            </select>
+            <button type="button" class="btn btn-accent btn-sm" data-order-save style="display:none;">Kaydet</button>
+          </div>
         </td>
         <td><button type="button" class="btn btn-outline btn-sm" data-order-detail="${esc(o.id)}">Detay</button></td>
       </tr>
     `).join('');
 
     body.querySelectorAll('[data-order-status]').forEach(sel => {
-      sel.addEventListener('change', async () => {
-        await OLYMPOS_BACKEND.updateOrderStatus(sel.dataset.orderStatus, sel.value);
-        await refreshOrders();
-        OLYMPOS.toast('Sipariş durumu güncellendi, müşteriye bilgilendirme e-postası gönderildi.');
-        renderOrders();
-        renderDashboard();
+      sel.addEventListener('change', () => {
+        sel.closest('tr').querySelector('[data-order-save]').style.display = sel.value !== sel.dataset.current ? 'inline-flex' : 'none';
+      });
+    });
+    body.querySelectorAll('[data-order-save]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const sel = btn.closest('tr').querySelector('[data-order-status]');
+        const original = btn.textContent;
+        btn.disabled = true; btn.textContent = 'Kaydediliyor…';
+        try {
+          await OLYMPOS_BACKEND.updateOrderStatus(sel.dataset.orderStatus, sel.value);
+          await refreshOrders();
+          OLYMPOS.toast('Sipariş durumu güncellendi, müşteriye bilgilendirme e-postası gönderildi.');
+          renderOrders();
+          renderDashboard();
+        } catch (err) {
+          OLYMPOS.toast(err.message || 'Güncellenemedi.');
+          btn.disabled = false; btn.textContent = original;
+        }
       });
     });
     body.querySelectorAll('[data-order-detail]').forEach(btn => {

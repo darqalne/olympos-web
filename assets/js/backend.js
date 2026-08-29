@@ -305,29 +305,73 @@ window.OLYMPOS_BACKEND = (() => {
      swallowed here, never allowed to block an order or status update
      that already succeeded in Firestore. */
   function bt2(key, vars) { return window.OLYMPOS_I18N.t('email.' + key, vars); }
-
-  function emailWrapper(bodyHtml) {
-    return `<div style="font-family:Georgia,'Times New Roman',serif; background:#F7F1E4; padding:32px 16px;">
-      <div style="max-width:480px; margin:0 auto; background:#FBF7EF; border-radius:4px; overflow:hidden;">
-        <div style="background:#241811; padding:22px 32px;">
-          <span style="color:#FBF7EF; font-size:19px; letter-spacing:0.08em;">OLYMPOS</span>
-        </div>
-        <div style="padding:32px; color:#4A3320; font-size:15px; line-height:1.6;">${bodyHtml}</div>
-        <div style="padding:18px 32px; border-top:1px solid rgba(74,51,32,0.15); font-size:12px; color:#8A6644;">
-          ${bt2('footerNote')}<br>Olympos Leather · Buca, İzmir · info@olymposleather.com.tr
-        </div>
-      </div>
-    </div>`;
+  function escHtml(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
   }
 
-  function orderItemsHtml(items) {
+  // Table-based markup throughout — div/flexbox-style CSS is
+  // unreliable in email clients (Outlook desktop especially), tables
+  // with inline styles are the one layout approach every client
+  // renders consistently. Fonts fall back to system serif/sans stacks
+  // that approximate the site's Cinzel/Jost pairing, since web fonts
+  // don't load reliably in most inboxes either.
+  function emailWrapper(bodyHtml) {
+    const logoUrl = window.location.origin + '/assets/img/brand/logo.png';
+    return `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F1E4; padding:36px 16px;">
+  <tr><td align="center">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px; background:#FFFFFF; border:1px solid rgba(74,51,32,0.12); border-radius:6px; overflow:hidden;">
+      <tr><td style="height:3px; line-height:3px; font-size:0; background:#C6872E;">&nbsp;</td></tr>
+      <tr><td align="center" style="padding:30px 32px 22px;">
+        <img src="${logoUrl}" width="132" alt="Olympos Leather" style="display:block; width:132px; max-width:55%; height:auto; border:0;">
+      </td></tr>
+      <tr><td style="padding:0 32px;"><div style="border-top:1px solid rgba(74,51,32,0.1); line-height:0; font-size:0;">&nbsp;</div></td></tr>
+      <tr><td style="padding:30px 32px 6px; font-family:'Segoe UI',Arial,Helvetica,sans-serif; color:#4A3320; font-size:15px; line-height:1.65;">
+        ${bodyHtml}
+      </td></tr>
+      <tr><td style="padding:22px 32px 28px; border-top:1px solid rgba(74,51,32,0.1); margin-top:20px; font-family:Arial,Helvetica,sans-serif; font-size:12px; color:#8A6644; line-height:1.7;">
+        ${bt2('footerNote')}<br>
+        <strong style="color:#4A3320;">Olympos Leather</strong> · Buca, İzmir<br>
+        <a href="mailto:info@olymposleather.com.tr" style="color:#A96E22; text-decoration:none;">info@olymposleather.com.tr</a>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>`;
+  }
+
+  function greetingHtml(name, message) {
+    return `
+      <p style="margin:0 0 6px; font-family:Georgia,'Times New Roman',serif; font-size:23px; color:#241811; letter-spacing:0.01em;">${escHtml(name ? bt2('confirmGreeting', { name }) : '')}</p>
+      <p style="margin:0 0 22px; font-size:15px; color:#6B4A2F;">${message}</p>`;
+  }
+
+  function orderNumberBoxHtml(number) {
+    return `
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F1E4; border-radius:5px; margin:0 0 22px;">
+        <tr><td style="padding:14px 18px; font-family:Arial,Helvetica,sans-serif;">
+          <span style="display:block; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; color:#A96E22; margin-bottom:3px;">${bt2('confirmOrderNumber')}</span>
+          <strong style="font-size:16px; color:#241811;">${escHtml(number)}</strong>
+        </td></tr>
+      </table>`;
+  }
+
+  function orderItemsHtml(items, subtotal) {
     const fmt = window.OLYMPOS.formatPrice;
-    return `<table style="width:100%; border-collapse:collapse; margin:16px 0;">${
-      items.map(it => `<tr>
-        <td style="padding:6px 0; font-size:14px;">${it.name} × ${it.qty}</td>
-        <td style="padding:6px 0; font-size:14px; text-align:right;">${fmt(it.price * it.qty)}</td>
-      </tr>`).join('')
-    }</table>`;
+    const rows = items.map(it => `
+      <tr>
+        <td style="padding:9px 0; border-bottom:1px solid rgba(74,51,32,0.08); font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#241811;">${escHtml(it.name)} <span style="color:#8A6644;">× ${it.qty}</span></td>
+        <td style="padding:9px 0; border-bottom:1px solid rgba(74,51,32,0.08); font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#241811; text-align:right; white-space:nowrap;">${fmt(it.price * it.qty)}</td>
+      </tr>`).join('');
+    return `
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin:0 0 4px;">
+        ${rows}
+        <tr>
+          <td style="padding:14px 0 0; font-family:Georgia,'Times New Roman',serif; font-size:16px; color:#241811; font-weight:bold;">${bt2('confirmTotal')}</td>
+          <td style="padding:14px 0 0; font-family:Georgia,'Times New Roman',serif; font-size:18px; color:#241811; font-weight:bold; text-align:right;">${fmt(subtotal)}</td>
+        </tr>
+      </table>`;
   }
 
   async function sendTransactionalEmail(to, subject, html) {
@@ -346,16 +390,19 @@ window.OLYMPOS_BACKEND = (() => {
     return window.location.origin + '/' + window.OLYMPOS_I18N.href('siparis-takip');
   }
   function trackCtaHtml() {
-    return `<p style="margin-top:24px;"><a href="${trackOrderUrl()}" style="display:inline-block; background:#4A3320; color:#FBF7EF; padding:12px 22px; border-radius:3px; text-decoration:none; font-size:13px; letter-spacing:0.04em;">${bt2('confirmTrackCta')}</a></p>`;
+    return `
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin:26px 0 4px;">
+        <tr><td style="border-radius:4px; background:#4A3320;">
+          <a href="${trackOrderUrl()}" target="_blank" style="display:inline-block; padding:13px 26px; font-family:Arial,Helvetica,sans-serif; font-size:13px; letter-spacing:0.04em; color:#FBF7EF; text-decoration:none; font-weight:600;">${bt2('confirmTrackCta')}</a>
+        </td></tr>
+      </table>`;
   }
 
   async function sendOrderConfirmation(order) {
     const html = emailWrapper(`
-      <p>${bt2('confirmGreeting', { name: order.shipping.name || '' })}</p>
-      <p>${bt2('confirmBody')}</p>
-      <p style="margin-top:20px;"><strong>${bt2('confirmOrderNumber')}:</strong> ${order.number}</p>
-      ${orderItemsHtml(order.items)}
-      <p style="font-size:16px;"><strong>${bt2('confirmTotal')}:</strong> ${window.OLYMPOS.formatPrice(order.subtotal)}</p>
+      ${greetingHtml(order.shipping.name, escHtml(bt2('confirmBody')))}
+      ${orderNumberBoxHtml(order.number)}
+      ${orderItemsHtml(order.items, order.subtotal)}
       ${trackCtaHtml()}
     `);
     await sendTransactionalEmail(order.email, bt2('confirmSubject', { number: order.number }), html);
@@ -365,9 +412,8 @@ window.OLYMPOS_BACKEND = (() => {
     const key = { received: 'Received', preparing: 'Preparing', shipped: 'Shipped', delivered: 'Delivered' }[status];
     if (!key) return;
     const html = emailWrapper(`
-      <p>${bt2('confirmGreeting', { name: order.shipping.name || '' })}</p>
-      <p>${bt2('statusBody' + key)}</p>
-      <p style="margin-top:20px;"><strong>${bt2('confirmOrderNumber')}:</strong> ${order.number}</p>
+      ${greetingHtml(order.shipping.name, escHtml(bt2('statusBody' + key)))}
+      ${orderNumberBoxHtml(order.number)}
       ${trackCtaHtml()}
     `);
     await sendTransactionalEmail(order.email, bt2('statusSubject' + key, { number: order.number }), html);
@@ -381,7 +427,7 @@ window.OLYMPOS_BACKEND = (() => {
       throw fail('Bu işlem için yönetici girişi gerekiyor.', 'not-authorized');
     }
     const idToken = await fbAuth.currentUser.getIdToken();
-    const html = emailWrapper(`<div style="white-space:pre-wrap;">${String(message).replace(/</g, '&lt;')}</div>`);
+    const html = emailWrapper(`<div style="white-space:pre-wrap; font-family:'Segoe UI',Arial,Helvetica,sans-serif; font-size:15px; color:#4A3320;">${escHtml(message)}</div>`);
     const res = await fetch('/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-site-secret': SITE_SECRET },

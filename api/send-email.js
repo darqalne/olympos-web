@@ -43,10 +43,14 @@
 
 import nodemailer from 'nodemailer';
 
-// Mirrors backend.js's ADMIN_EMAILS — kept in sync by hand, same as
-// that file's own comment describes for promoting a new admin.
+// Fallback list for the one account promoted at registration time —
+// mirrors backend.js's ADMIN_EMAILS. Any OTHER admin (promoted later
+// by hand-flipping isAdmin:true on their users/{uid} Firestore doc,
+// per that file's own comment) is recognized via the Firestore check
+// below instead, not by editing this list.
 const ADMIN_EMAILS = ['picturesshadow0@gmail.com'];
 const FIREBASE_API_KEY = 'AIzaSyDWDf0hp6BD6RkB0zAo2RkGis2yKUE_94E';
+const FIREBASE_PROJECT_ID = 'olympos-web-panel';
 const MAX_RECIPIENTS = 50;
 
 let cachedTransporter = null;
@@ -63,20 +67,36 @@ function getTransporter() {
 }
 
 // Verifies a Firebase Auth ID token belongs to a real, currently valid
-// session, using Google's own public token-lookup endpoint (no
-// firebase-admin / service-account key needed). Returns the verified
-// email on success, or null.
+// session (via Google's own public token-lookup endpoint), then checks
+// admin status the same way the client already does for yonetici.html:
+// the users/{uid}.isAdmin flag in Firestore. Reads that doc through
+// Firestore's REST API using the caller's own idToken as bearer auth —
+// this is subject to the project's existing security rules exactly
+// like the client SDK is (a user may always read their own users/{uid}
+// doc), so no firebase-admin / service-account key is needed here.
+// Returns the verified email on success, or null.
 async function verifiedAdminEmail(idToken) {
   if (!idToken) return null;
   try {
-    const res = await fetch(
+    const lookupRes = await fetch(
       `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_API_KEY}`,
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken }) }
     );
-    if (!res.ok) return null;
-    const data = await res.json();
-    const email = (data.users && data.users[0] && data.users[0].email || '').toLowerCase();
-    return ADMIN_EMAILS.includes(email) ? email : null;
+    if (!lookupRes.ok) return null;
+    const lookupData = await lookupRes.json();
+    const user = lookupData.users && lookupData.users[0];
+    if (!user) return null;
+    const email = (user.email || '').toLowerCase();
+    if (ADMIN_EMAILS.includes(email)) return email;
+
+    const docRes = await fetch(
+      `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${user.localId}`,
+      { headers: { Authorization: `Bearer ${idToken}` } }
+    );
+    if (!docRes.ok) return null;
+    const doc = await docRes.json();
+    const isAdmin = !!(doc.fields && doc.fields.isAdmin && doc.fields.isAdmin.booleanValue);
+    return isAdmin ? email : null;
   } catch {
     return null;
   }
