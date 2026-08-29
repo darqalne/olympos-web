@@ -1,0 +1,8 @@
+{
+  "name": "olympos-web",
+  "private": true,
+  "description": "Olympos Leather storefront — static site plus a couple of Vercel serverless functions under /api.",
+  "dependencies": {
+    "nodemailer": "^9.0.6"
+  }
+}

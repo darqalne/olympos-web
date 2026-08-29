@@ -223,6 +223,21 @@ window.OLYMPOS_I18N = (() => {
         a5Html: 'Sipariş numaranız ve siparişte kullandığınız e-posta adresiyle <a href="siparis-takip" class="underline hover:text-umber-800">Sipariş Takip</a> sayfasından anlık durumu görebilirsiniz. Hesabınıza giriş yaptıysanız geçmiş siparişlerinizi <a href="hesabim" class="underline hover:text-umber-800">Hesabım</a> sayfasında da bulabilirsiniz.'
       },
       notFound: { eyebrow: '404', title: 'Sayfa Bulunamadı', text: 'Aradığınız sayfa taşınmış, kaldırılmış olabilir ya da hiç var olmadı. Ama koleksiyonumuz yerinde duruyor.', home: 'Ana Sayfaya Dön', shop: 'Mağazaya Göz At' },
+      email: {
+        confirmSubject: 'Siparişiniz Alındı — {number}',
+        confirmGreeting: 'Merhaba {name},',
+        confirmBody: 'Siparişiniz başarıyla alındı ve hazırlanmaya başlanacak. Aşağıda sipariş özetinizi bulabilirsiniz.',
+        confirmOrderNumber: 'Sipariş Numarası', confirmTotal: 'Toplam', confirmTrackCta: 'Siparişimi Takip Et',
+        statusSubjectPreparing: 'Siparişiniz Hazırlanıyor — {number}',
+        statusSubjectShipped: 'Siparişiniz Kargoya Verildi — {number}',
+        statusSubjectDelivered: 'Siparişiniz Teslim Edildi — {number}',
+        statusSubjectReceived: 'Siparişiniz Alındı — {number}',
+        statusBodyPreparing: 'İyi haber — siparişiniz şu anda atölyemizde hazırlanıyor.',
+        statusBodyShipped: 'Siparişiniz kargoya verildi, yakında elinizde olacak.',
+        statusBodyDelivered: 'Siparişiniz teslim edildi. Bizi tercih ettiğiniz için teşekkür ederiz!',
+        statusBodyReceived: 'Siparişiniz tarafımıza ulaştı.',
+        footerNote: 'Bu e-postayı Olympos Leather üzerinden verdiğiniz bir siparişle ilgili aldınız.'
+      },
       privacy: {
         eyebrow: 'Yasal', title: 'Gizlilik Politikası', updated: 'Son güncelleme: 27 Ağustos 2026',
         s1Title: '1. Veri Sorumlusu',
@@ -456,6 +471,21 @@ window.OLYMPOS_I18N = (() => {
         a5Html: 'You can see the current status any time on the <a href="siparis-takip" class="underline hover:text-umber-800">Track Order</a> page using your order number and the email address you used to order. If you’re signed in, you can also find your past orders on the <a href="hesabim" class="underline hover:text-umber-800">Account</a> page.'
       },
       notFound: { eyebrow: '404', title: 'Page Not Found', text: 'The page you’re looking for may have moved, been removed, or never existed. But our collection is right where you left it.', home: 'Back to Home', shop: 'Browse the Shop' },
+      email: {
+        confirmSubject: 'Your Order Was Received — {number}',
+        confirmGreeting: 'Hi {name},',
+        confirmBody: 'Your order was received successfully and will start being prepared. Here is your order summary.',
+        confirmOrderNumber: 'Order Number', confirmTotal: 'Total', confirmTrackCta: 'Track My Order',
+        statusSubjectPreparing: 'Your Order Is Being Prepared — {number}',
+        statusSubjectShipped: 'Your Order Has Shipped — {number}',
+        statusSubjectDelivered: 'Your Order Was Delivered — {number}',
+        statusSubjectReceived: 'Your Order Was Received — {number}',
+        statusBodyPreparing: 'Good news — your order is now being prepared in our workshop.',
+        statusBodyShipped: 'Your order has shipped and will be with you soon.',
+        statusBodyDelivered: 'Your order has been delivered. Thank you for choosing us!',
+        statusBodyReceived: 'Your order has reached us.',
+        footerNote: 'You received this email about an order placed with Olympos Leather.'
+      },
       privacy: {
         eyebrow: 'Legal', title: 'Privacy Policy', updated: 'Last updated: August 27, 2026',
         s1Title: '1. Data Controller',
@@ -689,6 +719,21 @@ window.OLYMPOS_I18N = (() => {
         a5Html: 'Mit Ihrer Bestellnummer und der bei der Bestellung verwendeten E-Mail-Adresse können Sie den aktuellen Status jederzeit auf der Seite <a href="siparis-takip" class="underline hover:text-umber-800">Bestellung verfolgen</a> einsehen. Wenn Sie angemeldet sind, finden Sie Ihre früheren Bestellungen auch auf der Seite <a href="hesabim" class="underline hover:text-umber-800">Konto</a>.'
       },
       notFound: { eyebrow: '404', title: 'Seite nicht gefunden', text: 'Die gesuchte Seite wurde möglicherweise verschoben, entfernt oder hat nie existiert. Aber unsere Kollektion ist noch genau dort, wo Sie sie verlassen haben.', home: 'Zur Startseite', shop: 'Shop durchsuchen' },
+      email: {
+        confirmSubject: 'Ihre Bestellung ist eingegangen — {number}',
+        confirmGreeting: 'Hallo {name},',
+        confirmBody: 'Ihre Bestellung ist erfolgreich eingegangen und wird nun vorbereitet. Nachfolgend finden Sie Ihre Bestellübersicht.',
+        confirmOrderNumber: 'Bestellnummer', confirmTotal: 'Gesamt', confirmTrackCta: 'Meine Bestellung verfolgen',
+        statusSubjectPreparing: 'Ihre Bestellung wird vorbereitet — {number}',
+        statusSubjectShipped: 'Ihre Bestellung wurde versandt — {number}',
+        statusSubjectDelivered: 'Ihre Bestellung wurde zugestellt — {number}',
+        statusSubjectReceived: 'Ihre Bestellung ist eingegangen — {number}',
+        statusBodyPreparing: 'Gute Nachrichten — Ihre Bestellung wird gerade in unserer Werkstatt vorbereitet.',
+        statusBodyShipped: 'Ihre Bestellung wurde versandt und ist bald bei Ihnen.',
+        statusBodyDelivered: 'Ihre Bestellung wurde zugestellt. Vielen Dank, dass Sie sich für uns entschieden haben!',
+        statusBodyReceived: 'Ihre Bestellung ist bei uns eingegangen.',
+        footerNote: 'Sie haben diese E-Mail zu einer bei Olympos Leather aufgegebenen Bestellung erhalten.'
+      },
       privacy: {
         eyebrow: 'Rechtliches', title: 'Datenschutzerklärung', updated: 'Zuletzt aktualisiert: 27. August 2026',
         s1Title: '1. Verantwortlicher',

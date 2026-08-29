@@ -53,6 +53,12 @@ window.OLYMPOS_BACKEND = (() => {
   const SESSION_KEY = 'olympos_session_v1';
   const ORDERS_KEY = 'olympos_orders_v1';
 
+  // Gates /api/send-email against random/automated abuse (see that
+  // file's header comment). Must match its EMAIL_SITE_SECRET env var
+  // exactly — it's not truly secret (this file is public), but it
+  // stops drive-by scanners from using the endpoint as an open relay.
+  const SITE_SECRET = 'NROsU7gPg0LPUz4h_nxlauPK2W-K3mfE';
+
   function readJSON(key, fallback) {
     try { const v = JSON.parse(localStorage.getItem(key)); return v == null ? fallback : v; }
     catch { return fallback; }
@@ -292,6 +298,100 @@ window.OLYMPOS_BACKEND = (() => {
     return publicUser(user);
   }
 
+  /* ---------------- transactional email ----------------
+     Posts to /api/send-email (Gmail SMTP, see that file's header for
+     activation). Always fire-and-forget from the caller's point of
+     view — a failed or not-yet-configured send is logged and
+     swallowed here, never allowed to block an order or status update
+     that already succeeded in Firestore. */
+  function bt2(key, vars) { return window.OLYMPOS_I18N.t('email.' + key, vars); }
+
+  function emailWrapper(bodyHtml) {
+    return `<div style="font-family:Georgia,'Times New Roman',serif; background:#F7F1E4; padding:32px 16px;">
+      <div style="max-width:480px; margin:0 auto; background:#FBF7EF; border-radius:4px; overflow:hidden;">
+        <div style="background:#241811; padding:22px 32px;">
+          <span style="color:#FBF7EF; font-size:19px; letter-spacing:0.08em;">OLYMPOS</span>
+        </div>
+        <div style="padding:32px; color:#4A3320; font-size:15px; line-height:1.6;">${bodyHtml}</div>
+        <div style="padding:18px 32px; border-top:1px solid rgba(74,51,32,0.15); font-size:12px; color:#8A6644;">
+          ${bt2('footerNote')}<br>Olympos Leather · Buca, İzmir · info@olymposleather.com.tr
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function orderItemsHtml(items) {
+    const fmt = window.OLYMPOS.formatPrice;
+    return `<table style="width:100%; border-collapse:collapse; margin:16px 0;">${
+      items.map(it => `<tr>
+        <td style="padding:6px 0; font-size:14px;">${it.name} × ${it.qty}</td>
+        <td style="padding:6px 0; font-size:14px; text-align:right;">${fmt(it.price * it.qty)}</td>
+      </tr>`).join('')
+    }</table>`;
+  }
+
+  async function sendTransactionalEmail(to, subject, html) {
+    try {
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-site-secret': SITE_SECRET },
+        body: JSON.stringify({ to, subject, html })
+      });
+    } catch (err) {
+      console.error('sendTransactionalEmail failed', err);
+    }
+  }
+
+  function trackOrderUrl() {
+    return window.location.origin + '/' + window.OLYMPOS_I18N.href('siparis-takip');
+  }
+  function trackCtaHtml() {
+    return `<p style="margin-top:24px;"><a href="${trackOrderUrl()}" style="display:inline-block; background:#4A3320; color:#FBF7EF; padding:12px 22px; border-radius:3px; text-decoration:none; font-size:13px; letter-spacing:0.04em;">${bt2('confirmTrackCta')}</a></p>`;
+  }
+
+  async function sendOrderConfirmation(order) {
+    const html = emailWrapper(`
+      <p>${bt2('confirmGreeting', { name: order.shipping.name || '' })}</p>
+      <p>${bt2('confirmBody')}</p>
+      <p style="margin-top:20px;"><strong>${bt2('confirmOrderNumber')}:</strong> ${order.number}</p>
+      ${orderItemsHtml(order.items)}
+      <p style="font-size:16px;"><strong>${bt2('confirmTotal')}:</strong> ${window.OLYMPOS.formatPrice(order.subtotal)}</p>
+      ${trackCtaHtml()}
+    `);
+    await sendTransactionalEmail(order.email, bt2('confirmSubject', { number: order.number }), html);
+  }
+
+  async function sendOrderStatusEmail(order, status) {
+    const key = { received: 'Received', preparing: 'Preparing', shipped: 'Shipped', delivered: 'Delivered' }[status];
+    if (!key) return;
+    const html = emailWrapper(`
+      <p>${bt2('confirmGreeting', { name: order.shipping.name || '' })}</p>
+      <p>${bt2('statusBody' + key)}</p>
+      <p style="margin-top:20px;"><strong>${bt2('confirmOrderNumber')}:</strong> ${order.number}</p>
+      ${trackCtaHtml()}
+    `);
+    await sendTransactionalEmail(order.email, bt2('statusSubject' + key, { number: order.number }), html);
+  }
+
+  // admin-only broadcast to many/all users at once (yonetici.html) —
+  // proves the caller is a signed-in admin via their live Firebase ID
+  // token, which /api/send-email verifies itself before sending.
+  async function broadcastNotification({ to, subject, message }) {
+    if (CONFIG.auth.mode !== 'firebase' || !fbAuth.currentUser) {
+      throw fail('Bu işlem için yönetici girişi gerekiyor.', 'not-authorized');
+    }
+    const idToken = await fbAuth.currentUser.getIdToken();
+    const html = emailWrapper(`<div style="white-space:pre-wrap;">${String(message).replace(/</g, '&lt;')}</div>`);
+    const res = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-site-secret': SITE_SECRET },
+      body: JSON.stringify({ to, subject, html, idToken })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw fail(data.message || 'E-posta gönderilemedi.', data.error || 'send-failed');
+    return data;
+  }
+
   /* ---------------- orders ---------------- */
   function makeOrderNumber() {
     return 'OLY-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
@@ -310,6 +410,7 @@ window.OLYMPOS_BACKEND = (() => {
         history: [{ status: 'received', at: Date.now() }]
       };
       await fbDb.collection('orders').doc(number).set(order);
+      sendOrderConfirmation(order);
       return order;
     }
 
@@ -329,6 +430,7 @@ window.OLYMPOS_BACKEND = (() => {
     };
     orders.push(order);
     writeJSON(ORDERS_KEY, orders);
+    sendOrderConfirmation(order);
     return order;
   }
 
@@ -414,7 +516,9 @@ window.OLYMPOS_BACKEND = (() => {
       const order = snap.data();
       const history = [...(order.history || []), { status, at: Date.now() }];
       await ref.update({ status, history });
-      return { ...order, status, history };
+      const updated = { ...order, status, history };
+      sendOrderStatusEmail(updated, status);
+      return updated;
     }
 
     const orders = readJSON(ORDERS_KEY, []);
@@ -424,6 +528,7 @@ window.OLYMPOS_BACKEND = (() => {
     order.history = order.history || [];
     order.history.push({ status, at: Date.now() });
     writeJSON(ORDERS_KEY, orders);
+    sendOrderStatusEmail(order, status);
     return order;
   }
 
@@ -454,6 +559,7 @@ window.OLYMPOS_BACKEND = (() => {
     register, login, logout, currentUser, requireAuth, requireAdmin, updateProfile,
     createOrder, getOrdersForUser, findOrder,
     processPayment,
-    getAllUsers, getAllOrders, updateOrderStatus
+    getAllUsers, getAllOrders, updateOrderStatus,
+    broadcastNotification
   };
 })();

@@ -121,6 +121,7 @@
               <p class="sub">Kayıtlı tüm hesaplar ve bilgileri</p>
             </div>
             <div class="admin-toolbar">
+              <button type="button" class="btn btn-primary btn-sm" id="notify-btn">Bildirim Gönder</button>
               <div class="admin-search">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
                 <input type="text" id="users-search" placeholder="İsim veya e-posta ara…">
@@ -129,7 +130,7 @@
           </div>
           <div class="admin-table-wrap">
             <table class="admin-table">
-              <thead><tr><th>Kullanıcı</th><th>Telefon</th><th>Şehir</th><th>Kayıt Tarihi</th><th>Sipariş</th><th>Toplam Harcama</th></tr></thead>
+              <thead><tr><th style="width:2.5rem;"><input type="checkbox" id="users-select-all" aria-label="Tümünü seç"></th><th>Kullanıcı</th><th>Telefon</th><th>Şehir</th><th>Kayıt Tarihi</th><th>Sipariş</th><th>Toplam Harcama</th></tr></thead>
               <tbody id="users-table-body"></tbody>
             </table>
           </div>
@@ -204,6 +205,36 @@
     <div class="admin-modal-foot">
       <button type="button" class="btn btn-outline btn-sm" data-close-view>Kapat</button>
     </div>
+  </div>
+</div>
+
+<!-- ============ notify (broadcast email) modal ============ -->
+<div class="admin-modal-backdrop" id="notify-modal-backdrop">
+  <div class="admin-modal">
+    <div class="admin-modal-head">
+      <h3>Bildirim Gönder</h3>
+      <button type="button" class="icon-btn" data-close-notify aria-label="Kapat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="notify-form">
+      <div class="admin-modal-body">
+        <p class="muted" id="notify-recipient-note" style="margin-bottom:1.1rem; font-size:.85rem;"></p>
+        <div class="field">
+          <label for="notify-subject">Konu</label>
+          <input id="notify-subject" required placeholder="Ör. Yeni koleksiyon sizi bekliyor">
+        </div>
+        <div class="field">
+          <label for="notify-message">Mesaj</label>
+          <textarea id="notify-message" rows="6" required placeholder="Kullanıcılara gönderilecek mesajın metni…"></textarea>
+        </div>
+        <p id="notify-error" class="muted" style="color:#B4432E; display:none; font-size:.85rem;"></p>
+      </div>
+      <div class="admin-modal-foot">
+        <button type="button" class="btn btn-outline btn-sm" data-close-notify>Vazgeç</button>
+        <button type="submit" class="btn btn-primary btn-sm" id="notify-submit">Gönder</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -398,6 +429,57 @@
   document.querySelectorAll('[data-close-view]').forEach(el => el.addEventListener('click', closeView));
   viewBackdrop.addEventListener('click', (e) => { if (e.target === viewBackdrop) closeView(); });
 
+  /* ---------------- notify (broadcast email) modal ---------------- */
+  const notifyBackdrop = document.getElementById('notify-modal-backdrop');
+  const notifyForm = document.getElementById('notify-form');
+  const notifyError = document.getElementById('notify-error');
+  const NOTIFY_BATCH_SIZE = 50; // must match api/send-email.js's MAX_RECIPIENTS
+
+  function notifyRecipients() {
+    return selectedUserEmails.size > 0
+      ? Array.from(selectedUserEmails)
+      : usersCache.map(u => u.email);
+  }
+
+  document.getElementById('notify-btn').addEventListener('click', () => {
+    const recipients = notifyRecipients();
+    document.getElementById('notify-recipient-note').textContent = selectedUserEmails.size > 0
+      ? `Seçili ${recipients.length} kullanıcıya gönderilecek.`
+      : `Hiç kullanıcı seçmediniz — tüm kullanıcılara (${recipients.length}) gönderilecek.`;
+    notifyError.style.display = 'none';
+    notifyForm.reset();
+    notifyBackdrop.classList.add('open');
+  });
+  function closeNotify() { notifyBackdrop.classList.remove('open'); }
+  document.querySelectorAll('[data-close-notify]').forEach(el => el.addEventListener('click', closeNotify));
+  notifyBackdrop.addEventListener('click', (e) => { if (e.target === notifyBackdrop) closeNotify(); });
+
+  notifyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    notifyError.style.display = 'none';
+    const subject = document.getElementById('notify-subject').value.trim();
+    const message = document.getElementById('notify-message').value.trim();
+    const recipients = notifyRecipients();
+    if (recipients.length === 0) { notifyError.textContent = 'Gönderilecek kullanıcı yok.'; notifyError.style.display = 'block'; return; }
+
+    const submitBtn = document.getElementById('notify-submit');
+    const original = submitBtn.textContent;
+    submitBtn.disabled = true; submitBtn.textContent = 'Gönderiliyor…';
+    try {
+      for (let i = 0; i < recipients.length; i += NOTIFY_BATCH_SIZE) {
+        const batch = recipients.slice(i, i + NOTIFY_BATCH_SIZE);
+        await OLYMPOS_BACKEND.broadcastNotification({ to: batch, subject, message });
+      }
+      closeNotify();
+      OLYMPOS.toast(`Bildirim ${recipients.length} kullanıcıya gönderildi.`);
+    } catch (err) {
+      notifyError.textContent = err.message || 'E-posta gönderilemedi. SMTP yapılandırmasını kontrol edin.';
+      notifyError.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false; submitBtn.textContent = original;
+    }
+  });
+
   /* ---------------- dashboard ---------------- */
   function renderDashboard() {
     const users = usersCache;
@@ -427,6 +509,8 @@
   }
 
   /* ---------------- users ---------------- */
+  const selectedUserEmails = new Set();
+
   function renderUsers() {
     const q = document.getElementById('users-search').value.trim().toLowerCase();
     const users = usersCache.filter(u =>
@@ -434,11 +518,13 @@
     );
     const body = document.getElementById('users-table-body');
     if (users.length === 0) {
-      body.innerHTML = `<tr class="admin-empty-row"><td colspan="6">Eşleşen kullanıcı yok.</td></tr>`;
+      body.innerHTML = `<tr class="admin-empty-row"><td colspan="7">Eşleşen kullanıcı yok.</td></tr>`;
+      updateSelectAllState([]);
       return;
     }
     body.innerHTML = users.map(u => `
       <tr class="clickable" data-user="${esc(u.id)}">
+        <td onclick="event.stopPropagation()"><input type="checkbox" class="user-select-checkbox" data-email="${esc(u.email)}" ${selectedUserEmails.has(u.email) ? 'checked' : ''}></td>
         <td>
           <div style="display:flex; align-items:center; gap:0.7rem;">
             <span class="avatar-chip">${esc(initials(u.name))}</span>
@@ -458,7 +544,30 @@
     body.querySelectorAll('tr[data-user]').forEach(row => {
       row.addEventListener('click', () => openUserDetail(row.dataset.user));
     });
+    body.querySelectorAll('.user-select-checkbox').forEach(cb => {
+      cb.addEventListener('change', () => {
+        if (cb.checked) selectedUserEmails.add(cb.dataset.email);
+        else selectedUserEmails.delete(cb.dataset.email);
+        updateSelectAllState(users);
+      });
+    });
+    updateSelectAllState(users);
   }
+
+  function updateSelectAllState(visibleUsers) {
+    const allBox = document.getElementById('users-select-all');
+    if (visibleUsers.length === 0) { allBox.checked = false; allBox.indeterminate = false; return; }
+    const selectedCount = visibleUsers.filter(u => selectedUserEmails.has(u.email)).length;
+    allBox.checked = selectedCount === visibleUsers.length;
+    allBox.indeterminate = selectedCount > 0 && selectedCount < visibleUsers.length;
+  }
+
+  document.getElementById('users-select-all').addEventListener('change', (e) => {
+    const q = document.getElementById('users-search').value.trim().toLowerCase();
+    const visibleUsers = usersCache.filter(u => !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+    visibleUsers.forEach(u => { if (e.target.checked) selectedUserEmails.add(u.email); else selectedUserEmails.delete(u.email); });
+    renderUsers();
+  });
 
   function openUserDetail(id) {
     const user = usersCache.find(u => u.id === id);
@@ -524,7 +633,7 @@
       sel.addEventListener('change', async () => {
         await OLYMPOS_BACKEND.updateOrderStatus(sel.dataset.orderStatus, sel.value);
         await refreshOrders();
-        OLYMPOS.toast('Sipariş durumu güncellendi.');
+        OLYMPOS.toast('Sipariş durumu güncellendi, müşteriye bilgilendirme e-postası gönderildi.');
         renderOrders();
         renderDashboard();
       });
