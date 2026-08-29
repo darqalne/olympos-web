@@ -531,6 +531,25 @@ const OLYMPOS = (() => {
     </div>`;
   }
 
+  // touch/tablet devices have no real hover, so the stitch fx below is
+  // triggered by scroll visibility there instead — desktop (real hover)
+  // is untouched, still driven purely by the :hover CSS.
+  const isTouchDevice = window.matchMedia('(hover: none)').matches;
+  let stitchRevealObserver = null;
+  function observeStitchReveal(wrap) {
+    if (!stitchRevealObserver) {
+      stitchRevealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('stitch-play');
+            stitchRevealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 1 });
+    }
+    stitchRevealObserver.observe(wrap);
+  }
+
   // attaches the wrap-around stitch/lacing hover fx to every .product-frame
   // inside the given grid container (used by both the shop grid and the
   // homepage featured grid)
@@ -544,6 +563,7 @@ const OLYMPOS = (() => {
       wrap.appendChild(frame);
       wrap.insertAdjacentHTML('beforeend', stitchFrontLayerSVG());
       frame.insertAdjacentHTML('beforeend', stitchHolesWrapperHTML());
+      if (isTouchDevice) observeStitchReveal(wrap);
     });
   }
 

@@ -580,6 +580,31 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 #shop-grid .olympos-card-wrapper:hover .b5, #featured-grid .olympos-card-wrapper:hover .b5 { stroke-dashoffset: 0; transition-delay: 1.20s; }
 #shop-grid .olympos-card-wrapper:hover .f6, #featured-grid .olympos-card-wrapper:hover .f6 { stroke-dashoffset: 0; transition-delay: 1.30s; }
 
+/* touch/tablet: no real hover, so the stitch fx plays once, slowly,
+   when the card scrolls fully into view (see observeStitchReveal in
+   site.js) instead of on hover — desktop is untouched. */
+@media (hover: none) {
+  #shop-grid .olympos-card-wrapper.stitch-play .punch-hole, #featured-grid .olympos-card-wrapper.stitch-play .punch-hole { opacity: 1; transform: scale(1); }
+  #shop-grid .olympos-card-wrapper.stitch-play .ph-1, #featured-grid .olympos-card-wrapper.stitch-play .ph-1 { transition-delay: 0.30s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .b0, #featured-grid .olympos-card-wrapper.stitch-play .b0 { stroke-dashoffset: 0; transition-delay: 0.40s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .f1, #featured-grid .olympos-card-wrapper.stitch-play .f1 { stroke-dashoffset: 0; transition-delay: 0.60s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .ph-2, #featured-grid .olympos-card-wrapper.stitch-play .ph-2 { transition-delay: 0.70s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .b1, #featured-grid .olympos-card-wrapper.stitch-play .b1 { stroke-dashoffset: 0; transition-delay: 0.80s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .f2, #featured-grid .olympos-card-wrapper.stitch-play .f2 { stroke-dashoffset: 0; transition-delay: 1.00s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .ph-3, #featured-grid .olympos-card-wrapper.stitch-play .ph-3 { transition-delay: 1.10s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .b2, #featured-grid .olympos-card-wrapper.stitch-play .b2 { stroke-dashoffset: 0; transition-delay: 1.20s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .f3, #featured-grid .olympos-card-wrapper.stitch-play .f3 { stroke-dashoffset: 0; transition-delay: 1.40s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .ph-4, #featured-grid .olympos-card-wrapper.stitch-play .ph-4 { transition-delay: 1.50s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .b3, #featured-grid .olympos-card-wrapper.stitch-play .b3 { stroke-dashoffset: 0; transition-delay: 1.60s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .f4, #featured-grid .olympos-card-wrapper.stitch-play .f4 { stroke-dashoffset: 0; transition-delay: 1.80s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .ph-5, #featured-grid .olympos-card-wrapper.stitch-play .ph-5 { transition-delay: 1.90s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .b4, #featured-grid .olympos-card-wrapper.stitch-play .b4 { stroke-dashoffset: 0; transition-delay: 2.00s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .f5, #featured-grid .olympos-card-wrapper.stitch-play .f5 { stroke-dashoffset: 0; transition-delay: 2.20s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .ph-6, #featured-grid .olympos-card-wrapper.stitch-play .ph-6 { transition-delay: 2.30s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .b5, #featured-grid .olympos-card-wrapper.stitch-play .b5 { stroke-dashoffset: 0; transition-delay: 2.40s; }
+  #shop-grid .olympos-card-wrapper.stitch-play .f6, #featured-grid .olympos-card-wrapper.stitch-play .f6 { stroke-dashoffset: 0; transition-delay: 2.60s; }
+}
+
 /* reverse (hover-out): unravels bottom to top; each hole stays open
    a beat after its own back-thread segment has retreated */
 #shop-grid .f6, #featured-grid .f6 { transition-delay: 0.00s; }
