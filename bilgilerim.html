@@ -137,10 +137,13 @@
 
   <section class="section-parchment pt-14 pb-10 md:pt-20 md:pb-14">
     <div class="max-w-7xl mx-auto px-5 md:px-8">
-      <a href="hesabim" class="flex items-center gap-2 text-sm text-umber-600 hover:text-umber-800">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        <span data-i18n="profile.backToAccount">Hesabım'a Dön</span>
-      </a>
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <a href="hesabim" class="flex items-center gap-2 text-sm text-umber-600 hover:text-umber-800">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="profile.backToAccount">Hesabım'a Dön</span>
+        </a>
+        <button id="logout-btn" class="btn btn-outline btn-sm" data-i18n="account.logout">Çıkış Yap</button>
+      </div>
       <p class="eyebrow mt-6"><span class="glyph" style="--gsize:14px"></span><span data-i18n="profile.eyebrow">Hesap</span></p>
       <h1 class="font-display text-4xl md:text-5xl text-umber-800 mt-4" data-i18n="profile.title">Bilgilerim</h1>
       <p class="text-umber-600 mt-4 max-w-xl" data-i18n="profile.subtitle">Ad soyad, e-posta, şifre ve teslimat adresinizi buradan güncelleyebilirsiniz.</p>
@@ -281,6 +284,11 @@
 
     const errorEl = document.getElementById('profile-error');
     const successEl = document.getElementById('profile-success');
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      OLYMPOS_BACKEND.logout();
+      window.location.href = '/';
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();

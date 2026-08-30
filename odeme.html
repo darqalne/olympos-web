@@ -405,13 +405,6 @@
     renderCheckoutLines();
     window.addEventListener('olympos:langchange', renderCheckoutLines);
 
-    const user = OLYMPOS_BACKEND.currentUser();
-    if (user) {
-      const form = document.getElementById('checkout-form');
-      form.name.value = user.name;
-      form.email.value = user.email;
-    }
-
     const form = document.getElementById('checkout-form');
     const errorEl = document.getElementById('checkout-error');
     const PENDING_ORDER_KEY = 'olympos_pending_order';
@@ -487,6 +480,19 @@
         } catch {}
       }
       pendingPaymentFailed = true;
+    }
+
+    // logged-in shoppers get their saved profile (Bilgilerim) prefilled —
+    // saves retyping the address/phone/city/zip on every order. Skipped
+    // when we just repopulated the form from a failed attempt above.
+    const user = OLYMPOS_BACKEND.currentUser();
+    if (user && !pendingPaymentFailed) {
+      form.name.value = user.name || '';
+      form.email.value = user.email || '';
+      if (user.phone) form.phone.value = user.phone;
+      if (user.address) form.address.value = user.address;
+      if (user.city) form.city.value = user.city;
+      if (user.zip) form.zip.value = user.zip;
     }
 
     // step navigation: delivery + consent -> iyzico-styled payment step
