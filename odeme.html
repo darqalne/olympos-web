@@ -502,7 +502,8 @@
       stepPaymentEl.style.display = 'block';
       stepIndicator1.classList.remove('active'); stepIndicator1.classList.add('done');
       stepIndicator2.classList.add('active');
-      errorEl.textContent = OLYMPOS_I18N.t('checkout.paymentFailed');
+      const reason = returnParams.get('reason');
+      errorEl.textContent = OLYMPOS_I18N.t('checkout.paymentFailed') + (reason ? ` (${reason})` : '');
       errorEl.style.display = 'block';
     }
 

@@ -33,7 +33,17 @@ export default async function handler(req, res) {
     if (result.status === 'success' && result.paymentStatus === 'SUCCESS') {
       res.writeHead(302, { Location: `${origin}/odeme?iyzico=success&token=${encodeURIComponent(token)}` });
     } else {
-      res.writeHead(302, { Location: `${origin}/odeme?iyzico=failed` });
+      console.error('iyzico callback: payment not successful', {
+        status: result.status,
+        paymentStatus: result.paymentStatus,
+        errorCode: result.errorCode,
+        errorMessage: result.errorMessage,
+        mdStatus: result.mdStatus,
+        fraudStatus: result.fraudStatus,
+        paymentId: result.paymentId
+      });
+      const reason = encodeURIComponent(result.errorMessage || result.paymentStatus || 'unknown');
+      res.writeHead(302, { Location: `${origin}/odeme?iyzico=failed&reason=${reason}` });
     }
     return res.end();
   } catch (err) {
