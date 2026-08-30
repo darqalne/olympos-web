@@ -242,7 +242,15 @@
     document.getElementById('acc-email').textContent = user.email;
     if (user.isAdmin) document.getElementById('admin-link').style.display = 'inline-flex';
 
-    const orders = await OLYMPOS_BACKEND.getOrdersForUser(user.id);
+    // never let an orders-fetch failure (e.g. a Firestore rules issue)
+    // silently abort the rest of this script — the logout button below
+    // must still get wired up either way.
+    let orders = [];
+    try {
+      orders = await OLYMPOS_BACKEND.getOrdersForUser(user.id);
+    } catch (err) {
+      console.error('getOrdersForUser failed', err);
+    }
     const listEl = document.getElementById('orders-list');
     const emptyEl = document.getElementById('orders-empty');
 
@@ -269,8 +277,8 @@
     renderOrders();
     window.addEventListener('olympos:langchange', renderOrders);
 
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      OLYMPOS_BACKEND.logout();
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await OLYMPOS_BACKEND.logout();
       window.location.href = '/';
     });
   }

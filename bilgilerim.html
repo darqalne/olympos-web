@@ -285,8 +285,8 @@
     const errorEl = document.getElementById('profile-error');
     const successEl = document.getElementById('profile-success');
 
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      OLYMPOS_BACKEND.logout();
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await OLYMPOS_BACKEND.logout();
       window.location.href = '/';
     });
 
@@ -299,7 +299,7 @@
       btn.disabled = true; btn.textContent = OLYMPOS_I18N.t('profile.saving');
 
       try {
-        await OLYMPOS_BACKEND.updateProfile({
+        const result = await OLYMPOS_BACKEND.updateProfile({
           name: form.name.value.trim(),
           email: form.email.value.trim(),
           password: form.password.value.trim(),
@@ -309,7 +309,11 @@
           zip: form.zip.value.trim()
         });
         form.password.value = '';
+        successEl.textContent = result && result.emailVerificationSent
+          ? OLYMPOS_I18N.t('profile.emailVerifySentMsg')
+          : OLYMPOS_I18N.t('profile.successMsg');
         successEl.style.display = 'block';
+        if (result && result.emailVerificationSent) form.email.value = user.email;
       } catch (err) {
         errorEl.textContent = err.message || 'Bir hata oluştu.';
         errorEl.style.display = 'block';

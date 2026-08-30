@@ -214,8 +214,15 @@ window.OLYMPOS_BACKEND = (() => {
     return publicUser(user);
   }
 
-  function logout() {
-    if (CONFIG.auth.mode === 'firebase') { fbAuth.signOut(); _cachedUser = null; return; }
+  async function logout() {
+    if (CONFIG.auth.mode === 'firebase') {
+      // must finish before the caller navigates away, or the sign-out
+      // can get cut off mid-flight and the next page still sees a
+      // signed-in session.
+      await fbAuth.signOut();
+      _cachedUser = null;
+      return;
+    }
     localStorage.removeItem(SESSION_KEY);
   }
 
@@ -260,8 +267,16 @@ window.OLYMPOS_BACKEND = (() => {
 
     if (CONFIG.auth.mode === 'firebase') {
       if (!_cachedUser) throw fail(bt('notAuthenticated'), 'not-authenticated');
+      let emailVerificationSent = false;
       try {
-        if (normalizedEmail !== _cachedUser.email) await fbAuth.currentUser.updateEmail(normalizedEmail);
+        if (normalizedEmail !== _cachedUser.email) {
+          // Firebase no longer allows an instant email swap — it requires
+          // verifying ownership of the new address first. The address only
+          // actually changes once the shopper clicks the link it emails
+          // them, so we deliberately do NOT write it to Firestore yet.
+          await fbAuth.currentUser.verifyBeforeUpdateEmail(normalizedEmail);
+          emailVerificationSent = true;
+        }
         if (password) await fbAuth.currentUser.updatePassword(password);
       } catch (e) {
         if (e.code === 'auth/requires-recent-login') {
@@ -270,10 +285,10 @@ window.OLYMPOS_BACKEND = (() => {
         if (e.code === 'auth/email-already-in-use') throw fail(bt('emailExists'), 'email-exists');
         throw fail(e.message, e.code);
       }
-      const fields = { name, email: normalizedEmail, phone: phone || '', address: address || '', city: city || '', zip: zip || '' };
+      const fields = { name, phone: phone || '', address: address || '', city: city || '', zip: zip || '' };
       await fbDb.collection('users').doc(_cachedUser.id).update(fields);
       _cachedUser = { ..._cachedUser, ...fields };
-      return _cachedUser;
+      return { ..._cachedUser, emailVerificationSent };
     }
 
     const session = readJSON(SESSION_KEY, null);

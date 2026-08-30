@@ -406,8 +406,8 @@
     });
   });
 
-  document.getElementById('logout-btn').addEventListener('click', () => {
-    OLYMPOS_BACKEND.logout();
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await OLYMPOS_BACKEND.logout();
     window.location.href = '/';
   });
 

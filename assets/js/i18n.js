@@ -330,7 +330,8 @@ window.OLYMPOS_I18N = (() => {
         passwordTitle: 'Şifre', passwordHint: 'Şifrenizi değiştirmek istemiyorsanız bu alanı boş bırakın.',
         newPasswordLabel: 'Yeni Şifre', newPasswordPlaceholder: 'En az 6 karakter',
         addressTitle: 'Teslimat Adresi', addressLabel: 'Adres', cityLabel: 'Şehir', zipLabel: 'Posta Kodu',
-        saveButton: 'Değişiklikleri Kaydet', saving: 'Kaydediliyor…', successMsg: 'Bilgileriniz güncellendi.'
+        saveButton: 'Değişiklikleri Kaydet', saving: 'Kaydediliyor…', successMsg: 'Bilgileriniz güncellendi.',
+        emailVerifySentMsg: 'Bilgileriniz güncellendi. Yeni e-posta adresinize gönderdiğimiz linke tıklayana kadar giriş e-postanız değişmeyecek.'
       },
       cartPage: {
         backToAccount: "Hesabım'a Dön", eyebrow: 'Sepet', title: 'Sepetim', emptyMsg: 'Sepetiniz şu an boş.', browseShop: 'Mağazaya Göz At',
@@ -579,7 +580,8 @@ window.OLYMPOS_I18N = (() => {
         passwordTitle: 'Password', passwordHint: 'Leave this blank if you don’t want to change your password.',
         newPasswordLabel: 'New Password', newPasswordPlaceholder: 'At least 6 characters',
         addressTitle: 'Delivery Address', addressLabel: 'Address', cityLabel: 'City', zipLabel: 'Postal Code',
-        saveButton: 'Save Changes', saving: 'Saving…', successMsg: 'Your info has been updated.'
+        saveButton: 'Save Changes', saving: 'Saving…', successMsg: 'Your info has been updated.',
+        emailVerifySentMsg: 'Your info has been updated. Your login email won’t change until you click the link we sent to the new address.'
       },
       cartPage: {
         backToAccount: 'Back to My Account', eyebrow: 'Cart', title: 'My Cart', emptyMsg: 'Your cart is empty right now.', browseShop: 'Browse the Shop',
@@ -828,7 +830,8 @@ window.OLYMPOS_I18N = (() => {
         passwordTitle: 'Passwort', passwordHint: 'Lassen Sie dieses Feld leer, wenn Sie Ihr Passwort nicht ändern möchten.',
         newPasswordLabel: 'Neues Passwort', newPasswordPlaceholder: 'Mindestens 6 Zeichen',
         addressTitle: 'Lieferadresse', addressLabel: 'Adresse', cityLabel: 'Stadt', zipLabel: 'Postleitzahl',
-        saveButton: 'Änderungen speichern', saving: 'Wird gespeichert…', successMsg: 'Ihre Daten wurden aktualisiert.'
+        saveButton: 'Änderungen speichern', saving: 'Wird gespeichert…', successMsg: 'Ihre Daten wurden aktualisiert.',
+        emailVerifySentMsg: 'Ihre Daten wurden aktualisiert. Ihre Anmelde-E-Mail ändert sich erst, wenn Sie auf den Link klicken, den wir an die neue Adresse gesendet haben.'
       },
       cartPage: {
         backToAccount: 'Zurück zu meinem Konto', eyebrow: 'Warenkorb', title: 'Mein Warenkorb', emptyMsg: 'Ihr Warenkorb ist derzeit leer.', browseShop: 'Shop durchsuchen',
