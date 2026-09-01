@@ -183,30 +183,92 @@
           </div>
         </div>
 
-        <div>
-          <h2 class="font-display text-xl text-umber-800 mb-6" data-i18n="profile.addressTitle">Teslimat Adresi</h2>
-          <div class="space-y-6">
-            <div class="field">
-              <label for="pf-address" data-i18n="profile.addressLabel">Adres</label>
-              <textarea id="pf-address" name="address" autocomplete="street-address"></textarea>
-            </div>
-            <div class="grid sm:grid-cols-2 gap-6">
-              <div class="field">
-                <label for="pf-city" data-i18n="profile.cityLabel">Şehir</label>
-                <input id="pf-city" name="city" type="text" autocomplete="address-level2">
-              </div>
-              <div class="field">
-                <label for="pf-zip" data-i18n="profile.zipLabel">Posta Kodu</label>
-                <input id="pf-zip" name="zip" type="text" autocomplete="postal-code">
-              </div>
-            </div>
-          </div>
-        </div>
-
         <p id="profile-error" class="text-sm" style="color:#B4432E; display:none;"></p>
         <p id="profile-success" class="text-sm" style="color:#4A6B4A; display:none;" data-i18n="profile.successMsg">Bilgileriniz güncellendi.</p>
         <button type="submit" id="profile-submit" class="btn btn-primary" data-i18n="profile.saveButton">Değişiklikleri Kaydet</button>
       </form>
+
+      <div class="mt-16 pt-16 border-t border-umber-700/10">
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+          <div>
+            <h2 class="font-display text-xl text-umber-800" data-i18n="profile.addressesTitle">Adreslerim</h2>
+            <p class="text-umber-500 text-sm mt-1" data-i18n="profile.addressesSubtitle">Sipariş verirken seçebileceğiniz adresler.</p>
+          </div>
+          <button type="button" id="addr-add-btn" class="btn btn-outline btn-sm" data-i18n="profile.addAddress">+ Yeni Adres Ekle</button>
+        </div>
+
+        <div id="addr-empty" class="text-center py-12 border border-dashed border-umber-700/15 rounded-sm" style="display:none;">
+          <p class="text-umber-500 text-sm" data-i18n="profile.noAddressesYet">Henüz kayıtlı adresiniz yok.</p>
+        </div>
+        <div id="addr-list" class="space-y-4"></div>
+
+        <div id="addr-form-wrap" class="bg-cream-2 rounded-sm shadow-sm p-7 mt-6" style="display:none;">
+          <form id="addr-form" class="space-y-6" novalidate>
+            <input type="hidden" id="addr-id" value="">
+            <div class="field">
+              <label for="addr-label" data-i18n="profile.addressNameLabel">Adres Adı</label>
+              <input id="addr-label" name="label" type="text" placeholder="Örn. Ev, İş" data-i18n-placeholder="profile.addressNamePlaceholder">
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div class="field">
+                <label for="addr-name" data-i18n="checkout.nameLabel">Ad Soyad</label>
+                <input id="addr-name" name="name" type="text" required>
+              </div>
+              <div class="field">
+                <label for="addr-phone" data-i18n="checkout.phoneLabel">Telefon</label>
+                <input id="addr-phone" name="phone" type="tel" inputmode="numeric" placeholder="05XX XXX XX XX" maxlength="11" pattern="0?5[0-9]{9}" required>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div class="field">
+                <label for="addr-il" data-i18n="checkout.provinceLabel">İl</label>
+                <select id="addr-il" name="il" required>
+                  <option value="" data-i18n="checkout.provincePlaceholder">İl seçin</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="addr-ilce" data-i18n="checkout.districtLabel">İlçe</label>
+                <input id="addr-ilce" name="ilce" type="text" list="addr-ilce-list" required disabled autocomplete="off">
+                <datalist id="addr-ilce-list"></datalist>
+              </div>
+            </div>
+            <div class="field">
+              <label for="addr-mahalle" data-i18n="checkout.neighborhoodLabel">Mahalle</label>
+              <input id="addr-mahalle" name="mahalle" type="text" list="addr-mahalle-list" required disabled autocomplete="off">
+              <datalist id="addr-mahalle-list"></datalist>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div class="field">
+                <label for="addr-sokak" data-i18n="checkout.streetLabel">Sokak</label>
+                <input id="addr-sokak" name="sokak" type="text">
+              </div>
+              <div class="field">
+                <label for="addr-no" data-i18n="checkout.noLabel">No</label>
+                <input id="addr-no" name="no" type="text">
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div class="field">
+                <label for="addr-kat" data-i18n="checkout.floorLabel">Kat</label>
+                <input id="addr-kat" name="kat" type="text">
+              </div>
+              <div class="field">
+                <label for="addr-daire" data-i18n="checkout.doorLabel">Daire</label>
+                <input id="addr-daire" name="daire" type="text">
+              </div>
+            </div>
+            <div class="field" style="max-width:220px;">
+              <label for="addr-zip" data-i18n="checkout.zipLabel">Posta Kodu</label>
+              <input id="addr-zip" name="zip" type="text" autocomplete="postal-code">
+            </div>
+            <p id="addr-error" class="text-sm" style="color:#B4432E; display:none;"></p>
+            <div class="flex gap-3">
+              <button type="submit" id="addr-save-btn" class="btn btn-primary btn-sm" data-i18n="profile.saveAddressButton">Adresi Kaydet</button>
+              <button type="button" id="addr-cancel-btn" class="btn btn-outline btn-sm" data-i18n="profile.cancelButton">Vazgeç</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -269,6 +331,7 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/backend.js"></script>
 <script src="assets/js/site.js"></script>
+<script src="assets/js/turkiye-adres.js"></script>
 <script>
 (async () => {
   await OLYMPOS_BACKEND.ready();
@@ -278,9 +341,6 @@
     form.name.value = user.name;
     form.email.value = user.email;
     form.phone.value = user.phone || '';
-    form.address.value = user.address || '';
-    form.city.value = user.city || '';
-    form.zip.value = user.zip || '';
 
     const errorEl = document.getElementById('profile-error');
     const successEl = document.getElementById('profile-success');
@@ -303,10 +363,7 @@
           name: form.name.value.trim(),
           email: form.email.value.trim(),
           password: form.password.value.trim(),
-          phone: form.phone.value.trim(),
-          address: form.address.value.trim(),
-          city: form.city.value.trim(),
-          zip: form.zip.value.trim()
+          phone: form.phone.value.trim()
         });
         form.password.value = '';
         successEl.textContent = result && result.emailVerificationSent
@@ -317,6 +374,124 @@
       } catch (err) {
         errorEl.textContent = err.message || 'Bir hata oluştu.';
         errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false; btn.textContent = original;
+      }
+    });
+
+    /* ---------------- Adreslerim (address book) ---------------- */
+    const addrListEl = document.getElementById('addr-list');
+    const addrEmptyEl = document.getElementById('addr-empty');
+    const addrFormWrap = document.getElementById('addr-form-wrap');
+    const addrForm = document.getElementById('addr-form');
+    const addrErrorEl = document.getElementById('addr-error');
+
+    const cascade = TR_ADDRESS.wireCascadingAddress({
+      ilSelect: document.getElementById('addr-il'),
+      ilceInput: document.getElementById('addr-ilce'),
+      ilceList: document.getElementById('addr-ilce-list'),
+      mahalleInput: document.getElementById('addr-mahalle'),
+      mahalleList: document.getElementById('addr-mahalle-list')
+    });
+
+    function addressSummary(a) {
+      return [a.mahalle, a.sokak && (a.sokak + (a.no ? ' No:' + a.no : '')), a.ilce, a.il].filter(Boolean).join(', ');
+    }
+
+    function renderAddresses() {
+      const addresses = OLYMPOS_BACKEND.getAddresses();
+      addrEmptyEl.style.display = addresses.length === 0 ? 'block' : 'none';
+      addrListEl.innerHTML = addresses.map(a => `
+        <div class="bg-cream-2 rounded-sm shadow-sm p-6 flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <p class="font-display text-umber-800">${esc(a.label || a.name)}</p>
+            <p class="text-umber-600 text-sm mt-1">${esc(a.name)} · ${esc(a.phone)}</p>
+            <p class="text-umber-500 text-sm mt-1">${esc(addressSummary(a))}</p>
+          </div>
+          <div class="flex gap-3 shrink-0">
+            <button type="button" class="text-xs text-saffron-dim hover:underline" data-edit-addr="${a.id}" data-i18n="profile.editAddress">Düzenle</button>
+            <button type="button" class="text-xs text-umber-500 hover:underline" data-delete-addr="${a.id}" data-i18n="profile.deleteAddress">Sil</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    function esc(str) {
+      return String(str == null ? '' : str).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+    renderAddresses();
+
+    function openAddrForm(address) {
+      addrErrorEl.style.display = 'none';
+      addrForm.reset();
+      document.getElementById('addr-id').value = address ? address.id : '';
+      if (address) {
+        addrForm.label.value = address.label || '';
+        addrForm.name.value = address.name || '';
+        addrForm.phone.value = address.phone || '';
+        addrForm.sokak.value = address.sokak || '';
+        addrForm.no.value = address.no || '';
+        addrForm.kat.value = address.kat || '';
+        addrForm.daire.value = address.daire || '';
+        addrForm.zip.value = address.zip || '';
+        cascade.prefill(address.il, address.ilce, address.mahalle);
+      } else {
+        document.getElementById('addr-il').value = '';
+        document.getElementById('addr-ilce').disabled = true;
+        document.getElementById('addr-mahalle').disabled = true;
+      }
+      addrFormWrap.style.display = 'block';
+      addrFormWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function closeAddrForm() {
+      addrFormWrap.style.display = 'none';
+      addrForm.reset();
+    }
+
+    document.getElementById('addr-add-btn').addEventListener('click', () => openAddrForm(null));
+    document.getElementById('addr-cancel-btn').addEventListener('click', closeAddrForm);
+
+    addrListEl.addEventListener('click', async (e) => {
+      const editId = e.target.dataset.editAddr;
+      const deleteId = e.target.dataset.deleteAddr;
+      if (editId) {
+        const address = OLYMPOS_BACKEND.getAddresses().find(a => a.id === editId);
+        if (address) openAddrForm(address);
+      } else if (deleteId) {
+        if (!confirm(OLYMPOS_I18N.t('profile.deleteAddressConfirm'))) return;
+        await OLYMPOS_BACKEND.deleteAddress(deleteId);
+        renderAddresses();
+      }
+    });
+
+    addrForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      addrErrorEl.style.display = 'none';
+      const btn = document.getElementById('addr-save-btn');
+      const original = btn.textContent;
+      btn.disabled = true; btn.textContent = OLYMPOS_I18N.t('profile.addressSaving');
+
+      try {
+        const id = document.getElementById('addr-id').value;
+        const payload = {
+          label: addrForm.label.value.trim(),
+          name: addrForm.name.value.trim(),
+          phone: addrForm.phone.value.trim(),
+          il: document.getElementById('addr-il').value,
+          ilce: document.getElementById('addr-ilce').value.trim(),
+          mahalle: document.getElementById('addr-mahalle').value.trim(),
+          sokak: addrForm.sokak.value.trim(),
+          no: addrForm.no.value.trim(),
+          kat: addrForm.kat.value.trim(),
+          daire: addrForm.daire.value.trim(),
+          zip: addrForm.zip.value.trim()
+        };
+        if (id) await OLYMPOS_BACKEND.updateAddress(id, payload);
+        else await OLYMPOS_BACKEND.addAddress(payload);
+        renderAddresses();
+        closeAddrForm();
+      } catch (err) {
+        addrErrorEl.textContent = err.message || 'Bir hata oluştu.';
+        addrErrorEl.style.display = 'block';
       } finally {
         btn.disabled = false; btn.textContent = original;
       }

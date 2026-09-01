@@ -194,20 +194,63 @@
                   </div>
                 </div>
                 <p class="text-umber-500 text-xs" data-i18n="checkout.identityHint" style="margin-top:-1rem;">Ödeme altyapımız iyzico&#39;nun yasal zorunluluğu gereği istenmektedir; kart bilgilerinizle birlikte saklanmaz.</p>
-                <div class="field">
-                  <label for="ck-address" data-i18n="checkout.addressLabel">Adres</label>
-                  <textarea id="ck-address" name="address" required></textarea>
+
+                <div id="ck-saved-addresses" style="display:none;">
+                  <label style="display:block; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--umber-600); font-weight:600; margin-bottom:0.75rem;" data-i18n="checkout.savedAddressesTitle">Kayıtlı Adreslerim</label>
+                  <div id="ck-address-cards" class="space-y-3 mb-4"></div>
+                  <button type="button" id="ck-use-new-address" class="text-sm text-saffron-dim hover:underline" data-i18n="checkout.useNewAddress">+ Yeni Adres Kullan</button>
                 </div>
-                <div class="grid sm:grid-cols-2 gap-6">
-                  <div class="field">
-                    <label for="ck-city" data-i18n="checkout.cityLabel">Şehir</label>
-                    <select id="ck-city" name="city" required autocomplete="address-level2">
-                      <option value="" data-i18n="checkout.cityPlaceholder">Şehir seçin</option>
-                    </select>
+
+                <div id="ck-address-form" class="space-y-6">
+                  <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="field">
+                      <label for="ck-il" data-i18n="checkout.provinceLabel">İl</label>
+                      <select id="ck-il" name="il" required>
+                        <option value="" data-i18n="checkout.provincePlaceholder">İl seçin</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="ck-ilce" data-i18n="checkout.districtLabel">İlçe</label>
+                      <input id="ck-ilce" name="ilce" type="text" list="ck-ilce-list" required disabled autocomplete="off">
+                      <datalist id="ck-ilce-list"></datalist>
+                    </div>
                   </div>
                   <div class="field">
+                    <label for="ck-mahalle" data-i18n="checkout.neighborhoodLabel">Mahalle</label>
+                    <input id="ck-mahalle" name="mahalle" type="text" list="ck-mahalle-list" required disabled autocomplete="off">
+                    <datalist id="ck-mahalle-list"></datalist>
+                  </div>
+                  <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="field">
+                      <label for="ck-sokak" data-i18n="checkout.streetLabel">Sokak</label>
+                      <input id="ck-sokak" name="sokak" type="text">
+                    </div>
+                    <div class="field">
+                      <label for="ck-no" data-i18n="checkout.noLabel">No</label>
+                      <input id="ck-no" name="no" type="text">
+                    </div>
+                  </div>
+                  <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="field">
+                      <label for="ck-kat" data-i18n="checkout.floorLabel">Kat</label>
+                      <input id="ck-kat" name="kat" type="text">
+                    </div>
+                    <div class="field">
+                      <label for="ck-daire" data-i18n="checkout.doorLabel">Daire</label>
+                      <input id="ck-daire" name="daire" type="text">
+                    </div>
+                  </div>
+                  <div class="field" style="max-width:220px;">
                     <label for="ck-zip" data-i18n="checkout.zipLabel">Posta Kodu</label>
                     <input id="ck-zip" name="zip" type="text" autocomplete="postal-code">
+                  </div>
+                  <div id="ck-save-address-wrap" class="consent" style="display:none;">
+                    <input type="checkbox" id="ck-save-address">
+                    <label for="ck-save-address" data-i18n="checkout.saveThisAddress">Bu adresi hesabıma kaydet</label>
+                  </div>
+                  <div class="field" id="ck-address-name-wrap" style="display:none;">
+                    <label for="ck-address-name" data-i18n="checkout.addressNameOptional">Adres Adı (opsiyonel)</label>
+                    <input id="ck-address-name" type="text" placeholder="Örn. Ev, İş" data-i18n-placeholder="checkout.addressNamePlaceholder">
                   </div>
                 </div>
               </div>
@@ -376,6 +419,7 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/backend.js"></script>
 <script src="assets/js/site.js"></script>
+<script src="assets/js/turkiye-adres.js"></script>
 <script>
 (async () => {
   await OLYMPOS.ready();
@@ -413,23 +457,12 @@
     // iyzico popup) — stop a stray Enter keypress from reloading the page.
     form.addEventListener('submit', (e) => e.preventDefault());
 
-    const TURKISH_CITIES = [
-      'Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Aksaray', 'Amasya', 'Ankara', 'Antalya', 'Ardahan',
-      'Artvin', 'Aydın', 'Balıkesir', 'Bartın', 'Batman', 'Bayburt', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu',
-      'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Düzce', 'Edirne', 'Elazığ',
-      'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Iğdır',
-      'Isparta', 'İstanbul', 'İzmir', 'Kahramanmaraş', 'Karabük', 'Karaman', 'Kars', 'Kastamonu', 'Kayseri',
-      'Kilis', 'Kırıkkale', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa',
-      'Mardin', 'Mersin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Osmaniye', 'Rize', 'Sakarya', 'Samsun',
-      'Siirt', 'Sinop', 'Sivas', 'Şanlıurfa', 'Şırnak', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Uşak',
-      'Van', 'Yalova', 'Yozgat', 'Zonguldak'
-    ];
-    const citySelect = document.getElementById('ck-city');
-    TURKISH_CITIES.forEach((city) => {
-      const opt = document.createElement('option');
-      opt.value = city;
-      opt.textContent = city;
-      citySelect.appendChild(opt);
+    const cascade = TR_ADDRESS.wireCascadingAddress({
+      ilSelect: document.getElementById('ck-il'),
+      ilceInput: document.getElementById('ck-ilce'),
+      ilceList: document.getElementById('ck-ilce-list'),
+      mahalleInput: document.getElementById('ck-mahalle'),
+      mahalleList: document.getElementById('ck-mahalle-list')
     });
 
     // strip anything but digits as the shopper types — the pattern/maxlength
@@ -473,26 +506,93 @@
           if (s.name) form.name.value = s.name;
           if (s.email) form.email.value = s.email;
           if (s.phone) form.phone.value = s.phone;
-          if (s.address) form.address.value = s.address;
-          if (s.city) form.city.value = s.city;
-          if (s.zip) form.zip.value = s.zip;
           if (s.identityNumber) document.getElementById('ck-identity').value = s.identityNumber;
+          if (s.il) await cascade.prefill(s.il, s.ilce, s.mahalle);
+          if (s.sokak) document.getElementById('ck-sokak').value = s.sokak;
+          if (s.no) document.getElementById('ck-no').value = s.no;
+          if (s.kat) document.getElementById('ck-kat').value = s.kat;
+          if (s.daire) document.getElementById('ck-daire').value = s.daire;
+          if (s.zip) document.getElementById('ck-zip').value = s.zip;
         } catch {}
       }
       pendingPaymentFailed = true;
     }
 
-    // logged-in shoppers get their saved profile (Bilgilerim) prefilled —
-    // saves retyping the address/phone/city/zip on every order. Skipped
-    // when we just repopulated the form from a failed attempt above.
     const user = OLYMPOS_BACKEND.currentUser();
     if (user && !pendingPaymentFailed) {
       form.name.value = user.name || '';
       form.email.value = user.email || '';
       if (user.phone) form.phone.value = user.phone;
-      if (user.address) form.address.value = user.address;
-      if (user.city) form.city.value = user.city;
-      if (user.zip) form.zip.value = user.zip;
+    }
+
+    /* ---------------- saved address selection ---------------- */
+    const savedAddressesWrap = document.getElementById('ck-saved-addresses');
+    const addressCardsEl = document.getElementById('ck-address-cards');
+    const addressFormEl = document.getElementById('ck-address-form');
+    const saveAddressWrap = document.getElementById('ck-save-address-wrap');
+    const addressNameWrap = document.getElementById('ck-address-name-wrap');
+    const saveAddressCheckbox = document.getElementById('ck-save-address');
+    let selectedAddressId = null;
+
+    function escAddr(str) {
+      return String(str == null ? '' : str).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+    function addressSummary(a) {
+      return escAddr([a.mahalle, a.sokak && (a.sokak + (a.no ? ' No:' + a.no : '')), a.ilce, a.il].filter(Boolean).join(', '));
+    }
+
+    async function selectAddress(a) {
+      selectedAddressId = a.id;
+      form.name.value = a.name || form.name.value;
+      form.phone.value = a.phone || form.phone.value;
+      await cascade.prefill(a.il, a.ilce, a.mahalle);
+      document.getElementById('ck-sokak').value = a.sokak || '';
+      document.getElementById('ck-no').value = a.no || '';
+      document.getElementById('ck-kat').value = a.kat || '';
+      document.getElementById('ck-daire').value = a.daire || '';
+      document.getElementById('ck-zip').value = a.zip || '';
+      addressFormEl.style.display = 'none';
+      saveAddressWrap.style.display = 'none';
+      addressNameWrap.style.display = 'none';
+      renderAddressCards();
+    }
+
+    function useNewAddress() {
+      selectedAddressId = null;
+      addressFormEl.style.display = 'block';
+      if (user) { saveAddressWrap.style.display = 'flex'; addressNameWrap.style.display = 'block'; }
+      renderAddressCards();
+    }
+
+    function renderAddressCards() {
+      const addresses = user ? OLYMPOS_BACKEND.getAddresses() : [];
+      if (addresses.length === 0) { savedAddressesWrap.style.display = 'none'; return; }
+      savedAddressesWrap.style.display = 'block';
+      addressCardsEl.innerHTML = addresses.map(a => `
+        <button type="button" class="address-card${a.id === selectedAddressId ? ' selected' : ''}" data-select-addr="${a.id}">
+          <span class="font-display text-umber-800">${escAddr(a.label || a.name)}</span>
+          <span class="text-umber-500 text-xs block mt-1">${addressSummary(a)}</span>
+        </button>
+      `).join('');
+      addressCardsEl.querySelectorAll('[data-select-addr]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const a = addresses.find(x => x.id === btn.dataset.selectAddr);
+          if (a) selectAddress(a);
+        });
+      });
+    }
+
+    document.getElementById('ck-use-new-address').addEventListener('click', useNewAddress);
+
+    if (!pendingPaymentFailed) {
+      const addresses = user ? OLYMPOS_BACKEND.getAddresses() : [];
+      if (addresses.length > 0) {
+        await selectAddress(addresses[0]);
+      } else {
+        useNewAddress();
+      }
+    } else {
+      renderAddressCards();
     }
 
     // step navigation: delivery + consent -> iyzico-styled payment step
@@ -514,7 +614,7 @@
     }
 
     document.getElementById('to-payment-btn').addEventListener('click', () => {
-      const deliveryValid = ['name', 'email', 'phone', 'address', 'city'].every(f => form[f].checkValidity());
+      const deliveryValid = ['name', 'email', 'phone', 'il', 'ilce', 'mahalle'].every(f => form[f].checkValidity());
       if (!deliveryValid) { form.reportValidity(); return; }
       if (!agreeTermsInput.checked) {
         agreeErrorEl.style.display = 'block';
@@ -575,15 +675,42 @@
 
       try {
         const subtotal = OLYMPOS.cartSubtotal();
+        const il = document.getElementById('ck-il').value;
+        const ilce = document.getElementById('ck-ilce').value.trim();
+        const mahalle = document.getElementById('ck-mahalle').value.trim();
+        const sokak = document.getElementById('ck-sokak').value.trim();
+        const no = document.getElementById('ck-no').value.trim();
+        const kat = document.getElementById('ck-kat').value.trim();
+        const daire = document.getElementById('ck-daire').value.trim();
+        const zip = document.getElementById('ck-zip').value.trim();
+        const addressLine = [
+          mahalle && ('Mah. ' + mahalle),
+          sokak && ('Sk. ' + sokak),
+          no && ('No:' + no),
+          kat && ('Kat:' + kat),
+          daire && ('Daire:' + daire)
+        ].filter(Boolean).join(', ');
+
         const shipping = {
           name: form.name.value.trim(),
           email: form.email.value.trim(),
           phone: form.phone.value.trim(),
           identityNumber: identityInput.value.trim(),
-          address: form.address.value.trim(),
-          city: form.city.value.trim(),
-          zip: form.zip.value.trim()
+          il, ilce, mahalle, sokak, no, kat, daire, zip,
+          address: addressLine,
+          city: il
         };
+
+        if (user && !selectedAddressId && saveAddressCheckbox && saveAddressCheckbox.checked) {
+          try {
+            await OLYMPOS_BACKEND.addAddress({
+              label: document.getElementById('ck-address-name').value.trim(),
+              name: shipping.name, phone: shipping.phone,
+              il, ilce, mahalle, sokak, no, kat, daire, zip
+            });
+          } catch (e) { console.error('address save failed', e); }
+        }
+
         const items = lines.map(l => ({ id: l.id, name: l.product.name, qty: l.qty, price: l.product.price }));
 
         sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify({ items, subtotal, shipping }));

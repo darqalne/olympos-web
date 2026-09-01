@@ -670,6 +670,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   outline: none;
 }
 .field textarea { resize: vertical; min-height: 120px; }
+.address-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.address-card:hover { border-color: var(--saffron); }
+.address-card.selected {
+  border-color: var(--saffron);
+  box-shadow: 0 0 0 3px rgba(198,135,46,0.15);
+}
 .field select {
   appearance: none; -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238a7358' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");

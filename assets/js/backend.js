@@ -125,6 +125,7 @@ window.OLYMPOS_BACKEND = (() => {
       name: data.name || fbUser.displayName || '',
       email,
       phone: data.phone || '', address: data.address || '', city: data.city || '', zip: data.zip || '',
+      addresses: data.addresses || [],
       createdAt: data.createdAt || null,
       isAdmin: !!data.isAdmin || ADMIN_EMAILS.includes(email)
     };
@@ -311,6 +312,53 @@ window.OLYMPOS_BACKEND = (() => {
 
     writeJSON(USERS_KEY, users);
     return publicUser(user);
+  }
+
+  /* ---------------- saved addresses (Adreslerim) ----------------
+     Stored as an array field on the user doc — a handful of addresses
+     per shopper is nowhere near Firestore's 1MB document cap, so this
+     avoids the extra security-rules surface a subcollection would need. */
+  function addrId() { return 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+  function getAddresses() {
+    const user = currentUser();
+    return (user && user.addresses) || [];
+  }
+
+  async function saveAddresses(addresses) {
+    if (CONFIG.auth.mode === 'firebase') {
+      if (!_cachedUser) throw fail(bt('notAuthenticated'), 'not-authenticated');
+      await fbDb.collection('users').doc(_cachedUser.id).update({ addresses });
+      _cachedUser = { ..._cachedUser, addresses };
+      return addresses;
+    }
+    const session = readJSON(SESSION_KEY, null);
+    if (!session) throw fail(bt('notAuthenticated'), 'not-authenticated');
+    const users = readJSON(USERS_KEY, []);
+    const user = users.find(u => u.id === session.userId);
+    if (!user) throw fail(bt('userNotFound'), 'not-found');
+    user.addresses = addresses;
+    writeJSON(USERS_KEY, users);
+    return addresses;
+  }
+
+  async function addAddress(address) {
+    const addresses = getAddresses().slice();
+    addresses.push({ id: addrId(), ...address });
+    await saveAddresses(addresses);
+    return addresses;
+  }
+
+  async function updateAddress(id, address) {
+    const addresses = getAddresses().map(a => (a.id === id ? { ...a, ...address, id } : a));
+    await saveAddresses(addresses);
+    return addresses;
+  }
+
+  async function deleteAddress(id) {
+    const addresses = getAddresses().filter(a => a.id !== id);
+    await saveAddresses(addresses);
+    return addresses;
   }
 
   /* ---------------- transactional email ----------------
@@ -618,6 +666,7 @@ window.OLYMPOS_BACKEND = (() => {
     CONFIG,
     ready, getDb,
     register, login, logout, currentUser, requireAuth, requireAdmin, updateProfile,
+    getAddresses, addAddress, updateAddress, deleteAddress,
     createOrder, getOrdersForUser, findOrder,
     processPayment,
     getAllUsers, getAllOrders, updateOrderStatus,
