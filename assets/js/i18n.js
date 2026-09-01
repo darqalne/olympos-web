@@ -226,7 +226,7 @@ window.OLYMPOS_I18N = (() => {
       email: {
         confirmSubject: 'Siparişiniz Alındı — {number}',
         confirmGreeting: 'Merhaba {name},',
-        confirmBody: 'Siparişiniz başarıyla alındı ve hazırlanmaya başlanacak. Aşağıda sipariş özetinizi bulabilirsiniz.',
+        confirmBody: 'Bizi tercih ettiğiniz için teşekkür ederiz! Siparişiniz başarıyla alındı ve hazırlanmaya başlanacak. Aşağıda sipariş özetinizi bulabilirsiniz.',
         confirmOrderNumber: 'Sipariş Numarası', confirmTotal: 'Toplam', confirmTrackCta: 'Siparişimi Takip Et',
         statusSubjectPreparing: 'Siparişiniz Hazırlanıyor — {number}',
         statusSubjectShipped: 'Siparişiniz Kargoya Verildi — {number}',
@@ -488,7 +488,7 @@ window.OLYMPOS_I18N = (() => {
       email: {
         confirmSubject: 'Your Order Was Received — {number}',
         confirmGreeting: 'Hi {name},',
-        confirmBody: 'Your order was received successfully and will start being prepared. Here is your order summary.',
+        confirmBody: 'Thank you for choosing us! Your order was received successfully and will start being prepared. Here is your order summary.',
         confirmOrderNumber: 'Order Number', confirmTotal: 'Total', confirmTrackCta: 'Track My Order',
         statusSubjectPreparing: 'Your Order Is Being Prepared — {number}',
         statusSubjectShipped: 'Your Order Has Shipped — {number}',
@@ -750,7 +750,7 @@ window.OLYMPOS_I18N = (() => {
       email: {
         confirmSubject: 'Ihre Bestellung ist eingegangen — {number}',
         confirmGreeting: 'Hallo {name},',
-        confirmBody: 'Ihre Bestellung ist erfolgreich eingegangen und wird nun vorbereitet. Nachfolgend finden Sie Ihre Bestellübersicht.',
+        confirmBody: 'Vielen Dank, dass Sie sich für uns entschieden haben! Ihre Bestellung ist erfolgreich eingegangen und wird nun vorbereitet. Nachfolgend finden Sie Ihre Bestellübersicht.',
         confirmOrderNumber: 'Bestellnummer', confirmTotal: 'Gesamt', confirmTrackCta: 'Meine Bestellung verfolgen',
         statusSubjectPreparing: 'Ihre Bestellung wird vorbereitet — {number}',
         statusSubjectShipped: 'Ihre Bestellung wurde versandt — {number}',

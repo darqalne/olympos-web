@@ -381,17 +381,21 @@ window.OLYMPOS_BACKEND = (() => {
   // that approximate the site's Cinzel/Jost pairing, since web fonts
   // don't load reliably in most inboxes either.
   function emailWrapper(bodyHtml) {
-    const logoUrl = window.location.origin + '/assets/img/brand/logo.png';
+    const origin = window.location.origin;
+    const headerPhotoUrl = origin + '/assets/img/brand/craft-1.jpg';
     return `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F1E4; padding:36px 16px;">
   <tr><td align="center">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px; background:#FFFFFF; border:1px solid rgba(74,51,32,0.12); border-radius:6px; overflow:hidden;">
-      <tr><td style="height:3px; line-height:3px; font-size:0; background:#C6872E;">&nbsp;</td></tr>
-      <tr><td align="center" style="padding:30px 32px 22px;">
-        <img src="${logoUrl}" width="132" alt="Olympos Leather" style="display:block; width:132px; max-width:55%; height:auto; border:0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; background:#FFFFFF; border:1px solid rgba(74,51,32,0.12); border-radius:8px; overflow:hidden;">
+      <tr><td>
+        <img src="${headerPhotoUrl}" width="560" height="200" alt="Olympos Leather" style="display:block; width:100%; max-width:560px; height:200px; object-fit:cover; object-position:top; border:0;">
       </td></tr>
-      <tr><td style="padding:0 32px;"><div style="border-top:1px solid rgba(74,51,32,0.1); line-height:0; font-size:0;">&nbsp;</div></td></tr>
-      <tr><td style="padding:30px 32px 6px; font-family:'Segoe UI',Arial,Helvetica,sans-serif; color:#4A3320; font-size:15px; line-height:1.65;">
+      <tr><td align="center" style="background:#241811; padding:16px 32px;">
+        <span style="font-family:Georgia,'Times New Roman',serif; font-size:22px; letter-spacing:0.14em; color:#F7F1E4;">OLYMPOS</span>
+        <span style="display:block; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.38em; color:#C6872E; margin-top:2px;">LEATHER</span>
+      </td></tr>
+      <tr><td style="height:3px; line-height:3px; font-size:0; background:#C6872E;">&nbsp;</td></tr>
+      <tr><td style="padding:32px 32px 6px; font-family:'Segoe UI',Arial,Helvetica,sans-serif; color:#4A3320; font-size:15px; line-height:1.65;">
         ${bodyHtml}
       </td></tr>
       <tr><td style="padding:22px 32px 28px; border-top:1px solid rgba(74,51,32,0.1); margin-top:20px; font-family:Arial,Helvetica,sans-serif; font-size:12px; color:#8A6644; line-height:1.7;">
