@@ -668,16 +668,23 @@
     // few chunk scripts asynchronously, so we watch for it rather than
     // assume a fixed delay).
     function scrollToIyzicoWidgetWhenReady() {
-      const existing = document.getElementById('iyzipay-checkout-form');
-      if (existing) {
-        existing.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
+      // the host element appears before its own chunk-loaded content has
+      // finished expanding it to full height, so scrolling the instant we
+      // see it lands short (on our footer, not the widget) — settle a
+      // beat, then scroll again once more to correct for any late growth.
+      function settleThenScroll() {
+        const el = document.getElementById('iyzipay-checkout-form');
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 700);
       }
+      const existing = document.getElementById('iyzipay-checkout-form');
+      if (existing) { setTimeout(settleThenScroll, 400); return; }
       const observer = new MutationObserver(() => {
         const el = document.getElementById('iyzipay-checkout-form');
         if (el) {
           observer.disconnect();
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setTimeout(settleThenScroll, 400);
         }
       });
       observer.observe(document.body, { childList: true, subtree: true });
