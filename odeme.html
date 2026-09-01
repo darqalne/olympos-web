@@ -661,6 +661,29 @@
       });
     }
 
+    // iyzico's widget renders wherever its own bundle happens to attach
+    // in the DOM — on phones that's often well below our footer, with no
+    // automatic scroll of its own, so it silently looks broken unless we
+    // bring it into view ourselves once it actually appears (it loads a
+    // few chunk scripts asynchronously, so we watch for it rather than
+    // assume a fixed delay).
+    function scrollToIyzicoWidgetWhenReady() {
+      const existing = document.getElementById('iyzipay-checkout-form');
+      if (existing) {
+        existing.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      const observer = new MutationObserver(() => {
+        const el = document.getElementById('iyzipay-checkout-form');
+        if (el) {
+          observer.disconnect();
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      setTimeout(() => observer.disconnect(), 10000);
+    }
+
     document.getElementById('checkout-submit').addEventListener('click', async () => {
       errorEl.style.display = 'none';
       const identityInput = document.getElementById('ck-identity');
@@ -727,6 +750,7 @@
 
         injectCheckoutForm(data.checkoutFormContent);
         btn.style.display = 'none';
+        scrollToIyzicoWidgetWhenReady();
       } catch (err) {
         sessionStorage.removeItem(PENDING_ORDER_KEY);
         errorEl.textContent = err.message || OLYMPOS_I18N.t('checkout.genericError');
